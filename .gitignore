@@ -1,0 +1,28 @@
+# intermediate latex and sagemathcloud file types
+*.aux
+*.log
+*.pdf
+*.gz
+*.bbl
+*.bcf
+*.blg
+*.dvi
+*.term
+*.run.*
+*.sage-backup
+*.sage-chat
+
+# directory & config stuff that come with sagemathcloud
+.bash_history
+.bash_profile
+.bashrc
+.forever
+.octave_hist
+.sage
+.sagemathcloud
+.selected_editor
+.snapshots
+.ssh
+.trash
+.viminfo
+.repo

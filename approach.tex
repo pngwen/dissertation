@@ -1,0 +1,65 @@
+%% LyX 2.0.2 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{babel}
+\begin{document}
+
+\section{Introduction}
+
+The purpose of these proposed techniques is to explore extend the
+remaining useful life (RUL) of a system through the use of prognostics
+and adaptive control. The overall approach consists of two parts.
+The first is an RUL predictor, and the second is control modification.
+The prognostic predictor is used to extract information which is used
+to augment the system's control model. This will allow the system
+to modify its behavior as it progresses through degraded states of
+operation in order to maximize its remaining useful life.
+
+The remainder of this document describes a proposed prognostics algorithm,
+a framework to be used to augment control, and a proposed set of experiments
+for validating both the prognostics algorithm and the control modification
+steps.
+
+
+\section{Prognostics Approach}
+
+Many approaches exist for performing prognostic prediction. A generalized
+framework for these many methods will allow system life extension
+to be explored in as broad and general method as available. Also,
+by unifying the process of performing predictions, multiple predictors
+can be used in conjunction with other system elements (such as the
+adaptive control layer). This generalized approach consists of a vector
+space representation of the system, a set of functions for mapping
+states onto the vector space, and a method for performing the predictions.
+
+
+\subsection{Vector Space Formulation}
+
+The vector space is formulated as follows:
+\begin{description}
+\item [{$\mathcal{F}$}] A complex-valued $k$ dimensional vector space
+where $k$ is some constant.
+\item [{$F$}] A function which maps sensor history $S$ onto some vector
+$\bar{v_{s}}\in\mathcal{F}$
+\item [{$R$}] A set of regions within $\mathcal{F}$ which indicate system
+failure.
+\item [{$D$}] A function which maps $\bar{v}_{s}$onto a real value $d$
+which is the distance from the nearest failure region $r\in R$  
+\end{description}
+
+\subsection{Performing Predictions}
+
+
+\subsection{Training Methods}
+
+
+\subsection{Proposed Advantages}
+
+
+\section{Corrective Action}
+
+
+\section{Experiments}
+\end{document}
