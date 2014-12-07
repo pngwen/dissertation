@@ -1,5 +1,6 @@
 \documentclass[12pt]{article}
 \title{Literature Review Draft}
+\author{Robert Lowe}
 \usepackage{cite}
 \usepackage{fullpage}
 
@@ -7,8 +8,49 @@
 
 \maketitle
 
-\section{Introduction to Prognostics}
-Complex machines are of growing importance in today's society.  As people
+\section{Introduction}
+As robots encroach upon the world of men, they will all do one thing
+quite frequently.  They will, in the due course of time, suffer some
+sort of hardware failure.  Anyone who has worked closely with modern
+robots can attest to just how fragile these mechanized monsters can
+be.  Of course, the same can be said of any complex system, and the
+quest for robust and fault tolerant systems has been a major pursuit
+both in and out of computing.  This idea was well summarized by
+Fernando Corbato ``Don't wonder if some mishap may happen, but rather
+ask what one will do about it when it does occur.''  \cite{corbato}.
+
+Accepting the truth of the ultimate fate of complex systems is what
+gave rise to the field of prognostics.  However, prognostics has
+traditionally focused on designing maintenance schedules and
+delivering information to well trained technicians so that systems can
+be repaired before catastrophic failure can occur.  This works well in
+laboratory or manufacturing floor settings, but it is not a workable
+solution in home and office environments where a robot must work far
+away from anyone who knows how to service it.  Of course, current
+trends in robotics seem to be leading towards a revolution of personal
+robots, which in turn means that robots will be increasingly operating
+among humans who have none of the necessary skills needed to affect
+repairs should something go wrong with the system.  In extreme cases,
+a robot may even be called upon to act in environments where no human
+can reach them.  In either case a modern robot must be able to cope
+with its own impending electromechanical damage.
+
+The traditional approach to robust robotics, as will be explored in
+detail later in this review, has been to build systems that tolerate
+failures gracefully.  A modern robust robot will either use alternate
+sets of controllers to continue its mission in a damaged state, or it
+will use controllers that allow it degrade and cease functioning in a
+way which causes no damage to other parts of its environment.  
+
+
+
+\subsection{Prognostics}
+\subsection{Robust Control Systems}
+\subsection{Bipedal Walking}
+
+
+\section{Prognostics}
+Complex machines are of growing importance in today's world.  As people
 become more and more dependent on these machines, they begin to realize a
 universal truth about these machines.  Namely, these machines break.  In most
 situations, a broken machine is a nuisance, but in some instances a failed
@@ -16,7 +58,7 @@ system can be catastrophic.  For instance, if we consider the control system of
 a nuclear power plant or the guidance system of a spacecraft, we can easily
 find that failure of such systems is unacceptable.  The main goal of
 prognostics is to predict when a system failure will occur in order to inform
-the maintenance process of critical systems.  
+the maintenance process of critical systems.
 
 This introduction to prognostics is divided into two parts.  First, we explore
 the definition of the prognostic problem itself, and then we explore the
@@ -43,7 +85,7 @@ and the expected time of failure.  Thus an operator can determine a schedule
 for a system by performing maintenance before failure occurs, but not so far in
 advance as to be costly.  In order to meet this goal, however, simple
 estimations of remaining useful life are insufficient.  A prognostic algorithm
-must also provide a confidence measure so that the its prediction can be
+must also provide a confidence measure so that its prediction can be
 weighted against its expected accuracy.  Engel develops this idea by using a
 probabilistic model to predict a ``Just In Time point'' which is the point
 past which a failure becomes highly likely.  This point forms the optimal time
@@ -57,21 +99,21 @@ efficiency point'' which is a point chosen along the prognostic time line to
 represent the best time for repairs~\cite{4585821}.  This is a subtle change to
 the previous point in that this point is not necessarily the point at which
 failure is probabilistically predicted with high confidence.  Instead, Liu's
-point takes into account risk mitigation and repair cost in order to identify
-the best time from the standpoint of both availability and cost.
+approach takes into account risk mitigation and repair cost in order to identify
+the best time for maintenance from the standpoint of both availability and cost.
 
 Both \cite{877920} and \cite{4585821} mention the rise of sensor technology as
 being crucial to the emergence of the field of prognostics.  This is largely
 due to the ability of systems to have the capacity to maintain some notion of
-their own status.  Prior to the widespread availability of good sensors,
+their own operating status.  Prior to the widespread availability of good sensors,
 prognostics was predominately performed by determining the mean time to failure
 based on large scale sampling of system components in production.  For
 instance, any automobile owner is accustomed to buying ``5-year'' versus
 ``3-year'' batteries.  Such determinations are made based on historical data,
-and determining what the mean and variance of failure in the components are.
+and a statistical model (usually a normal distribution) of the components' life spans.
 However, as pointed out in \cite{4711428}, the real world degradation of a
-system usually occurs as a stochastic process.  That is to say, failures are
-not generally deterministic.  Moreover, simple mean time to failure
+system usually occurs as a stochastic process.
+Moreover, simple mean time to failure
 computations are inadequate because failure conditions cannot be explored
 exhaustively in the samples used to inform the mean time to failure model.  Thus
 maintaining some sense of the state of a system or component is needed.  This
@@ -91,17 +133,19 @@ years because 90 percent of this type of battery have successfully operated for
 3 years.''  Experience based prognostics is the lowest cost in terms of
 complexity and materials, but this comes at a sacrifice of precision.  
 
-Moving up the hierarchy, and building upon experience based prognostics, is the
-notion of {\em data driven} prognostics.  The data driven approach uses
-classification systems to create an estimation of the machine's health based on
-learned trends in data.  Generally this approach uses regression techniques
-(such as statistical regression or machine learning) to learn the trends in
-observed data.  They also tend to work by learning trends which represent
-degradation processes in systems.  They use this data to classify a system into
-different representation of varying health based on sensor data.  Data driven
-systems are, according to Peysson, more precise than experience based systems,
-but they come at a higher cost in terms of materials (in that an application
-must have sensors to determine state) and in terms of complexity.  
+Moving up the hierarchy, and building upon experience based
+prognostics, is {\em data driven} prognostics.  The data driven
+approach uses classification systems to create an estimation of the
+machine's health based on learned trends in data.  Generally this
+approach uses regression techniques (such as statistical regression or
+machine learning) to learn the trends in observed data.  They also
+tend to work by learning trends which represent degradation processes
+in systems.  They use this data to classify a system into different
+representation of varying health based on sensor data.  Data driven
+systems are, according to Peysson, more precise than experience based
+systems, but they come at a higher cost in terms of materials (in that
+an application must have sensors to determine state) and in terms of
+complexity.
 
 The highest level of the prognostic hierarchy is {\em physical model}
 prognostics.  In this approach a model of a system's performance is created by
@@ -150,7 +194,7 @@ prognostic systems have emerged, as is outlined in Hall et al's
   \item use model(S) to perform PHM analysis.
 \end{enumerate}
 These steps show that the present trend in prognostics is toward a fusion of
-model and data drive prognostics.  Namely, the model is learned and then
+model and data driven prognostics.  Namely, the model is learned and then
 applied to online data readings.  This online model is in sharp contrast to the
 original statistics based experience models.  Further, prognostics is now seen
 in a broader sense as part of a larger system goal of Prognostic Health
@@ -168,7 +212,7 @@ stochastic, and because there exist many techniques for performing prognostics,
 PHM also depends on developing methods of evaluating the efficacy of prediction
 algorithms.  As mentioned in Lybeck et al's paper \cite{4161637} this is not a
 trivial task.  In this paper, one of the first to provide a general approach to
-evaluating prognostics, Lybeck studies a system which monitors the vibration of
+evaluating prognostics, Lybeck studys a system which monitors the vibration of
 a ball bearing system.  The approach Lybeck proposes is to evaluate a
 prognostic algorithm by observing the predicted RUL over several time steps and
 comparing it to the actual RUL for a real failure.  The quantification which
@@ -226,7 +270,7 @@ based on statistical sampling of states on known trajectories to failure, thus
 establishing both a prognostic and diagnostic confidence level.
 
 
-\section{Application of Existing Algorithms}
+\subsection{Application of Existing Algorithms}
 As is the case with most fields, many existing algorithms can be applied to
 prognostics.  Most approaches fall under the heading of either being model
 based, data driven, or mixed prognostic systems.  This section explores each
@@ -238,7 +282,7 @@ data driven prognostics methods borrow heavily from the field of machine
 learning.  Finally, the mixed approach provides a fusion of both model and data
 driven techniques.
 
-\subsection{Model Based Prognostics}
+\subsubsection{Model Based Prognostics}
 Model based prognostics can best be described as a system which uses a
 predetermined model to predict the remaining useful life of a system or a
 component within a system.  As previously discussed, these models often reflect
@@ -423,6 +467,18 @@ RUL.  All of these approaches come with increased complexity as multiple
 algorithms must be execute simultaneously, however, they have been shown to
 overcome limitations in incomplete physical models and the inherent problems of
 data driven techniques.
+
+\subsection{Handling Uncertainty}
+
+\section{Robust Robot Controllers}
+\subsection{Traditional Approach}
+\subsection{Self Modelling Approach}
+\subsection{Self-Healing Systems}
+
+\section{Bipedal Walking}
+\subsection{Dependency Chains}
+\subsection{Inverted Pendulum Model}
+\subsection{Parameterized Walking}
 
 \section{Future Work}
 With all of the techniques presented here, one common thread can be found.
