@@ -40,14 +40,41 @@ detail later in this review, has been to build systems that tolerate
 failures gracefully.  A modern robust robot will either use alternate
 sets of controllers to continue its mission in a damaged state, or it
 will use controllers that allow it degrade and cease functioning in a
-way which causes no damage to other parts of its environment.  
+way which causes no damage to other parts of its environment.  In
+either case, the current state of the art seems to be to respond to
+faults once they have occured. The present work will explore the
+problem of robot failure from a different perspective. This approach
+can be readily summarized in the form of a question.  Instead of
+determining a course of action in the wake of an already experienced
+fault, what if we could recognize that a fault is likely to occur and
+take action to mitigate, or even avert, that fault?
 
+To accomplish this will require an exploration of several disparate
+fields:
+\begin{itemize}
+\item Prognostics
+\item Robust Robot Controllers
+\item Task Specific Control (Bipedal Walking)
+\end{itemize}
+The rest of this chapter explores background work in these related
+fields.  First, there is an introduction to the field of prognostics.
+Next, a review is made of some of the more common tecniques in robust
+robot control.  Finally, we end with an exploration of the task to
+which this work will be applied.
 
+The task selected for this exploration of control is bipedal walking.
+The reason for this is that bipedal walking is somewhat unique in that
+simple mechanical redundancy would be rather difficult to achieve.
+Without going into too much detail at this stage, it will suffice to
+say that the dependancy chain of a leg is highly interdependant, and
+when only two legs are present this exacerbates the issue.
+The goal of this last section will be to give an overview of how
+bipedal walking can be achieved, and introduce the core ideas about
+how this type of control can be improved using prognostics.
 
-\subsection{Prognostics}
-\subsection{Robust Control Systems}
-\subsection{Bipedal Walking}
-
+The end result will, hopefully, be a robust system which can avoid
+faults where possible, and extend its useful life where faults are
+unavoidable.
 
 \section{Prognostics}
 Complex machines are of growing importance in today's world.  As people
