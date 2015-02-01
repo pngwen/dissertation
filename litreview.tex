@@ -87,7 +87,7 @@ applied.
 
 \subsection{The Prognostics Problem}
 At its core, prognostics is a field which is aimed at predicting how
-long a system will remain operation and/or useful.  Attempting to
+long a system will remain operational and/or useful.  Attempting to
 predict how long a system will remain operational is not a new
 discipline.  However, the study of prognostics as its own field is a
 fairly recent development~\cite{877920}.  The formalized field, which
@@ -111,7 +111,7 @@ schedule for a system by performing maintenance before failure occurs,
 but not so far in advance as to be costly.  In order to meet this
 goal, however, simple estimations of remaining useful life are
 insufficient.  A prognostic algorithm must also provide a confidence
-measure so that its prediction can be weighted against its expected
+measure so that its prediction can be weighed against its expected
 accuracy.  Engel develops this idea by using a probabilistic model to
 predict a ``Just In Time point'' which is the point past which a
 failure becomes highly likely.  This point forms the optimal time for
@@ -148,12 +148,12 @@ samples used to inform the mean time to failure model.  Thus
 maintaining some sense of the state of a system or component is
 needed.  This led to the emergence of a notion of a ``damage''
 variable which, as described in Peysson et. al \cite{4711428} is a
-measure of the deviation of a system away from nominal operation.
-Peysson summarizes the emerging trends in the prognostic field as a
-hierarchy of three classes of prognostic techniques, all of which are
-expressed as different forms of accounting for system damage by
-dividing prognostic approaches into three categories: {\em experience
-  base, data driven, and model based}.
+measure of the deviation of a system from nominal operation.  Peysson
+summarizes the emerging trends in the prognostic field as a hierarchy
+of three classes of prognostic techniques, all of which are expressed
+as different forms of accounting for system damage by dividing
+prognostic approaches into three categories: {\em experience based},
+  {\em data driven}, and {\em model based}.
 
 The lowest level technique is called {\em experience based}
 prognostics which is the previously mentioned estimation of mean time
@@ -162,7 +162,7 @@ Stated simply, experience based prognostics would work by saying ``The
 operational life of this battery is 3 years because 90 percent of this
 type of battery have successfully operated for 3 years.''  Experience
 based prognostics is the lowest cost in terms of complexity and
-materials, but this comes at a sacrifice of precision.
+materials, but this comes with a sacrifice of precision.
 
 Moving up the hierarchy, and building upon experience based
 prognostics, is {\em data driven} prognostics.  The data driven
@@ -171,7 +171,7 @@ machine's health based on learned trends in data.  Generally this
 approach uses regression techniques (such as statistical regression or
 machine learning) to learn the trends in observed data.  They also
 tend to work by learning trends which represent degradation processes
-in systems.  They use this data to classify a system into different
+in systems.  The use this data to classify a system into different
 representation of varying health based on sensor data.  Data driven
 systems are, according to Peysson, more precise than experience based
 systems, but they come at a higher cost in terms of materials (in that
@@ -183,12 +183,12 @@ prognostics.  In this approach a model of a system's performance is
 created by a domain expert.  This model is then used to predict the
 ideal outputs of the system for a given set of inputs.  The model's
 outputs are then compared to actual sensor data to determine the state
-of the system.  Physical models are generally very complex to build in
-that the model must not only account for the operation of a healthy
+of the system.  Physical models are generally very complex to build
+because the model must not only account for the operation of a healthy
 system, but must also be able to predict system operation under
 degraded conditions.  Because of the complexity of constructing the
-model, which are usually computationally complex, these models come at
-the highest cost in terms of material and complexity.  However, a
+models, which are usually computationally complex, these models come
+at the highest cost in terms of material and complexity.  However, a
 truly good physical model will generally outperform a data driven
 system in terms of precision.
 
@@ -196,16 +196,16 @@ The role of prognostic systems in the maintenance cycle of complex
 systems is further refined in Liu et al's paper \cite{4273732}.  This
 paper refines the goals of availability and reliability by adding
 ``survivability'' to the mix.  The system studied by Liu in this paper
-is an all electric ship which is being developed for navy service.
-Clearly, in this system safety is a critical concern.  The solutions
+is an all electric ship which is being developed for the US Navy.
+Clearly, safety is a critical concern in this system .  The solutions
 proposed by Liu use a mixture of diagnostic and prognostic techniques
 to predict and isolate failures.  The role which prognostics plays in
 prediction based maintenance in this paper is part of a larger trend
 where prognostics not only predicts when maintenance is necessary, but
 also models what maintenance is necessary to maintain the goals of the
 system.  This shift in paradigm comes with an increased demand for
-precision models and forecasting capability and thus adds a new layer
-of complexity to the study of prognostic systems.
+precise models and forecasting capability and thus adds a new layer of
+complexity to the study of prognostic systems.
 
 Further refinements on the definition of the prognostic problem are
 presented in \cite{4585821} where another goal is added.  Namely,
@@ -245,11 +245,11 @@ PHM analysis portion is still lacking.
 Prognostic prediction, and its definition, are only part of the
 problem of performing prediction based maintenance.  Because
 prognostic predictions are stochastic, and because there exist many
-techniques for performing prognostics, PHM also depends on developing
-methods of evaluating the efficacy of prediction algorithms.  As
-mentioned in Lybeck et al's paper \cite{4161637} this is not a trivial
-task.  In this paper, one of the first to provide a general approach
-to evaluating prognostics, Lybeck studys a system which monitors the
+techniques for performing prognostics, PHM also depends on methods of
+evaluating the efficacy of prediction algorithms.  As mentioned in
+Lybeck et al's paper \cite{4161637} this is not a trivial task.  In
+this paper, one of the first to provide a general approach to
+evaluating prognostics, Lybeck studys a system which monitors the
 vibration of a ball bearing system.  The approach Lybeck proposes is
 to evaluate a prognostic algorithm by observing the predicted RUL over
 several time steps and comparing it to the actual RUL for a real
@@ -260,7 +260,7 @@ the accuracy of the prognostic prediction is to measure the Gaussian
 noise relative to actual observed failures.
 
 Measuring the Gaussian noise of the predictor is, of course, a very
-course measurement for the prognostic system.  Such a measure can tell
+coarse measurement for the prognostic system.  Such a measure can tell
 whether a prediction system is working, but it cannot determine which
 parts contribute to the error rate.  A more refined approach, which is
 proposed by Zili and Li in \cite{5413560}, allows for a multi-part
@@ -281,7 +281,7 @@ requirements which must be met and then provide a quantified approach
 of how to analyze these requirements.  For state supervision, they
 propose to monitor the rate at which the system is able to determine
 its state.  For fault diagnosis, the system is judged according to the
-false alarm rate and the false positive rate.  That is, the system 
+false alarm rate and the false positive rate.  That is, the system
 metrics are the percentage of false alarms and the percentage of
 missed faults.  Fault prewarning is measured in a similar fashion,
 using the percentage of predicted faults which do not occur and the
