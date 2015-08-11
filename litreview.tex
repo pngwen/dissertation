@@ -42,7 +42,7 @@ sets of controllers to continue its mission in a damaged state, or it
 will use controllers that allow it degrade and cease functioning in a
 way which causes no damage to other parts of its environment.  In
 either case, the current state of the art seems to be to respond to
-faults once they have occured. The present work will explore the
+faults once they have occurred. The present work will explore the
 problem of robot failure from a different perspective. This approach
 can be readily summarized in the form of a question.  Instead of
 determining a course of action in the wake of an already experienced
@@ -58,7 +58,7 @@ fields:
 \end{itemize}
 The rest of this chapter explores background work in these related
 fields.  First, there is an introduction to the field of prognostics.
-Next, a review is made of some of the more common tecniques in robust
+Next, a review is made of some of the more common techniques in robust
 robot control.  Finally, we end with an exploration of the task to
 which this work will be applied.
 
@@ -66,7 +66,7 @@ The task selected for this exploration of control is bipedal walking.
 The reason for this is that bipedal walking is somewhat unique in that
 simple mechanical redundancy would be rather difficult to achieve.
 Without going into too much detail at this stage, it will suffice to
-say that the depenancy chain of a leg is highly interdependant, and
+say that the dependency chain of a leg is highly interdependent, and
 when only two legs are present this exacerbates the issue.  The goal
 of this last section will be to give an overview of how bipedal
 walking can be achieved, and introduce the core ideas about how this
@@ -223,7 +223,7 @@ prognostic systems have emerged, as is outlined in Hall et al's
 \cite{6024332}.  These essential steps are:
 \begin{enumerate}
   \item Collect Sensor Data.
-  \item Denoising and Data Characterization
+  \item De-noising and Data Characterization
   \item Extract features from raw data.
   \item Use extracted features to build a model
   \item use model(S) to perform PHM analysis.
@@ -249,7 +249,7 @@ techniques for performing prognostics, PHM also depends on methods of
 evaluating the efficacy of prediction algorithms.  As mentioned in
 Lybeck et al's paper \cite{4161637} this is not a trivial task.  In
 this paper, one of the first to provide a general approach to
-evaluating prognostics, Lybeck studys a system which monitors the
+evaluating prognostics, Lybeck studies a system which monitors the
 vibration of a ball bearing system.  The approach Lybeck proposes is
 to evaluate a prognostic algorithm by observing the predicted RUL over
 several time steps and comparing it to the actual RUL for a real
@@ -259,7 +259,7 @@ as a mean and standard deviation.  Thus Lybeck's criteria for judging
 the accuracy of the prognostic prediction is to measure the Gaussian
 noise relative to actual observed failures.
 
-Measuring the Gaussian noise of the predictor is, of course, a very
+Measuring the Gaussian noise of the predictor is a very
 coarse measurement for the prognostic system.  Such a measure can tell
 whether a prediction system is working, but it cannot determine which
 parts contribute to the error rate.  A more refined approach, which is
@@ -336,7 +336,7 @@ However, once discovered, a good model can create very accurate
 predictions of RUL.
 
 Model based systems in the literature can be further classified into
-two subcategories.  The first, and more traditional of the two, are
+two sub-categories.  The first, and more traditional of the two, are
 the physical models.  A physical model is created by a domain expert
 to represent some known and quantifiable physical aspect of the
 system. The second category is comprised of the statistical model.
@@ -532,37 +532,94 @@ however, they have been shown to overcome limitations in incomplete
 physical models and the inherent problems of data driven techniques.
 
 \subsection{Handling Uncertainty}
+One of the main challenges in using prognostic data within the control
+loop is uncertainty.  Projection into the future necessarily carries
+uncertainty.  Traditional approaches to prognostics deal with the
+uncertainty by including operators in the loop, or by converging on
+solutions over time. As has been shown in the work of Orchard et al.,
+(~\cite{orchard2005}, and ~\cite{4711433}), particle filtering works
+well to both estimate RUL and RUL uncertainty.
+
+In Orchard's technique, the feature space in which the particles move
+represents the status of the system being monitored.  One or more
+dimensions within this space represents an estimate of damage.  Sensor
+input is used to weight each particle according to the system model.
+This model can either be supplied by a physical model or it can be
+learned by whatever technique is appropriate to the system.  Standard
+particle filtering techniques are then used to compute the current
+status of the system. A measure of the uncertainty of the system state
+naturally follows from the confidence calculations within the PF
+model.
+
+To estimate RUL, Orchard uses a novel technique to compute the
+posterior probability of failure at each timestep in the future.
+System failure can be represented in a wide variety of ways, but the
+techniques tried experimentally in Orchard's papers relies on
+threshold values, from which the system cannot recover.  That is,
+there is a set of extremes within the damage dimensions which indicate
+where failure occurs. In this formulation, we observe the posterior
+probability: 
+\[
+P(X_t | Y_{1:t})
+\]
+Where $X_t$ is the estimated multi-dimensional system state at time
+$t$ and $Y_{1:t}$ is the history of sensor leading to time $t$.
+Of course, this probability is a direct result of the PF process.  The
+prognostic projection which Orchard uses is solved generally by the
+integral:
+\[
+  \hat{P}(X_{t+k} | Y_{1:t}) = \int P(X_i | Y_{1:t}) 
+  \displaystyle\prod_{j=t+1}^{t+p} P(X_j | X_{j-1})dX_{t:t+p-1}
+\]
+Of course, this integral is difficult to compute in real situations,
+especially given that it necessitates a PDF for the degradation
+process (as presented in the posterior probability in the product).
+In practice, Orchard recommends either a discrete differential
+estimate or the use of kernel functions to estimate the projected
+posterior probability of the system state.
+
+This estimation carries with it confidence estimates from the PF
+process as well as the confidence interval of the projected
+probability.  Orchard's work applies this technique to a gearbox 
+vibration problem and shows that it converges to a PDF with a high
+confidence interval well in advance of the actual failure, even when
+using a small number of particles \cite{4711433}.  
 
 \section{Robust Robot Controllers}
 \subsection{Traditional Approach}
-\subsection{Self Modelling Approach}
+TODO: Summarize some of the well known papers on this.  Generally,
+these fall into two categories, which are redundant hardware, and
+predefined fault responses.  (Like in Hannibal).
+
 \subsection{Self-Healing Systems}
 
+
 \section{Bipedal Walking}
-\subsection{Dependency Chains}
-\subsection{Inverted Pendulum Model}
-\subsection{Parameterized Walking}
+TODO: Pending selection of my gate generation system.  It will use the
+inverted pendulum method, but the actual parameter scheme will depend
+on how the data turns out.
 
 \section{Future Work}
-With all of the techniques presented here, one common thread can be found.
-Each of these systems predict, at a minimum, the remaining useful life of an
-observed system.  Some are capable of producing anomaly detection and an
-estimation of damage/health, but not all of them are.  Also, few novel
-approaches to prediction exist.  Most of these systems are a combination of
-classification and regression.
+With all of the techniques presented here, one common thread can be
+found.  Each of these systems predict, at a minimum, the remaining
+useful life of an observed system.  Some are capable of producing
+anomaly detection and an estimation of damage/health, but not all of
+them are.  Also, few novel approaches to prediction exist.  Most of
+these systems are a combination of classification and regression.
+With the latest advance being the introduction of particle filtering
+techniques to predict future damage.
 
-The work presented in this dissertation aims, in part, to address this.
-Presented here is a framework which can be applied to produce any of the above
-mentioned prognostic schemes, but does so in a way which facilitates fusion of
-information and the estimation of anomalies, health, and remaining useful life
-of the observed system.  
+The work presented here will included an online learning model for the
+PF environment, which will be generalizeable.  This will be applied to
+the application of bipedal walking, allowing a robot to determine when
+it is likely to lose the ability to walk.
 
-The work presented here also includes the use of this framework to perform
-adaptive control of a system in order to extend its remaining useful life.  The
-properties of the generalized framework will be necessary in order to
-accomplish this task as it will provide a method for determining not only the
-present health of the system, but the effects of control modification on the
-system.  
+The work presented here also includes the use of this framework to
+perform adaptive control of a system in order to extend its remaining
+useful life.  The properties of the generalized framework will be
+necessary in order to accomplish this task as it will provide a method
+for determining not only the present health of the system, but the
+effects of control modification on the system.  
 
 
 \section{Bibliography}
