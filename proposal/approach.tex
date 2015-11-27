@@ -1,1 +1,40 @@
 \section{Proposed Approach}
+The basic approach to the proposed problem is to use a combination of
+Particle Filter based prognostics and a physical model of the system
+under observation.  This is an extension of Marcos Orchard's approach
+to PF based prognostics.  (See the related work section for details of
+Orchard's existing body of work.)
+
+In addition to the prognostic step, the present proposal include
+a method by which prognostics can be applied in the control loop.
+There are two main goals present here.  First, there is low level
+control considerations where control parameters are modified in
+response to predicted future state of the system.  The secondary is
+a high level planning considerations wherein mission parameters are
+modified in response to predicted future loss of system capabilities.
+
+In the case of low level control modification, the objective is to
+extend the remaining useful life of the system and preserve all of its
+capabilities for as long as possible.  In fact there may be situations
+in which control reconfiguration can completely avert an impending
+predicted fault.  This objective is, of course, not always achievable,
+and some system faults may not be avoidable.  In these circumstances,
+low level control can still be modified in such a way to extend the
+time before a loss of capabilities occurs.
+
+Given that some loss of capabilities is unavoidable, there still
+exists a need to replan tasks so as to maximize mission utility.  This
+is where the high level replanning system comes into play.  In this
+part of the system, prognostic information about impending failures is
+used to redefine mission constraints.  
+
+The key cotributions the proposed work will provide are:
+\begin{itemize}
+\item A novel control scheme using prognostic data in the control
+loop.
+\item A novel prognostic model utilizing both particle filters and
+physics simulation.
+\item A novel approach to future capabilities estimation.
+\item A novel mission planning scheme using future capabilities
+estimation.
+\end{itemize}
