@@ -1,0 +1,78 @@
+%! PostScript set of library objects for XCircuit
+%  Version: 3.8
+%  Library name is: (user)
+%  Author:  <pngwen@tomato>
+%
+
+
+% XCircuitLib library objects
+/::ATmega328 {
+begingate
+(1  RST) {/Courier cf} 2 16 0 0.750 -256 200 label
+(2  D0 \(RX\)) {/Courier cf} 2 16 0 0.750 -256 168 label
+(3  D1 \(TX\)) {/Courier cf} 2 16 0 0.750 -256 136 label
+(4  D2) {/Courier cf} 2 16 0 0.750 -256 104 label
+(5  D3 ~) {/Courier cf} 2 16 0 0.750 -256 72 label
+(6  D4) {/Courier cf} 2 16 0 0.750 -256 40 label
+(7  +) {/Courier cf} 2 16 0 0.750 -256 8 label
+(8  -) {/Courier cf} 2 16 0 0.750 -256 -24 label
+(9  CLK) {/Courier cf} 2 16 0 0.750 -256 -56 label
+(10 CLK) {/Courier cf} 2 16 0 0.750 -256 -88 label
+(11 D5 ~) {/Courier cf} 2 16 0 0.750 -256 -120 label
+(12 D6 ~) {/Courier cf} 2 16 0 0.750 -256 -152 label
+(13 D7) {/Courier cf} 2 16 0 0.750 -256 -184 label
+(14 B0) {/Courier cf} 2 16 0 0.750 -256 -216 label
+(\(SCL\) C5 28) {/Courier cf} 2 19 0 0.750 256 200 label
+(\(SDA\) C4 27) {/Courier cf} 2 19 0 0.750 256 168 label
+(C3 26) {/Courier cf} 2 19 0 0.750 256 136 label
+(C2 25) {/Courier cf} 2 19 0 0.750 256 104 label
+(C1 24) {/Courier cf} 2 19 0 0.750 256 72 label
+(C0 23) {/Courier cf} 2 19 0 0.750 256 40 label
+(- 22) {/Courier cf} 2 19 0 0.750 256 8 label
+(ARef 21) {/Courier cf} 2 19 0 0.750 256 -24 label
+(+ 20) {/Courier cf} 2 19 0 0.750 256 -56 label
+(\(SCK\) B5 19) {/Courier cf} 2 19 0 0.750 256 -88 label
+(\(MISO\) B4 18) {/Courier cf} 2 19 0 0.750 256 -120 label
+(\(MOSI\)~ B3 17) {/Courier cf} 2 19 0 0.750 256 -152 label
+(~ B2 16) {/Courier cf} 2 19 0 0.750 256 -184 label
+(~ B1 15) {/Courier cf} 2 19 0 0.750 256 -216 label
+(ATmega328) {/Times-Roman 1.500 cf} 2 16 90 1.000 -40 160 label
+0 1.000 -272 240 -272 -240 272 -240 272 240 4 polygon
+endgate
+} def
+
+/::L293D {
+begingate
+(1  1,2 EN) {/Courier cf} 2 16 0 0.750 -192 104 label
+(2  1A) {/Courier cf} 2 16 0 0.750 -192 72 label
+(3  1Y) {/Courier cf} 2 16 0 0.750 -192 40 label
+(4  GND) {/Courier cf} 2 16 0 0.750 -192 8 label
+(5  GND) {/Courier cf} 2 16 0 0.750 -192 -24 label
+(6  2Y) {/Courier cf} 2 16 0 0.750 -192 -56 label
+(7  2A) {/Courier cf} 2 16 0 0.750 -192 -88 label
+(8  Vcc2) {/Courier cf} 2 16 0 0.750 -192 -120 label
+(Vcc1 16) {/Courier cf} 2 19 0 0.750 192 104 label
+(4A 15) {/Courier cf} 2 19 0 0.750 192 72 label
+(4Y 14) {/Courier cf} 2 19 0 0.750 192 40 label
+(GND 13) {/Courier cf} 2 19 0 0.750 192 8 label
+(GND 12) {/Courier cf} 2 19 0 0.750 192 -24 label
+(3Y 11) {/Courier cf} 2 19 0 0.750 192 -56 label
+(3A 10) {/Courier cf} 2 19 0 0.750 192 -88 label
+(3,4 EN  9) {/Times-Roman cf} 2 19 0 0.750 192 -120 label
+(L293D) {/Courier cf} 2 16 90 1.500 -8 88 label
+0 1.000 -208 144 -208 -144 208 -144 208 144 4 polygon
+endgate
+} def
+
+/::xtal {
+begingate
+0 1.000 -32 8 -32 -8 32 -8 32 8 4 polygon
+1 1.000 -32 -16 32 -16 2 polygon
+1 1.000 -32 16 32 16 2 polygon
+1 1.000 0 -16 0 -64 2 polygon
+1 1.000 0 16 0 64 2 polygon
+endgate
+} def
+
+
+% EndLib
