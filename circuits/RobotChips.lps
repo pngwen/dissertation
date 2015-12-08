@@ -1,7 +1,7 @@
 %! PostScript set of library objects for XCircuit
 %  Version: 3.8
 %  Library name is: (user)
-%  Author:  <pngwen@tomato>
+%  Author:  <pngwen@mcmater>
 %
 
 
@@ -9,8 +9,8 @@
 /::ATmega328 {
 begingate
 (1  RST) {/Courier cf} 2 16 0 0.750 -256 200 label
-(2  D0 \(RX\)) {/Courier cf} 2 16 0 0.750 -256 168 label
-(3  D1 \(TX\)) {/Courier cf} 2 16 0 0.750 -256 136 label
+(2  D0  \(RX\)) {/Courier cf} 2 16 0 0.750 -256 168 label
+(3  D1  \(TX\)) {/Courier cf} 2 16 0 0.750 -256 136 label
 (4  D2) {/Courier cf} 2 16 0 0.750 -256 104 label
 (5  D3 ~) {/Courier cf} 2 16 0 0.750 -256 72 label
 (6  D4) {/Courier cf} 2 16 0 0.750 -256 40 label
@@ -22,8 +22,8 @@ begingate
 (12 D6 ~) {/Courier cf} 2 16 0 0.750 -256 -152 label
 (13 D7) {/Courier cf} 2 16 0 0.750 -256 -184 label
 (14 B0) {/Courier cf} 2 16 0 0.750 -256 -216 label
-(\(SCL\) C5 28) {/Courier cf} 2 19 0 0.750 256 200 label
-(\(SDA\) C4 27) {/Courier cf} 2 19 0 0.750 256 168 label
+(\(SCL\)  C5 28) {/Courier cf} 2 19 0 0.750 256 200 label
+(\(SDA\)  C4 27) {/Courier cf} 2 19 0 0.750 256 168 label
 (C3 26) {/Courier cf} 2 19 0 0.750 256 136 label
 (C2 25) {/Courier cf} 2 19 0 0.750 256 104 label
 (C1 24) {/Courier cf} 2 19 0 0.750 256 72 label
@@ -31,8 +31,8 @@ begingate
 (- 22) {/Courier cf} 2 19 0 0.750 256 8 label
 (ARef 21) {/Courier cf} 2 19 0 0.750 256 -24 label
 (+ 20) {/Courier cf} 2 19 0 0.750 256 -56 label
-(\(SCK\) B5 19) {/Courier cf} 2 19 0 0.750 256 -88 label
-(\(MISO\) B4 18) {/Courier cf} 2 19 0 0.750 256 -120 label
+(\(SCK\)  B5 19) {/Courier cf} 2 19 0 0.750 256 -88 label
+(\(MISO\)  B4 18) {/Courier cf} 2 19 0 0.750 256 -120 label
 (\(MOSI\)~ B3 17) {/Courier cf} 2 19 0 0.750 256 -152 label
 (~ B2 16) {/Courier cf} 2 19 0 0.750 256 -184 label
 (~ B1 15) {/Courier cf} 2 19 0 0.750 256 -216 label
