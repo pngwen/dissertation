@@ -1,0 +1,305 @@
+\documentclass[12pt]{article}
+\title{Notes on Approach}
+\author{Robert Lowe}
+\date{}
+\usepackage{cite}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\begin{document}
+\maketitle
+
+\section{Overview}
+The proposed approach is based on three main components.
+
+\begin{itemize}
+\item A Physics-Based model of the system.
+\item A Particle Filter
+\item A series of functions which model progression of the physics
+  model.
+\end{itemize}
+
+\subsection{Physics Model}
+The first thing to create is the physics model of the system.  This
+will consist of equations defining each component to monitored.  For
+example, an electric motor can be modeled by application of Kirchoff's
+laws (and a little bit of standard physics) as:
+
+\[
+\dfrac{\delta i}{\delta t} = \dfrac{1}{l} ( v_s - r * i_s - k_m \omega)
+\]
+
+\[
+\dfrac{\delta \omega}{\delta t} = \dfrac{1}{j} ( -f \omega + k_m i_s
+- m_l)
+\]
+
+\[
+\dfrac{\delta \alpha}{\delta t} = \omega
+\]
+
+The constant parameters to this model are:
+\begin{itemize}
+\item $f$ Motor Friction
+\item $r$ Motor Resistance
+\item $l$ Motor Inductance
+\item $k_m$ Motor Constant
+\item $j$ Total Inertial Load
+\end{itemize}
+
+The variable parameters of the model are:
+\begin{itemize}
+\item $v_s$ Supply Voltage
+\item $m_l$ Loading torque.
+\end{itemize}
+
+The supply voltage is the main control mechanism of this model, as is
+normally the case with inductive electric motors.  Loading torque is
+based on the current status of the load under motor actuation, and is
+not commanded but is rather an observed state in the model.
+
+Other parts of the system (Wheels with their moment of inertia,
+chassis, limbs, etc) have similar models with similar properties.
+
+The end result is that most of the system is defined by a series of
+equations, consisting primarily of constants.
+
+The main idea is that a healthy system is a system which behaves
+according its own nominal state.  As the system begins to break, these
+values will change.  More specifically degradation processes will
+cause the model to become invalid.  The standard approach to prognosis
+is to observe the residual values of these values in order to
+determine the health of the system, however in most real-world
+situations these parameters are difficult to observe.
+
+We could look at the system output, and the see how it deviates from
+the model's predictions, however because there are multiple parameters
+that can be affected, estimating which is slipping by direct
+calculation is not necessarily possible.
+
+The physical model will readily lends itself to estimation of total
+damage, and with application of a method of computing which parameters
+have most recently changed, we can estimate both RUL and capability
+loss within the system.
+
+\subsection{Particle Filter}
+The key aspect to the proposed approach is to be able to estimate,
+with some known degree of uncertainty, what the current physical
+parameters are.  This will allow the system to determine how faults
+are progressing, and it will also isolate the parameters that are most
+likely changing.  Because the number of physical parameters will
+vastly outnumber the number of observable system outputs, we will have
+to rely on a stochastic method for system state information.
+
+This proposal follows the approach proposed by Marcos Orchard
+\cite{orchard} which has been shown to work well in other
+applications.  This approach uses a particle filter to estimate the
+current state of the system.  The present work differs from Orchard in
+that Orchard's approach used a model of known system failures as the
+search space for the system.  Instead, we use the physical parameters
+as our search space.  So if we have the system outputs $\hat{S}$, the
+model constants $\hat{M_k}$, the model variables $\hat{M_v}$ we
+compute the estimated state of the system $\hat{M_k'}$ based on a
+particle filter.
+
+The particle filter is $d$ dimensional where $d=|\hat{M_k}|$.  Each
+dimension is a real number, making the entire search space
+$\mathbb{R}^d$, which is huge!  We assign particle weights based on
+the probability $P(\hat{M_k}'|\hat{M_v}, \hat{S})$.  The particle
+filter will use sequential importance resampling. Initial starting
+positions of the particles will be mostly centered around the
+theoretical norms for the system.
+
+Each parameter will have a degree of uncertainty, the probabilities
+for the particles are computed as an average of probabilities over
+each dimension.  (A reasonable assumption given the natures of the
+parameters represented along each dimension).
+
+Uncertainty about the observed parameters in $\hat{S}$ are best
+expressed in the noise distribution of the sensors that provide the
+data.  This, in turn, can be used to compute the noise that would be
+present in each parameters.  For initial testing, we will assume that
+these distributions are normal.  (They probably are.  Most things
+are; thank you Carl Friedrich Gauss!)
+
+Thus we can use particle filtering to compute the state of all the
+system variables, and we also get a measure for uncertainty of current
+state.
+
+Now, to use this for prognosis, we must extend the PF into future
+states.  To do this, we will employee the recursive technique for
+estimating the future state of the system which is outlined by Orchard
+\cite{orchard}. Orchard's method uses a functional model of the
+fault's progression, or in the absence of such a model it uses a
+kernel function.  Neither of these approaches will work well in the
+present situation as we are not assuming a priori knowledge of the
+faults which may occur within the system.  Also, we need a fine
+grained estimation of future states, and there may be interactions
+among the parameters that would be difficult to describe in a kernel
+function. (That is, no suitable kernel would be readily apparent for
+most practical considerations.)  For the present work, we will need a
+more robust method of determining the progression of the system state.
+
+\subsection{Progression Modeling}
+The present work aims to augment control so as to prolong the useful
+life of a system, and possibly avert failure.  This goal contains the
+basic assumption that control inputs, $M_v$, has some effect on the
+progression towards failure.  This may not always be the case, but it
+is certainly reasonable to assume that if control inputs can have no
+impact on a failure, then there is no way to avert that failure.
+
+So, the function that we need is to determine what the change in state
+for each parameter will be a function of the control input and the
+current state.  Thus:
+
+\[
+f(\hat{M_v}, \hat{M_k}) = \dfrac{\delta \hat{M_k}}{\delta t}
+\]
+
+So then as we estimate the progression of the state, we can compute
+the future value of $\hat{M_k}$ quite simply.  At each discrete
+time step:
+
+\[
+\hat{M'_k} = \hat{M_k} + f(\hat{M_v}, \hat{M_k})
+\]
+
+This function $f$ must be learned through some mechanism.  The current
+approach will try the standard methods of estimating this, though I
+have a strong hunch that an ANN with backwards propagation should do
+the trick.  We just need some way to estimate a multi-dimensional
+real-valued function.  There are many standard approaches that will
+likely work here.  I'll try a few and see what comes out.
+
+\section{Prognostic Estimation and Controller Augmentation}
+As we estimate each future state of the system, we can estimate both
+uncertainty and values of each parameter.  If the parameters stay
+within some known thresholds, then we predict no failure as imminent.
+However, if the parameters vary toward some boundary then we can
+predict which time step this happens at, and we also get the requisite
+uncertainty from the estimation method we are using.  A more subtle
+kind of failure is one where the system is still partially operable,
+but where some capabilities may be lost.
+
+Past work is basically centered around
+mission replanning due to loss of capabilities \cite{balaban}.  This is still
+possible under the current system in that we can simulate the system
+using the physical model we have built.  By providing a trial run for
+the system we can determine what capabilities it still has, and
+augment the mission accordingly.  
+
+The interesting application is in finding control strategies which
+will allow the system to keep operating and complete all of its
+mission objectives.  This sort of fine grained corrective action is
+absent in the literature.  However, there is an applicable approach to
+doing this with an already damaged machine.  The approach we will use
+here is the one outlined in \cite{koos}.  This is an approach where a
+damaged machine is able to try different control strategies via
+self-simulation, and then it follows the controller which yields the
+highest utility.
+
+The novel application here is that we are doing this with a machine
+that is not yet broken.  Our prognostic method provides us with an
+estimation of a future fault.  The model also provides a method for
+simulating the fault progression.  We can simulate the system using
+the candidate controllers (either pre-derived or randomly generated.
+Possibly some GA action, which is really just random but sounds cooler
+in a paper), and then we can also simulate the progression of the
+fault under each controller because we have also learned the fault
+progression function $f$ from observed system states.
+
+We just use each controller's output as the $\hat{M_v}$ parameter to
+the system outlined here, which lets us see what damage each
+controller would do.
+
+All of our predictions come with uncertainty as shown in the equations
+I have yet to fully derive.  It is there though, {\bf TODO}.
+
+As time progresses, and as we near the point of failure, we should
+have enough convergence to discover a good controller.  Better still,
+we may force the system out of inevitable failure and instead stay
+within some healthy boundaries.  
+
+There may even be some sort of continuous controller adjustment which
+would work.  I really think GA or GP may work here, but I don't have
+enough of the code written to try this.
+
+\section{Testing}
+Testing this prognostic model with corrective action will be done in
+two phases.  First, it will be done in simulation.  As self-simulation
+is a large part of this, there will already be simulation software
+created.
+
+To prevent over-fitting, we will use a very fine grained simulator to
+be our ``ground-truth'' simulation, and the self-simulations will
+run at a coarser time interval.  Thus the predictive system will have
+a greater level of uncertainty than the system simulation.
+
+Failures will be introduced by augmentation of parameters.  These will
+be conducted in a way that more or less matches observed physical
+changes due to these faults.
+
+Once simulation shows promising results, the tests will be conducted
+on actual hardware.  Because these tests will be destructive in
+nature, relatively few of these tests will be conducted.
+
+In either case, the hardware will be used to validate the physical
+models prior to simulation testing.  This is to ensure that the
+simulation models are sound models for the actual systems, and to
+ensure that the faults introduced to the simulation will have
+realistic patterns.
+
+\subsection{Motor Model}
+The motor model has been given above, we will also use the motor
+heating model outlined in \cite{balaban}.  In simulation we will try
+seeded fault test which augment friction and inductance.  In actual
+practice, varying inductance will be difficult.  The first real-world
+tests to be conducted will be with increasing motor friction.
+
+To increase motor friction, materials will be introduced into the
+motor shaft to provide greater drag to the system (like a string being
+fed into it.)  Also, destructive modification to gearboxes (baking the
+gears, cutting off teeth, removing grease, etc.) will also be used to
+cause motor friction to vary.  Inductance variation is a lot harder in
+that changes in induction are generally indicative of burning motor
+coils.  It can, however, be simulated by varying capacitance across
+the motor leads.  I'll dream up some hardware fault simulator to do
+this.
+
+
+\subsection{Battery Model}
+Another model to be used is the battery model.  We can easily model
+current output and remaining capacity using the standard methods.  In
+simulation, we will create shorted circuits to provide higher loads.
+This will be duplicated in actual practice, moving the faulty circuit
+to various subsystems.
+
+\subsection{Differential Drive}
+The first robot to try these tests will be a differential drive
+rover.  The rover will consist of two drive wheels and one caster.
+The drive wheels have optical encoders, and each has an inductive
+motor.  They are controlled via an atmega 328 microcontroller for low
+level control and a Linux raspberry pi for a high level logic
+control. 
+
+\subsection{Humanoid}
+The humanoid robot will be a bipedal walker consisting of servo motors
+at each joint.  These servos will be simulated, and will have the same
+range of tests run on them.  Humanoid control is the more interesting problem.
+
+\begin{thebibliography}{9}
+\bibitem{orchard} Orchard, Marcos \emph{A Particle Filtering Framework
+  for Failure Prognosis}, Proceedings of WTC2005, 2005
+
+\bibitem{balaban} Balaban, Edward et. al \emph{Development of a Mobile
+  Robot Test Platform and Methods for Validation of
+  Prognostics-Enabled Decision Making Algorithms}, International
+  Journal of Prognostics and Health Management.  2013 issue 6
+
+\bibitem{koos} Koos, Sylvain Koos et. al \emph{Fast Damage Recovery in
+  Robotics with the T-Resilience Algorithm}
+  
+\end{thebibliography}
+
+\end{document}

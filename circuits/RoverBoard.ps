@@ -1,7 +1,7 @@
 %!PS-Adobe-3.0
 %%Title: RoverBoard.ps
 %%Creator: XCircuit v3.8 rev78
-%%CreationDate: Tue Dec  8 13:17:53 2015
+%%CreationDate: Sun Dec 13 22:12:10 2015
 %%Pages: 1
 %%BoundingBox: 0 0 612 792
 %%DocumentNeededResources: font Helvetica Times-Roman Courier Symbol 
@@ -302,6 +302,20 @@ begingate
 endgate
 } def
 
+/analog::resistor {
+begingate
+1 1.000 0 64 0 36 2 polygon
+1 1.000 0 -64 0 -36 2 polygon
+1 1.000 0 -36 14 -30 -14 -18 14 -6 -14 6 14 18 -14 30 0 36 8 polygon
+1.000 0.000 0.000 scb
+(r.1) {/Times-Roman cf} 2 9 0 1.000 0 64 pinlabel
+(r.2) {/Times-Roman cf} 2 13 0 1.000 0 -64 pinlabel
+0.180 0.545 0.341 scb
+(spice:R%i %pr.1 %pr.2 1.0K) {/Times-Roman cf} 2 0 0 1.000 -208 -160 infolabel
+(sim:r %pr.1 %pr.2) {/Times-Roman cf} 2 0 0 1.000 -208 -208 infolabel
+endgate
+} def
+
 
 %%EndSetup
 
@@ -331,10 +345,10 @@ endgate
 1.000 0 -912 32 generic::dot
 1.000 0 -688 160 generic::dot
 1.000 0 -688 32 generic::dot
--1.000 0 -624 416 generic::circle
+-1.000 0 -688 416 generic::circle
 1 1.000 -384 416 -624 416 2 polygon
--1.000 0 -624 384 generic::circle
-1 1.000 -624 384 -384 384 2 polygon
+-1.000 0 -688 384 generic::circle
+1 1.000 -464 384 -384 384 2 polygon
 1.000 0 672 144 ::L293D
 1 1.000 464 256 432 256 432 576 3 polygon
 1 1.000 880 256 912 256 912 576 3 polygon
@@ -372,6 +386,21 @@ endgate
 1.000 90 928 -176 generic::circle
 1.000 90 960 -176 generic::circle
 (Rover Controller) {/Helvetica cf} 2 16 0 1.500 512 -720 label
+(0.22 pF) {/Helvetica cf} 2 16 0 0.500 -816 200 label
+(0.22 pF) {/Helvetica cf} 2 16 0 0.500 -816 -24 label
+(16MHz) {/Helvetica cf} 2 16 270 0.500 -728 64 label
+1.000 90 -528 384 analog::resistor
+1 1.000 -592 256 -592 -480 2 polygon
+1 1.000 -688 384 -592 384 2 polygon
+1 1.000 -688 416 -624 416 2 polygon
+(GPIO RX) {/Helvetica cf} 2 19 0 0.500 -720 384 label
+(GPIO TX) {/Helvetica cf} 2 19 0 0.500 -720 416 label
+(1.6 k) {/Helvetica cf} 2 16 0 0.500 -544 352 label
+(3.3 k) {/Helvetica cf} 2 144 270 0.500 -560 296 label
+1.000 0 -592 384 generic::dot
+1.000 0 -592 320 analog::resistor
+1.000 0 -592 -480 generic::dot
+1.000 0 -912 576 generic::dot
 pgsave restore showpage
 
 %%Trailer
