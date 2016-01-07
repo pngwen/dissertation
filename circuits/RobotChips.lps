@@ -1,9 +1,10 @@
 %! PostScript set of library objects for XCircuit
 %  Version: 3.8
 %  Library name is: (user)
-%  Author:  <pngwen@mcmater>
+%  Author:  <pngwen@tomato>
 %
 
+% Depend Momentary Pushbutton generic::circle
 
 % XCircuitLib library objects
 /::ATmega328 {
@@ -41,6 +42,16 @@ begingate
 endgate
 } def
 
+/::xtal {
+begingate
+0 1.000 -32 8 -32 -8 32 -8 32 8 4 polygon
+1 1.000 -32 -16 32 -16 2 polygon
+1 1.000 -32 16 32 16 2 polygon
+1 1.000 0 -16 0 -64 2 polygon
+1 1.000 0 16 0 64 2 polygon
+endgate
+} def
+
 /::L293D {
 begingate
 (1  1,2 EN) {/Courier cf} 2 16 0 0.750 -192 104 label
@@ -64,13 +75,23 @@ begingate
 endgate
 } def
 
-/::xtal {
+/generic::circle {
+% trivial
 begingate
-0 1.000 -32 8 -32 -8 32 -8 32 8 4 polygon
-1 1.000 -32 -16 32 -16 2 polygon
-1 1.000 -32 16 32 16 2 polygon
-1 1.000 0 -16 0 -64 2 polygon
-1 1.000 0 16 0 64 2 polygon
+1 1.000 16 0 6 0.000 360.000 xcarc
+1 1.000 0 0 10 0 2 polygon
+1.000 0.000 0.000 scb
+(out) {/Times-Roman cf} 2 4 0 1.000 16 0 pinlabel
+(out) {/Times-Roman cf} 2 7 0 1.000 0 0 pinlabel
+endgate
+} def
+
+/::Momentary\040Pushbutton {
+begingate
+1.000 0 -40 -8 generic::circle
+1.000 180 48 -8 generic::circle
+1 1.000 -24 8 32 8 2 polygon
+1 1.000 -8 8 -8 16 16 16 16 8 4 polygon
 endgate
 } def
 

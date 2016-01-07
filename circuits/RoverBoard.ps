@@ -1,7 +1,7 @@
 %!PS-Adobe-3.0
 %%Title: RoverBoard.ps
 %%Creator: XCircuit v3.8 rev78
-%%CreationDate: Sun Dec 13 22:12:10 2015
+%%CreationDate: Thu Jan  7 16:14:10 2016
 %%Pages: 1
 %%BoundingBox: 0 0 612 792
 %%DocumentNeededResources: font Helvetica Times-Roman Courier Symbol 
@@ -316,6 +316,110 @@ begingate
 endgate
 } def
 
+/generic::arrowhead {
+% nonetwork
+begingate
+8 -28 beginpath
+3 -18 3 -15 0 0 curveto
+-3 -15 -3 -18 -8 -28 curveto
+-2 -26 2 -26 8 -28 curveto
+249 
+1.000 endpath
+endgate
+} def
+
+/analog::switch {
+% trivial
+begingate
+1 1.300 32 32 2 -43 2 polygon
+1 0.600 0 -48 57 49.000 90.000 xcarc
+-1.000 /sv 90 0 -64 generic::circle
+0.600 /sv 270 -12 8 generic::arrowhead
+1.000 90 0 48 generic::circle
+1.000 0.000 0.000 scb
+(sw.1) {/Times-Roman cf} 2 9 0 1.000 0 48 pinlabel
+(sw.2) {/Times-Roman cf} 2 13 0 1.000 0 -64 pinlabel
+endgate
+} def
+
+/analog::pnp {
+begingate
+1 1.000 -48 0 -64 0 2 polygon
+1 1.000 -48 48 -48 -48 2 polygon
+1 1.000 0 48 -48 22 2 polygon
+1 1.000 0 48 0 64 2 polygon
+1 1.000 0 -48 -48 -22 2 polygon
+1 1.000 0 -48 0 -64 2 polygon
+1.000 240 -48 22 generic::arrowhead
+1.000 0.000 0.000 scb
+(C) {/Times-Roman cf} 2 13 0 1.000 0 -64 pinlabel
+(B) {/Times-Roman cf} 2 7 0 1.000 -64 0 pinlabel
+(E) {/Times-Roman cf} 2 9 0 1.000 0 64 pinlabel
+0.180 0.545 0.341 scb
+(spice:Q%i %pC %pB %pE pnp) {/Times-Roman cf} 2 4 0 1.000 -244 -139 infolabel
+endgate
+} def
+
+/analog::npn {
+begingate
+1 1.000 -48 0 -64 0 2 polygon
+1 1.000 -48 48 -48 -48 2 polygon
+1 1.000 0 48 -48 22 2 polygon
+1 1.000 0 48 0 64 2 polygon
+1 1.000 0 -48 -48 -22 2 polygon
+1 1.000 0 -48 0 -64 2 polygon
+1.000 120 0 -48 generic::arrowhead
+1.000 0.000 0.000 scb
+(C) {/Times-Roman cf} 2 9 0 1.000 0 64 pinlabel
+(B) {/Times-Roman cf} 2 7 0 1.000 -64 0 pinlabel
+(E) {/Times-Roman cf} 2 13 0 1.000 0 -64 pinlabel
+0.180 0.545 0.341 scb
+(spice:Q%i %pC %pB %pE npn) {/Times-Roman cf} 2 4 0 1.000 -244 -139 infolabel
+(sim:b %pB %pE %pC) {/Times-Roman cf} 2 4 0 1.000 -244 -187 infolabel
+endgate
+} def
+
+/::Momentary\040Pushbutton {
+begingate
+1.000 0 -40 -8 generic::circle
+1.000 180 48 -8 generic::circle
+1 1.000 -24 8 32 8 2 polygon
+1 1.000 -8 8 -8 16 16 16 16 8 4 polygon
+endgate
+} def
+
+/analog::diode {
+begingate
+248 1.000 -18 -16 0 16 18 -16 3 polygon
+1 1.000 0 -48 0 -16 2 polygon
+1 1.000 0 48 0 16 2 polygon
+1 1.000 -18 16 18 16 2 polygon
+1.000 0.000 0.000 scb
+(d.m) {/Times-Roman cf} 2 9 0 1.000 0 48 pinlabel
+(d.p) {/Times-Roman cf} 2 13 0 1.000 0 -48 pinlabel
+endgate
+} def
+
+/generic::tap {
+% trivial
+<</@in (bus\(0:7\)) /@out (bus\(0\)) >> begingate
+496 1.000 0 8 16 0 0 -8 3 polygon
+1.000 0.000 0.000 scb
+mark @out {/Helvetica cf} ctmk 20 0 1.000 16 0 pinlabel
+mark @in {/Helvetica cf} ctmk 23 0 1.000 0 0 pinlabel
+endgate
+} def
+
+/::SingleLED {
+begingate
+1.000 90 0 -16 analog::diode
+1 1.000 -8 8 8 24 2 polygon
+1.000 315 8 24 generic::tap
+1 1.000 0 0 16 16 2 polygon
+1.000 315 16 16 generic::tap
+endgate
+} def
+
 
 %%EndSetup
 
@@ -323,13 +427,14 @@ endgate
 %%PageOrientation: Landscape
 %%PageBoundingBox: 0 0 612 792
 /pgsave save def bop
+% 32.00 8.00 gridspace
 90 rotate -18 -594 translate
 1.0000 inchscale
 2.6000 setlinewidth 1072 784 translate
 
 1.000 0 -112 240 ::ATmega328
 1.000 0 -912 608 digital::5V
-1.000 0 -912 -480 analog::gnd
+1.000 0 -912 -624 analog::gnd
 1 1.000 -912 576 -912 256 -384 256 3 polygon
 1 1.000 -912 -480 -912 224 -384 224 3 polygon
 1.000 90 -784 160 analog::capacitor
@@ -358,13 +463,11 @@ endgate
 1 1.000 880 32 912 32 2 polygon
 1 1.000 880 160 896 160 896 128 880 128 4 polygon
 1 1.000 464 160 448 160 448 128 464 128 4 polygon
-1 1.000 896 128 896 -480 -912 -480 3 polygon
-1 1.000 448 128 448 -480 2 polygon
+1 1.000 448 128 448 -336 2 polygon
 1.000 0 448 128 generic::dot
 1.000 0 432 256 generic::dot
 1.000 0 912 256 generic::dot
 1.000 0 896 128 generic::dot
-1.000 0 448 -480 generic::dot
 1.000 0 -912 -480 generic::dot
 1.000 0 432 576 generic::dot
 1 1.000 464 192 384 192 384 -176 3 polygon
@@ -374,7 +477,7 @@ endgate
 1 1.000 464 224 320 224 320 -64 -416 -64 -416 96 -384 96 6 polygon
 1 1.000 464 64 352 64 352 -96 -448 -96 -448 128 -384 128 6 polygon
 1 1.000 160 32 288 32 288 320 960 320 960 224 880 224 6 polygon
-1 1.000 880 64 976 64 976 352 256 352 256 64 160 64 6 polygon
+1 1.000 880 64 976 64 976 336 272 336 272 64 160 64 6 polygon
 1 1.000 880 96 928 96 928 -176 3 polygon
 1 1.000 960 -176 960 192 880 192 3 polygon
 (Left Motor +) {/Helvetica cf} 2 16 90 0.500 384 -208 label
@@ -395,12 +498,147 @@ endgate
 1 1.000 -688 416 -624 416 2 polygon
 (GPIO RX) {/Helvetica cf} 2 19 0 0.500 -720 384 label
 (GPIO TX) {/Helvetica cf} 2 19 0 0.500 -720 416 label
-(1.6 k) {/Helvetica cf} 2 16 0 0.500 -544 352 label
-(3.3 k) {/Helvetica cf} 2 144 270 0.500 -560 296 label
 1.000 0 -592 384 generic::dot
 1.000 0 -592 320 analog::resistor
 1.000 0 -592 -480 generic::dot
 1.000 0 -912 576 generic::dot
+1.000 0 896 -416 analog::switch
+1 1.000 -912 -480 896 -480 2 polygon
+1 1.000 896 -368 896 128 2 polygon
+1 1.000 448 -336 896 -336 2 polygon
+1.000 0 896 -336 generic::dot
+1.000 0 -480 -208 analog::pnp
+1.000 0 -304 -208 analog::resistor
+1 1.000 -304 -144 -400 -144 2 polygon
+1 1.000 -480 -144 -480 256 2 polygon
+1.000 0 -480 256 generic::dot
+1.000 0 -480 -144 generic::dot
+1.000 0 -304 -384 analog::npn
+1 1.000 -304 -272 -304 -320 2 polygon
+1.000 90 -400 -288 analog::capacitor
+1 1.000 -480 -144 -400 -144 2 polygon
+1 1.000 -480 -272 -480 -384 -368 -384 3 polygon
+1.000 0 -544 -384 analog::resistor
+1 1.000 -544 -320 -544 -208 2 polygon
+1 1.000 -544 -448 -544 -480 2 polygon
+1 1.000 -336 -288 -304 -288 2 polygon
+1 1.000 -464 -288 -544 -288 2 polygon
+1 1.000 -304 -448 -304 -480 2 polygon
+1.000 0 -544 -288 generic::dot
+1.000 0 -304 -288 generic::dot
+1.000 0 -544 -480 generic::dot
+1.000 0 -304 -480 generic::dot
+1.000 0 -912 -560 analog::switch
+1 1.000 -912 -512 -912 -480 2 polygon
+(F) {/Helvetica cf} (m) {/Symbol cf} (22 ) {/Helvetica cf} 6 16 0 0.500 -424 
+-336 label
+(W) {/Symbol cf} (22 ) {/Helvetica cf} 4 16 270 0.500 -272 -224 label
+(MMBT 3906) {/Helvetica cf} 2 16 270 0.500 -456 -264 label
+(MMBT 2222) {/Helvetica cf} 2 16 270 0.500 -272 -440 label
+(W) {/Symbol cf} (100 k) {/Helvetica cf} 4 16 270 0.500 -512 -416 label
+(Computer / Master) {/Helvetica cf} 2 16 360 0.500 -896 -608 label
+(Motor) {/Helvetica cf} 2 16 0 0.500 952 -416 label
+1.000 0 -176 544 generic::circle
+0 1.000 -168 568 -168 552 -152 552 -152 568 4 polygon
+1.000 0 -176 528 generic::circle
+1.000 180 -96 560 generic::circle
+1.000 180 -96 544 generic::circle
+1.000 180 -96 528 generic::circle
+(ISP6) {/Helvetica cf} 2 16 90 0.500 -144 560 label
+1 1.000 -168 560 -176 560 2 polygon
+1 1.000 160 96 224 96 224 544 -96 544 4 polygon
+1 1.000 -400 448 -400 528 -176 528 3 polygon
+1 1.000 160 160 208 160 208 496 -176 496 -176 544 5 polygon
+1.000 0 -400 448 generic::dot
+1 1.000 -96 560 -80 560 -80 608 -416 608 -416 256 5 polygon
+1 1.000 -432 224 -432 624 -64 624 -64 528 -96 528 5 polygon
+1.000 0 -416 256 generic::dot
+1.000 0 -432 224 generic::dot
+2 1.000 -576 -112 -576 -512 -256 -512 -256 -112 4 polygon
+(Load Oscillator) {/Helvetica cf} 2 16 0 0.500 -560 -528 label
+(Only used to keep the USB power supply awake) {/Helvetica cf} 2 16 0 0.500 
+-560 -560 label
+1 1.000 160 128 240 128 240 640 -176 640 -176 560 5 polygon
+1.000 90 496 544 analog::resistor
+1.000 90 496 448 analog::resistor
+(W) {/Symbol cf} (470 ) {/Helvetica cf} 4 16 0 0.500 464 512 label
+(W) {/Symbol cf} (10 k) {/Helvetica cf} 4 16 0 0.500 464 416 label
+1.000 0 432 544 generic::dot
+1.000 0 640 544 generic::circle
+1.000 0 640 448 generic::circle
+1.000 90 496 496 analog::resistor
+(W) {/Symbol cf} (470 ) {/Helvetica cf} 4 16 0 0.500 464 464 label
+1.000 0 432 496 generic::dot
+1.000 0 640 496 generic::circle
+1.000 90 496 400 analog::resistor
+(W) {/Symbol cf} (10 k) {/Helvetica cf} 4 16 0 0.500 464 368 label
+1.000 0 640 400 generic::circle
+1.000 0 432 448 generic::dot
+1.000 0 432 400 generic::dot
+(Left Encoder LED Anode) {/Helvetica cf} 2 16 0 0.500 672 536 label
+(Right Encoder LED Anode) {/Helvetica cf} 2 16 0 0.500 672 488 label
+(Left Encoder Collector) {/Helvetica cf} 2 16 0 0.500 672 440 label
+(Right Encoder Collector) {/Helvetica cf} 2 16 0 0.500 672 392 label
+1.000 0 584 448 generic::dot
+1.000 0 608 400 generic::dot
+1.000 180 848 -64 generic::circle
+1.000 180 848 -96 generic::circle
+1.000 180 848 -128 generic::circle
+1.000 180 848 -160 generic::circle
+1 1.000 848 -64 896 -64 2 polygon
+1 1.000 848 -96 896 -96 2 polygon
+1 1.000 848 -128 896 -128 2 polygon
+1 1.000 848 -160 896 -160 2 polygon
+(Left Encoder Cathode) {/Helvetica cf} 2 16 0 0.500 608 -72 label
+(Right Encoder Cathode) {/Helvetica cf} 2 16 0 0.500 608 -136 label
+(Left Encoder Emitter) {/Helvetica cf} 2 16 0 0.500 608 -104 label
+(Right Encoder Emitter) {/Helvetica cf} 2 16 0 0.500 608 -168 label
+1 1.000 496 -672 496 -512 1040 -512 3 polygon
+(Note: The encoders are Reflectance Sensors \(#H048W\)) {/Helvetica cf} 2 16 0 
+0.500 512 -536 label
+(These consist of an IR LED and an IR Transistor) {/Helvetica cf} 2 16 0 0.500 
+568 -560 label
+(are used to represent pin jumper connections.) {/Helvetica cf} 2 16 0 0.500 
+600 -592 label
+1.000 180 592 -584 generic::circle
+1 1.000 -384 448 -400 448 2 polygon
+1.000 90 -544 448 analog::resistor
+1 1.000 -480 448 -400 448 2 polygon
+1 1.000 -608 448 -608 576 2 polygon
+1.000 0 -608 576 generic::dot
+1.000 0 -544 520 ::Momentary\040Pushbutton
+1 1.000 -496 512 -480 512 -480 448 3 polygon
+1 1.000 -584 512 -640 512 -640 224 3 polygon
+1.000 0 -640 224 generic::dot
+1.000 0 -480 448 generic::dot
+(W) {/Symbol cf} (10 k) {/Helvetica cf} 4 16 0 0.500 -568 472 label
+1.000 0 896 -64 generic::dot
+1.000 0 896 -96 generic::dot
+1.000 0 896 -128 generic::dot
+1.000 0 896 -160 generic::dot
+(Reset) {/Helvetica cf} 2 16 0 0.500 -568 544 label
+-1.000 90 -768 592 generic::circle
+-1.000 270 -768 -496 generic::circle
+1 1.000 -768 -496 -768 -480 2 polygon
+1 1.000 -768 592 -768 576 2 polygon
+1.000 0 -768 -480 generic::dot
+1.000 0 -768 576 generic::dot
+(Raspberry Pi VCC) {/Helvetica cf} 2 16 0 0.500 -824 624 label
+(Raspberry Pi Gnd) {/Helvetica cf} 2 16 0 0.500 -840 -536 label
+1.000 90 -848 -216 ::SingleLED
+1.000 0 -864 -104 analog::resistor
+1 1.000 -864 -40 -864 256 2 polygon
+1 1.000 -864 -264 -864 -480 2 polygon
+(W) {/Symbol cf} (33 ) {/Helvetica cf} 4 16 270 0.500 -832 -128 label
+(W) {/Symbol cf} (1.6 k) {/Helvetica cf} 4 16 0 0.500 -560 352 label
+(W) {/Symbol cf} (3.3 k) {/Helvetica cf} 4 16 270 0.500 -560 288 label
+(red) {/Helvetica cf} 2 16 270 0.500 -800 -240 label
+1 1.000 560 544 640 544 2 polygon
+1 1.000 560 496 640 496 2 polygon
+1 1.000 560 448 640 448 2 polygon
+1 1.000 560 400 640 400 2 polygon
+1 1.000 584 456 584 664 -448 664 -448 352 -384 352 5 polygon
+1 1.000 -384 288 -456 288 -456 672 608 672 608 400 5 polygon
 pgsave restore showpage
 
 %%Trailer
