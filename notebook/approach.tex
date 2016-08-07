@@ -1,0 +1,127 @@
+\documentclass{article}
+\title{Approach Notes}
+\author{Robert Lowe}
+\usepackage{euscript}
+
+\begin{document}
+\maketitle
+
+\newcommand{\tens}[1]{\mathcal{#1}}
+\newcommand{\ntens}[1]{\hat{\tens{#1}}}
+
+\section{Brainstorming}
+We assume that all written documents are the result of two components, 
+the authors original thoughts $C$ and the set of thoughts from body of works 
+that the author has seen previously $L$.  So then the document's composition
+is something like this:
+
+\[
+  D = C \circ L
+\]
+
+Where $\circ$ is some composition operator over some tensor.  (We assume
+that $D$, $C$, and $L$ are in some vector space.)
+
+There is a recursive relationship here, where $L$ is fully made up of documents:
+
+\[
+  L = l_1 \circ l_2 \circ l_3 \circ \ldots \circ l_n
+\]
+
+Where $n$ is the number of documents in the literature set.
+Each of these are made up of the same sort of compositions:
+
+\[
+  l_i = C_i \circ L_i
+\]
+
+
+The literature set of $l_i$ is such that
+\[
+  L_i \subset L
+\]
+
+$L_i$ must, at a minimum, exclude all documents which were created after
+$l_i$, so there is a sort of temporal component in this.
+
+
+There's an abuse of notation here, but nonetheless, there is a recursive decomposition here:
+
+\[
+ D = C \circ ((c_1\circ l_1)\circ (c_2\circ l_2) \circ \ldots \circ (c_n \circ l_n))
+\]
+
+We can use the $c_i$ components to trace the influence of document $i$ on all the others, by observing to what degree they are present with $l_j$ sets for each document.
+
+This allows us to view the cascading effect of the influence exerted by the
+document.
+
+In order to pull this off, we would have to somehow decompose each document into
+its constituent topics, and then further decomposing the documents into the portions $C$ and $L$.
+
+This will necessitate knowing the contributions of $L$ beforehand, so a 
+chronological sweep may be the best way to go.
+
+\section{More Brainstorming}
+\begin{itemize}
+\item $\mathcal{X}$ a document in the corpus.
+\item $\mathcal{L}$ the corpus of related documents.
+\item $n$ Size of the concepts represented as $n\mathrm{-grams}$
+\item $m$ Number of terms in the corpus.
+\end{itemize}
+
+If we treat the tensors $\mathcal{X}$ and $\mathcal{C}$ as $n$ ranked tensors,
+each entry $x_{i_1\ldots i_n}$ would then be the weight of the $n\mathrm{-gram}$
+over terms $i_1 \ldots i_n$.  (The set of terms is $m$ elements in length. The 
+total number of tensor components is therefore $m^n$).
+
+\subsection{Corpus Composition}
+$\mathcal{L}$ is composed of all the documents in $\mathcal{X}$.  
+
+Intuatively:
+\[
+\mathcal{L}=\displaystyle\sum\mathcal{X}
+\]
+
+It would be convenient to create weighting which will make this the case. 
+We could just count all the ngrams, the problem being that proportional 
+representation may be more powerful.
+
+\subsection{Document Composition}
+The document has a composition something like this:
+\[
+\mathcal{X} = \mathcal{L} \circ \mathcal{C}
+\]
+
+Where $\mathcal{C}$ is the author's original contribution and $\circ$ is some
+operation which combines $\mathcal{L}$ and $\mathcal{C}$ to produce $\mathcal{X}$.
+
+Really, only a subset of the $n\mathrm{-grams}$ in $\mathcal{L}$ will be present
+in $\mathcal{X}$, so perhaps a better equation would be to solve for 
+$\mathcal{C}$:
+
+\[
+\mathcal{C} = \mathcal{X} - \mathcal{L}
+\]
+
+Then we filter $\mathcal{C}$ so that only non-negative components remain.
+
+\section{Thoughts on Using Counts as Values}
+Suppose we made the elements of $\mathcal{X}$, $\mathcal{C}$, and $\mathcal{L}$ be the
+count of the $n\mathrm{-gram}$ element within the documents.  What would that do to us?
+
+The upshot of it would be that it would be easy to combine $\mathcal{X}$ documents to 
+form $\mathcal{L}$ as this would be a simple additive process. The downside is that the
+literature tensor would have such a vast magnitude that each $\mathcal{X}$ would get 
+lost in it.
+
+Perhaps there is a middle ground though in that we could represent these with a normalized
+version, perhaps even inventing some nifty notation:
+\[
+\hat{\mathcal{L}} = \displaystyle\frac{1}{||\mathcal{L}||} \mathcal{L}
+\]
+
+In this way we can the compare the influence of the document to the normalized tensor
+values contained in $\hat{\mathcal{L}}$.  So normalizing $\tens{X}$ would be needed as well.
+The decompositions of interest would then involve the sequence $(\ntens{X}, \ntens{L}, \ntens{C})$
+\end{document}
