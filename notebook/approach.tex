@@ -124,4 +124,16 @@ version, perhaps even inventing some nifty notation:
 In this way we can the compare the influence of the document to the normalized tensor
 values contained in $\hat{\mathcal{L}}$.  So normalizing $\tens{X}$ would be needed as well.
 The decompositions of interest would then involve the sequence $(\ntens{X}, \ntens{L}, \ntens{C})$
+
+\section{Basic Ideas}
+The basic idea of this research is to decompose a document into the following tensor equation:
+\[
+\tens{D} = w_f \tens{F} + w_c \tens{C}
+\]
+Where $\tens{D}$ is the tensor representation of the document, $\tens{F}$ is the contributions from 
+supporting documents (the contributed factors), and $\tens{C}$ is the contributed new information from the 
+author.  $w_f$. and $w_c$ are the weighting factors of the document contribution and author contribution 
+respectively.  For convenience, we will set everything up so that $w_f+w_c = 1$
+
+
 \end{document}

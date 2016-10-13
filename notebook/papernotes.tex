@@ -1,0 +1,183 @@
+\documentclass{article}
+\title{Paper Notes}
+\author{Robert Lowe}
+
+\begin{document}
+\maketitle
+
+\section{Unsorted Papers}
+
+\subsection{Complex-networks-Structure and dynamics}
+\begin{itemize}
+  \item {\bf Title:} Complex networks: Structure and dynamics
+  \item {\bf Authors:} S. Boccaletti, V. Latorab, Y. Morenod, M. Chavezf, U. Hwanga
+  \item Physics Reports 2006
+  \item Study of how networks of dynamix systems interact.
+  \item Graph Theory based.  Largely an overview of weighted directed graphs.
+  \item Opinion Formation
+  \begin{itemize}
+    \item The most interesting application for me in this one is opinion formation.
+    \item Ising Models Majorona
+    \item Opnion influence models: Sznajd, Deffuant, Krause and Hegselman
+  \end{itemize}
+  \item Papers to Read
+  \begin{itemize}
+    \item E Majorana, Scientia 36 (1942) 58
+    \item K Sznajd-Weron Mod. Physics C11 (2000) 1157
+    \item R. Heggelmann, U. Krausse Arti Soc. Social Simul 5(3) (2002) paper
+    2 jass.soc.surrey.uk    
+  \end{itemize}
+\end{itemize}
+
+\subsection{Growth and structure of slovenia }
+\begin{itemize}
+  \item{\bf Title:} Growth and structure of Slovenia’s scientific collaboration network
+  \item{\bf Author:} Matjaz Perc
+  \item Interesting paper on small world problem, largely based on graphs of known associations
+  \item Studies how collaboration networks evolve over time
+  \item May be a useful topic to pursue once I can establish what the associative networks are.
+\end{itemize}
+
+\subsection{Scale free characteristics of random networks}
+\begin{itemize}
+  \item {\bf Title:} Scale-free characteristics of random networks:
+the topology of the world-wide web
+  \item {\bf Authors: } Albert-Laszlo Barabasi, Reka Albert, Hawoong Jeong
+  \item Extracts self-organizing order in complex networks, esp. www
+  \item Power Law connectivity
+  \[
+  P(k)\sim k^{-\gamma}
+  \]
+  \item Properties of distribution of large networks
+  \item Interesting, but not directly relavent to me!
+\end{itemize}
+
+
+\subsection{inducible regularization for low rank matrix}
+\begin{itemize}
+  \item {\bf Title: } Inducible regularization for low-rank matrix factorizations for collaborative filtering
+  \item {\bf Authors: } Zhenyue Zhang, Keke Zhao, Hongyuan Zha
+  \item Introduced me to the keyword ``Collaborative Filtering''
+  \item The basic idea of this paper is a method of matrix factorization where some factors are known and others are not.
+  \item Factors with regularization to the known filter elements.
+  \item Could be a useful way for me to look for common factors if extended to tesnors.
+\end{itemize}
+
+\subsection{integrating content based filtering with collaborative filtering}
+\begin{itemize}
+  \item {\bf Title:} Integrating content-based filtering with collaborative filtering using co-clustering with augmented matrices
+  \item {\bf Author:} Meng-Lun Wu, Chia-Hui Chang, Rui-Zhe Liu
+  \item Novel method, CCAM, which combines collaborative filtering with content based systems.
+  \item Clusters based on content similarity and user input.
+  \item May be a useful inspiration for an augmented decomposition model, though not directly applicable to me.
+\end{itemize}
+
+\subsection{Low n rank tensor recovery based on multi-linear augmented lagrange}
+
+This paper presents an approach to recover a Low order component from a tensor.  The basic idea is to solve the low rank recovery method via a novel 
+application of Legrange Multipliers.  This reduces the noise in the 
+recovered tensor by separating the tensors into their low rank and sparse components, satisfying:
+
+\[
+\mathrm{min}_{L,S} : ||L||_* + \lambda ||S||_1 
+\]
+
+Where $A=L+S$.  Here $A$ is the matrix to be recovered, $L$ is the low-rank 
+component we wish to recover, and $S$ is the sparse component of A.  $\lambda$ is a positive weighted parameter.
+
+The technique describe effectively separates the low order component from
+the sparse and is demonstrated to work in several image noise removal
+applications.
+
+This paper may be interesting for general usage of Tensors, and perhaps
+will inspire decomposition work, but it does not appear to be very relevent
+to my work at this time.
+
+\subsection{hashmann-wpppfac0.pdf}
+This is the {\em the original} PARAFAC Paper.  In general, PARAFAC will be
+provided to me by a python library, however this may be a useful read 
+when modifiying the algorithm.
+
+Everyone cites this, so should I.
+
+\subsection{splatt.pdf}
+This is a description of a parallel parafac implimentation.  It describes
+an algorithm implemented in a package of the same name.   SPLATT looks 
+promising, but in my attempts to use it, it always results in NaN.
+
+Speed is not necessarily in my present objectives, so I probably won't
+revisit SPLATT.
+
+\subsection{wikisent.pdf}
+Simple sentiment analysis scheme.  Not really relevant to me.
+
+\subsection{parcube-sparse tensor.pdf}
+Technique for decomposition of sparse tensors.  Could be handy for
+making a speedy version of my algorithm!
+
+\subsection{Fully sparse topic models.pdf}
+A novel method of topic modelling for an entire corpus of documents at a
+time.  They present a method of estimating $\theta$, which is the 
+infulence of each topic on the document.  This could be very 
+useful to me, and closer reading/notes are definitely in order!
+
+\subsection{1-s2.0-s0169743997000324-parafac.pdf}
+Just af tutorial over various uses of Parafac.  Good information, though
+not particularly citable.
+
+\subsection{icdm2005-Liu-Text-Vectors-To-Tensors.pdf}
+
+\subsection{30204713-Mission Survival Corpus.pdf}
+
+\subsection{p775-sun-models Influence Analysis.pdf}
+short intro piece for a tutorial
+
+good citations though
+
+\subsection{p559-li-Influence Heterogeneous.pdf}
+
+probability network preselected features.
+very short and little more than prob net.
+
+\subsection{p171-liu-Influence Maximiztion Linear Approach.pdf}
+a nice and very technical article about 
+the social influence maximization problem
+with an efficient solution.
+
+there is nothing presented about feature identifocation
+
+There is a good description of a fast linear
+approach for discovering seed nodes in a network
+though.  Elements of this approach could work
+for finding seminal works in my networks.
+
+\section{p207-argawal}
+
+\section{a7-aziz}
+
+\subsection{p271-dong-influence Model Functional Roles.pdf}
+
+\subsection{p33 kasthuriathna-Influence Modeling Boundary.pdf}
+
+\subsection{p46-herzig-Author-Reader Influence.pdf}
+
+\subsection{p15-jiang-dynamic Topic-Citation Influence.pdf}
+
+\subsection{surveyTensors-Idl-09-34.pdf}
+
+\subsection{tensordecompositions.pdf}
+
+\subsection{Tensors TM2002211716.pdf}
+
+\subsection{p113-blei-dynamic-topic.pdf}
+
+\subsection{1-s2.0-S0925231212009083-main-tensor.pdf}
+
+\subsection{1-s2.0-S0378437102007367-main.pdf}
+
+\subsection{0910.3529-Citation Statistics.pdf}
+
+\subsection{1145-Discovering-Relavent-Scientific-Literature.pdf}
+
+\subsection{p50-buneman.pdf}
+\end{document}
