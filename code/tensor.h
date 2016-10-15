@@ -1,4 +1,4 @@
-﻿/*
+/*
  * File: tensor.h
  * Purpose: Declaration of a tensor class.  
  * Author: Robert Lowe
@@ -28,20 +28,24 @@ public:
     //provides access to the index element
     int & operator[](int i) { return v[i]; }
     
+    //returns the number of dimensions
+    int size() const { return v.size(); }
+    
     //comparison operations
-    bool operator<(const TensorIndex& rhs) { return compare(rhs) < 0; }
-    bool operator==(const TensorIndex& rhs) { return compare(rhs) == 0; }
-    bool operator>(const TensorIndex& rhs) { return compare(rhs) > 0; }
+    bool operator<(const TensorIndex& rhs) const { return compare(rhs) < 0; }
+    bool operator==(const TensorIndex& rhs) const { return compare(rhs) == 0; }
+    bool operator>(const TensorIndex& rhs) const { return compare(rhs) > 0; }
     
 protected:
     std::vector<int> v;
     
-    int compare(const TensorIndex &rhs)
+    int compare(const TensorIndex &rhs) const
     {
         for(int i=0; i<v.size(); i++) {
             if(v[i]>rhs.v[i]) return 1;
             if(v[i]<rhs.v[i]) return -1;
         }
+        
         //must be equal
         return 0;
     }
@@ -53,14 +57,28 @@ class Tensor
 {
 public:
     Tensor(const TensorDimension & dims);
-    virtual ~Tensor();
     
-    //used as part of the general index strategy
+    //used as part of the general index strategy, this fixes dimensions to build an index
+    class Accessor
+    {
+    public:
+        Accessor operator[](int i);
+        double operator=(double rhs);
+        operator double();
+    protected:
+        Accessor(Tensor &t, TensorIndex &index) : t(t), index(index) { }
+        Tensor &t;
+        TensorIndex index;
+        friend Tensor;
+    };
+    
+    //index operation (start of the chain of accessors)
+    Accessor operator[](int i);
     
 protected:
-    std::map<int,double> elements;
+    std::map<TensorIndex,double> elements;
     TensorDimension d;
-    
+    friend Accessor;
 };
 
 
