@@ -26,21 +26,21 @@ public:
     TensorIndex(const TensorIndex &rhs) : v(rhs.v.begin(), rhs.v.end()) { /* nothing */ }
     
     //provides access to the index element
-    int & operator[](int i) { return v[i]; }
+    virtual int & operator[](int i) { return v[i]; }
     
     //returns the number of dimensions
-    int size() const { return v.size(); }
+    virtual int size() const { return v.size(); }
     
     //comparison operations
-    bool operator<(const TensorIndex& rhs) const { return compare(rhs) < 0; }
-    bool operator==(const TensorIndex& rhs) const { return compare(rhs) == 0; }
-    bool operator!=(const TensorIndex& rhs) const { return compare(rhs) != 0; }
-    bool operator>(const TensorIndex& rhs) const { return compare(rhs) > 0; }
+    virtual bool operator<(const TensorIndex& rhs) const { return compare(rhs) < 0; }
+    virtual bool operator==(const TensorIndex& rhs) const { return compare(rhs) == 0; }
+    virtual bool operator!=(const TensorIndex& rhs) const { return compare(rhs) != 0; }
+    virtual bool operator>(const TensorIndex& rhs) const { return compare(rhs) > 0; }
     
 protected:
     std::vector<int> v;
     
-    int compare(const TensorIndex &rhs) const
+    virtual int compare(const TensorIndex &rhs) const
     {
         if(v.size() < rhs.v.size()) return -1;
         if(v.size() > rhs.v.size()) return 1;
@@ -62,19 +62,19 @@ public:
     Tensor(const TensorDimension & dims);
     
     //get the tensor's dimensions
-    TensorDimension dim();
+    virtual TensorDimension dim();
     
     //used as part of the general index strategy, this fixes dimensions to build an index
     class Accessor
     {
     public:
-        Accessor operator[](int i);
-        double operator=(double rhs);
-        double operator+=(double rhs);
-        double operator-=(double rhs);
-        double operator*=(double rhs);
-        double operator/=(double rhs);
-        operator double();
+        virtual Accessor operator[](int i);
+        virtual double operator=(double rhs);
+        virtual double operator+=(double rhs);
+        virtual double operator-=(double rhs);
+        virtual double operator*=(double rhs);
+        virtual double operator/=(double rhs);
+        virtual operator double();
     protected:
         Accessor(Tensor &t, TensorIndex &index) : t(t), index(index) { }
         Tensor &t;
@@ -83,34 +83,34 @@ public:
     };
     
     //index operation (start of the chain of accessors)
-    Accessor operator[](int i);
+    virtual Accessor operator[](int i);
    
     //multiply current tensor by a scalar
-    Tensor & operator*=(double rhs);
+    virtual Tensor & operator*=(double rhs);
     
     //divide current tensor by a scalar
-    Tensor & operator/=(double rhs);
+    virtual Tensor & operator/=(double rhs);
     
     //multiply by a scalar and return new tensor
-    Tensor operator*(double rhs);
+    virtual Tensor operator*(double rhs);
     
     //divide by a scalar and return new tensor
-    Tensor operator/(double rhs);
+    virtual Tensor operator/(double rhs);
     
     //add and asign tensor
-    Tensor & operator+=(Tensor &rhs);
+    virtual Tensor & operator+=(Tensor &rhs);
     
     //subtract and assign tensor
-    Tensor & operator-=(Tensor &rhs);
+    virtual Tensor & operator-=(Tensor &rhs);
     
     //add two tensors and return new tensor
-    Tensor operator+(Tensor &rhs);
+    virtual Tensor operator+(Tensor &rhs);
     
     //subtract two tensors and return new tensor
-    Tensor operator-(Tensor &rhs);
+    virtual Tensor operator-(Tensor &rhs);
     
     //compute the Frobenius Norm of the tensor
-    double norm();
+    virtual double norm();
 protected:
     std::map<TensorIndex,double> elements;
     TensorDimension d;
