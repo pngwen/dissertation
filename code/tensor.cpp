@@ -1,4 +1,5 @@
-﻿#include <iostream>
+#include <iostream>
+#include <cmath>
 #include "tensor.h"
 
 using namespace std;
@@ -9,6 +10,11 @@ Tensor::Tensor(const TensorDimension& dims) : d(dims)
 }
 
 
+//get the tensor's dimensions
+TensorDimension Tensor::dim()
+{
+    return d;
+}
 
 //index operation (start of the chain of accessors)
 Tensor::Accessor Tensor::operator[](int i)
@@ -22,6 +28,108 @@ Tensor::Accessor Tensor::operator[](int i)
     
     //return the accessor
     return Accessor(*this, index);
+}
+
+
+//multiply current tensor by a scalar
+Tensor & Tensor::operator*=(double rhs)
+{
+    //mutliply all the non-zero elements
+    for(auto itr = elements.begin(); itr != elements.end(); itr++) {
+        itr->second *= rhs;
+    }
+    
+    return *this;
+}
+    
+
+//divide current tensor by a scalar
+Tensor & Tensor::operator/=(double rhs)
+{
+    //divide all the non-zero elements
+    for(auto itr=elements.begin(); itr != elements.end(); itr++) {
+        itr->second /= rhs;
+    }
+    
+    return *this;
+}
+    
+
+//multiply by a scalar and return new tensor
+Tensor Tensor::operator*(double rhs)
+{
+    Tensor nt{*this};
+    nt*=rhs;
+    
+    return nt;
+}
+
+
+//divide by a scalar and return new tensor
+Tensor Tensor::operator/(double rhs) 
+{
+    Tensor nt{*this};
+    nt /= rhs;
+    
+    return nt;
+}
+    
+
+//add and asign tensor
+Tensor & Tensor::operator+=(Tensor &rhs)
+{
+    if(d != rhs.d) throw out_of_range("Dimension Mismatch");
+    
+    //go through all the non-zero elements of rhs
+    for(auto itr=rhs.elements.begin(); itr!=rhs.elements.end(); itr++) {
+        elements[itr->first];
+        elements[itr->first] += itr->second;
+    }
+}
+    
+
+//subtract and assign tensor
+Tensor & Tensor::operator-=(Tensor &rhs)
+{
+    if(d != rhs.d) throw out_of_range("Dimension Mismatch");
+    
+    //go through all the non-zero elements of rhs
+    for(auto itr=rhs.elements.begin(); itr!=rhs.elements.end(); itr++) {
+        elements[itr->first];
+        elements[itr->first] -= itr->second;
+    }
+}
+    
+
+//add two tensors and return new tensor
+Tensor Tensor::operator+(Tensor &rhs)
+{
+    Tensor nt{*this};
+    nt += rhs;
+    return nt;
+}
+    
+
+//subtract two tensors and return new tensor
+Tensor Tensor::operator-(Tensor &rhs)
+{
+    Tensor nt{*this};
+    nt -= rhs;
+    return nt;
+}
+    
+
+//compute the Frobenius Norm of the tensor
+double Tensor::norm()
+{
+    double sum = 0;
+    
+    //add the square of all the non-zero elements
+    for(auto itr=elements.begin(); itr!=elements.end(); itr++) {
+        sum += itr->second * itr->second;
+    }
+    
+    return sqrt(sum);
 }
 
 
@@ -56,6 +164,42 @@ double Tensor::Accessor::operator=(double rhs)
     //make the assignment
     return t.elements[index] = rhs;
 } 
+
+
+double Tensor::Accessor::operator+=(double rhs) 
+{
+    double x;
+    
+    x = (double) *this;   //get the value (or crash if invalid cast!)
+    return t.elements[index] = x + rhs;
+}
+
+
+double Tensor::Accessor::operator-=(double rhs)
+{
+    double x;
+    
+    x = (double) *this;   //get the value (or crash if invalid cast!)
+    return t.elements[index] = x - rhs;
+}
+
+
+double Tensor::Accessor::operator*=(double rhs)
+{
+    double x;
+    
+    x = (double) *this;   //get the value (or crash if invalid cast!)
+    return t.elements[index] = x * rhs;
+}
+
+
+double Tensor::Accessor::operator/=(double rhs)
+{
+    double x;
+    
+    x = (double) *this;   //get the value (or crash if invalid cast!)
+    return t.elements[index] = x / rhs;
+}
 
 
 Tensor::Accessor::operator double()

@@ -34,6 +34,7 @@ public:
     //comparison operations
     bool operator<(const TensorIndex& rhs) const { return compare(rhs) < 0; }
     bool operator==(const TensorIndex& rhs) const { return compare(rhs) == 0; }
+    bool operator!=(const TensorIndex& rhs) const { return compare(rhs) != 0; }
     bool operator>(const TensorIndex& rhs) const { return compare(rhs) > 0; }
     
 protected:
@@ -41,6 +42,8 @@ protected:
     
     int compare(const TensorIndex &rhs) const
     {
+        if(v.size() < rhs.v.size()) return -1;
+        if(v.size() > rhs.v.size()) return 1;
         for(int i=0; i<v.size(); i++) {
             if(v[i]>rhs.v[i]) return 1;
             if(v[i]<rhs.v[i]) return -1;
@@ -58,12 +61,19 @@ class Tensor
 public:
     Tensor(const TensorDimension & dims);
     
+    //get the tensor's dimensions
+    TensorDimension dim();
+    
     //used as part of the general index strategy, this fixes dimensions to build an index
     class Accessor
     {
     public:
         Accessor operator[](int i);
         double operator=(double rhs);
+        double operator+=(double rhs);
+        double operator-=(double rhs);
+        double operator*=(double rhs);
+        double operator/=(double rhs);
         operator double();
     protected:
         Accessor(Tensor &t, TensorIndex &index) : t(t), index(index) { }
@@ -74,7 +84,33 @@ public:
     
     //index operation (start of the chain of accessors)
     Accessor operator[](int i);
+   
+    //multiply current tensor by a scalar
+    Tensor & operator*=(double rhs);
     
+    //divide current tensor by a scalar
+    Tensor & operator/=(double rhs);
+    
+    //multiply by a scalar and return new tensor
+    Tensor operator*(double rhs);
+    
+    //divide by a scalar and return new tensor
+    Tensor operator/(double rhs);
+    
+    //add and asign tensor
+    Tensor & operator+=(Tensor &rhs);
+    
+    //subtract and assign tensor
+    Tensor & operator-=(Tensor &rhs);
+    
+    //add two tensors and return new tensor
+    Tensor operator+(Tensor &rhs);
+    
+    //subtract two tensors and return new tensor
+    Tensor operator-(Tensor &rhs);
+    
+    //compute the Frobenius Norm of the tensor
+    double norm();
 protected:
     std::map<TensorIndex,double> elements;
     TensorDimension d;
