@@ -31,6 +31,30 @@ Tensor::Accessor Tensor::operator[](int i)
 }
 
 
+//index operation with tensor index
+double Tensor::operator[](TensorIndex & i) 
+{
+    //check for invalid number of dimensions
+    if(i.size() != d.size()) throw out_of_range("Tensor dimension mismatch");
+    
+    //check the bounds
+    if(i > d) throw out_of_range("Tensor index out of range.");
+    
+    //check the validity of the bounds
+    for(int id=0; id<i.size(); id++) {
+        if(i[id] < 0) throw out_of_range("Invalid tensor index");
+    }
+    
+    
+    //check for an empty element and return 0
+    if(t.elements.find(i) == t.elements.end()) {
+        return 0;
+    }
+    
+    return t.elements[i];
+}
+
+
 //multiply current tensor by a scalar
 Tensor & Tensor::operator*=(double rhs)
 {
@@ -130,6 +154,30 @@ double Tensor::norm()
     }
     
     return sqrt(sum);
+}
+
+
+//outer tensor product
+Tensor Tensor::operator*(Tensor & rhs) 
+{
+    //first we need to make our dimension
+    TensorDimension d(this->d);
+    d.append(rhs.d);
+    
+    //now we make the resultant tensor
+    Tensor t(d);
+    
+    //now we multiply all the non-zero tensor elements of our tensor by
+    //all the non-zero elements of the rhs tensor
+    for(auto itr=elements.begin(); itr != elements.end(); itr++) {
+        for(auto itr2=rhs.elements.begin(); itr2.elements.end(); itr2++) {
+            TensorIndex i{itr->first};
+            i.append{itr2->first};
+            t.elements[i] = itr->second * itr2->second;
+        }
+    }
+    
+    return t;
 }
 
 

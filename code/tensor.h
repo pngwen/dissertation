@@ -18,6 +18,7 @@ class TensorIndex
 public:
     //create the index from an initializer list
     TensorIndex(std::initializer_list<int>l) : v(l.begin(), l.end()) { /* just capture the list */ }
+    TensorIndex(std::vector<int>l) : v(l.begin(), l.end()) { /* just capture the list */ }
     
     //create an index for an n-dimensioned tensor (initialized to -1)
     TensorIndex(int n) : v(n, -1) { /* all done! */ }
@@ -30,6 +31,9 @@ public:
     
     //returns the number of dimensions
     virtual int size() const { return v.size(); }
+    
+    //appends one index object onto this one
+    virtual void append(TensorIndex &rhs) { v.insert(v.end(), rhs.v.begin(), rhs.v.end()); }
     
     //comparison operations
     virtual bool operator<(const TensorIndex& rhs) const { return compare(rhs) < 0; }
@@ -84,6 +88,9 @@ public:
     
     //index operation (start of the chain of accessors)
     virtual Accessor operator[](int i);
+    
+    //index operation with tensor index
+    virtual double operator[](TensorIndex &i);
    
     //multiply current tensor by a scalar
     virtual Tensor & operator*=(double rhs);
@@ -111,6 +118,10 @@ public:
     
     //compute the Frobenius Norm of the tensor
     virtual double norm();
+    
+    //compute the outer tensor product of the tensors
+    virtual Tensor operator*(Tensor &rhs);
+    
 protected:
     std::map<TensorIndex,double> elements;
     TensorDimension d;
