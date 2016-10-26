@@ -33,7 +33,7 @@ public:
     virtual int size() const { return v.size(); }
     
     //appends one index object onto this one
-    virtual void append(TensorIndex &rhs) { v.insert(v.end(), rhs.v.begin(), rhs.v.end()); }
+    virtual void append(const TensorIndex &rhs) { v.insert(v.end(), rhs.v.begin(), rhs.v.end()); }
     
     //comparison operations
     virtual bool operator<(const TensorIndex& rhs) const { return compare(rhs) < 0; }
@@ -90,7 +90,7 @@ public:
     virtual Accessor operator[](int i);
     
     //index operation with tensor index
-    virtual double operator[](TensorIndex &i);
+    virtual Accessor operator[](TensorIndex &i);
    
     //multiply current tensor by a scalar
     virtual Tensor & operator*=(double rhs);
