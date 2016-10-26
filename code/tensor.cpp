@@ -44,6 +44,9 @@ Tensor & Tensor::operator*=(double rhs)
     //mutliply all the non-zero elements
     for(auto itr = elements.begin(); itr != elements.end(); itr++) {
         itr->second *= rhs;
+        if(itr->second == 0.0) {
+            itr = elements.erase(itr);
+        }
     }
     
     return *this;
@@ -56,6 +59,9 @@ Tensor & Tensor::operator/=(double rhs)
     //divide all the non-zero elements
     for(auto itr=elements.begin(); itr != elements.end(); itr++) {
         itr->second /= rhs;
+        if(itr->second == 0.0) {
+            itr = elements.erase(itr);
+        }
     }
     
     return *this;
@@ -91,6 +97,9 @@ Tensor & Tensor::operator+=(Tensor &rhs)
     for(auto itr=rhs.elements.begin(); itr!=rhs.elements.end(); itr++) {
         elements[itr->first];
         elements[itr->first] += itr->second;
+        if(elements[itr->first] == 0.0) {
+            elements.erase(itr->first);
+        }
     }
 }
     
@@ -104,6 +113,9 @@ Tensor & Tensor::operator-=(Tensor &rhs)
     for(auto itr=rhs.elements.begin(); itr!=rhs.elements.end(); itr++) {
         elements[itr->first];
         elements[itr->first] -= itr->second;
+        if(elements[itr->first] == 0) {
+            elements.erase(itr->first);
+        }
     }
 }
     
@@ -193,7 +205,14 @@ double Tensor::Accessor::operator=(double rhs)
     }
     
     //make the assignment
-    return t.elements[index] = rhs;
+    t.elements[index] = rhs;
+
+    //keep it sparse
+    if(rhs == 0) {
+        t.elements.erase(index);
+    }
+
+    return rhs;
 } 
 
 
