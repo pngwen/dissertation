@@ -10,6 +10,8 @@
 #include <exception>
 #include <typeinfo>
 #include <initializer_list>
+#include <istream>
+#include <ostream>
 
 
 //serves as an index into a tensor
@@ -60,10 +62,19 @@ protected:
 typedef TensorIndex TensorDimension;
 
 
+//io operations for indexes
+std::istream& operator>>(std::istream& is, TensorIndex& index);
+std::ostream& operator<<(std::ostream& os, TensorIndex& index);
+
+
 class Tensor
 {
 public:
     Tensor(const TensorDimension & dims);
+    
+    //sparse load and save 
+    static Tensor sparseLoad(std::istream &is);
+    void sparseSave(std::ostream &os);
     
     //get the tensor's dimensions
     virtual TensorDimension dim();

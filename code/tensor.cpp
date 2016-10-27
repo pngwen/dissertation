@@ -4,9 +4,88 @@
 
 using namespace std;
 
+
+//io operations for indexes
+std::istream& operator>>(std::istream& is, TensorIndex& index)
+{
+    //read each dimension
+    for(int i=0; i<index.size(); i++) {
+        is >> index[i];
+    }
+    
+    return is;
+}
+
+
+std::ostream& operator<<(std::ostream& os, TensorIndex& index)
+{
+    //print out each dimension
+    for(int i=0; i<index.size(); i++) {
+        os << index[i];
+        if(i < index.size()-1) os << ' ';
+    }
+}
+
+
+
 Tensor::Tensor(const TensorDimension& dims) : d(dims)
 {
     //nothing else to init for now!
+}
+
+
+// load a tensor in sparse format.
+// The format works like this:
+//    tensor order
+//    number of non-zero elements
+//    dimensions (space separated)
+//    index value
+static Tensor Tensor::sparseLoad(std::istream &is)
+{
+    //get the order and elements
+    int order;
+    int count;
+    is >> order >> count;
+    
+    //get our dimension
+    TensorDimension d{order};
+    is >> d;
+    
+    //create the tensor
+    Tensor t{d};
+    
+    //read the tensor elements
+    TensorIndex index{order};
+    while(count--) {
+        is >> index;
+        is >> double(t[index]);
+    }
+    
+    return t;
+}
+
+
+// save a tensor in sparse format.
+// The format works like this:
+//    tensor order
+//    number of non-zero elements
+//    dimensions (space separated)
+//    index value
+void Tensor::sparseSave(std::ostream &os)
+{
+    //print order
+    os << d.size() << endl;
+    
+    //print number of non-zero elements
+    os << elements.size() << endl;
+    
+    //print the dimensions
+    os << d << endl;
+    
+    //and do all the indexes
+    for(auto itr = elements.begin(); itr != elements.end(); itr++) {
+        os << itr->first << ' ' << itr->second << endl;
+    }
 }
 
 
