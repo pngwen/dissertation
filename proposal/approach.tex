@@ -1,0 +1,91 @@
+\documentclass{report}
+\usepackage{amsfonts}
+\newcommand{\tens}[1]{\mathcal{#1}}
+\newcommand{\ntens}[1]{\hat{\tens{#1}}}
+
+\begin{document}
+\chapter{Proposed Approach}
+
+\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The proposed work will model influence through tensor decomposition.
+Here, influence is meant to model the semantic influence that one author
+exerts on another.  This model depends on identifying common factors 
+within documents, and looking at the overall impact of those factors in 
+the document being modeled. 
+Moreover, as we seek to determine how other documents have influenced 
+the creation of a given work, we can also model the impact that work
+has had on other documents, again by searching for common influencing
+factors among the corpus the document belongs to.  
+A third potential application of the present model is to verify citations,
+where they are available.  That is to say, given a document and a list of
+asserted citations, the proposed model will be able to identify the
+actual impact of the cited works, thus providing some measure of 
+the validity of the citations.  
+A final possible application exists in corpora where reliable temporal
+data are not available.  By identifying common factors among documents,
+the model should make topological sorting of the documents within the
+corpus possible based solely upon the analysis of contributing structures
+throughout the document.
+
+The proposed model is designed to analyze a corpus of documents, $C$, and 
+generates, for each document, the variable sequence
+\[
+\langle F, A, D \rangle
+\]
+where $F$ is the set of influencing factors and $A$ is the set of factors contributed by the author.  Both $F$ and $C$ are sequences of 
+tensor factors with contributing weights.  $D$ is a weight matrix
+where element $d_{ij}$ is the estimated probability that influencing 
+factor $I_i$ originated in document $C_j$.
+
+The details and formulations of this proposed model will be presented
+in the following sections.  First, we explore the proposed method
+of representing the documents of $C$ as a tensor.  This is followed by
+a formal definition of each of the model variables.  The proposed model
+is rounded out by a high-level explanation of how the model is to be
+computed.  Finally, we conclude this chapter with a description of
+the challenges inherent in this type of model and the proposed solutions
+to be explored.
+
+\section{Tensor Representation of Documents}
+The proposed model uses n-grams to model semantic influence relationships
+between documents.  Given a document $d$, we construct a tensor $\tens{D}$
+of order $n$, where $n$ is the size of the phrases we are interested
+in analyzing.  For the present proposal, we will assume that we are going
+to perform 3-gram analysis of a document, hence we will create tensors
+of 3 dimensions.  Higher dimensioned tensors do provide for greater 
+flexibility, but of course they come with a higher computational and 
+storage cost.
+
+For the present 3-gram analysis, we will construct the tensor dimensions
+as:
+$$\mathrm{term} \times \mathrm{term} \times \mathrm{term}$$
+This is constructed so that the element $d_{ijk}$ in the tensor $\tens{D}$
+corresponds to the n-gram consisting of term $i$, term $j$, and term $k$.  
+Note that order is preserved in this tensor representation of the document.
+
+The high-level view of the procedure for generating this tensor is as follows:
+\begin{enumerate}
+\item Construct a word list $W$ for the entire corpus.
+\item Create a tensor $D$ with 3 dimensions of size $|W|$. 
+\item Let each element $d_{ijk}$ of $\tens{D}$ be the count of the 3-gram $\langle w_i, w_j, w_k \rangle$.
+\item Compute the Frobenius Norm of the Tensor.
+\item Normalize $\tens{D}$ by dividing all elements by the norm.
+\end{enumerate}
+
+The resultant representation of the document is a tensor containing the
+weights of all possible 3-grams within the document.  Of course, this
+tensor is expected to be very sparse.  In fact, as the number of 
+dimensions increases, it is reasonable to assume that the sparsity will
+also increase because the probability of any given phrase appearing would
+also decrease.  
+
+\section{Variable Definitions}
+
+\section{Simple Approach to Decomposition}
+
+\section{Tensor Decomposition Challenges}
+
+\section{Proposed Solutions to Tensor Decomposition Issues}
+
+\end{document}
