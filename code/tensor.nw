@@ -1,0 +1,265 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+This is a template of a tensor class.  A tensor is a multi-dimensional
+array whihc is a generalization of matrices, vectors, and scalars.
+A scalar can be represented as an order 0 tensor, a vector is an order 1 
+tensor, and a matrix is an order 2 tensor.  We can extend the notion of
+tensor above 2 by imagining prisms, and hyperprisms of data.  
+
+The elements of a tensor are scalar values, and they can vary in type.  This
+is why the present class is a template.  A tensor could be comprised of int, 
+double, or of some sort of arbitrary precision arithmetic.  Regardless of
+the object stored in the tensor, the overall handling of the tensors remains
+the same, though some functions will need to be passed into the template for
+the operations to work.  By default, the tensor will operate on doubles, and
+so all the template parameters will be geared toward that.
+
+The template specification for this tensor is as follows:
+
+<<Tensor Template>>=
+template<typename E, typename SQRT>
+@
+
+Where {\tt E} is the element type and {\tt SQRT} is a functor type for a 
+squareroot function for the elements.  The overall layout of the template 
+file (named ``{\tt tensor.h}'') is as follows:
+
+<<tensor.h>>=
+#ifndef TENSOR_H
+#define TENSOR_H
+<<Includes>>
+
+<<Tensor Template>> class Tensor
+{
+public:
+    //inner class prototypes
+    <<Tensor Inner Class Prototypes>>
+    
+    //constructors
+    <<Tensor Constructors>>
+    
+    //scalar operations
+    <<Tensor Scalar Operations>>
+    
+    //tensor operations
+    <<Tensor Operations>>
+    
+    //inner classes
+    <<Tensor Inner Classes>>
+    
+private:
+    <<Tensor Member Variables>>
+};
+
+#endif
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Storage}
+The first question to be addressed in construction this tensor is, how does
+tensor storage work?  One approach would be to simply use vectors of vectors
+nested enough levels deep to hold all of the elements.  This would be the
+simplest approach, however it is wasteful unless tensors are completely 
+populated.  That is, a vector representation is only appropriate for dense
+tensors.  Sparse tensors, on the other hand, would leave a lot of empty
+space in that configuration.  As this tensor class is being created for a 
+class of problems where interesting tensors are both sparse and large, 
+another method needs to be used.  
+
+Our method of storage will be to use a map to store the elements of our 
+tensor. In order to avoid nesting, we will map an index onto each element,
+thus our storage becomes:
+
+<<Includes>>=
+#include <map>
+@
+
+<<Tensor Member Variables>>=
+std::map<Index, E> data;
+@
+
+Of course,this creates the issue of what a tensor index looks like!  
+A tensor may have any number of indices, so it should be something like
+a vector, but in order to make effecient usage of the map, it should
+have basic comparison operations.  Because no pre-existing container
+will suffice, we need to make one.  This will be a pretty simple
+inner class.
+
+<<Tensor Inner Class Prototypes>>=
+class Index;
+@
+
+<<Tensor Inner Classes>>=
+class Index
+{
+public:
+  //constructors
+  <<Index Constructors>>
+  
+  //vector operations
+  <<Index Vector Operations>>
+  
+  //comparison operations
+  <<Index Comparison Operations>>
+  
+private:
+  <<Index Member Variables>>
+};
+@
+
+Because {\tt Index} is essentially a wrapper for a vector of 
+integers, it follows that the inner storage container should
+be a vector which is named {\tt v}.
+
+<<Includes>>=
+#include <vector>
+@
+
+<<Index Member Variables>>=
+std::vector<int> v;
+@
+
+Construction an index can be accomplished in multiple ways.  For example,
+we could simply pass a vector into a constructor:
+<<Index Constructors>>=
+Index(std::vector<int> index) : v(index.start(), index.end()) { }
+@
+We could also use the an {\tt initializer\_list}, introduced in C++11, 
+to initialize the Index:
+<<Includes>>=
+#include <initializer_list>
+@
+<<Index Constructors>>=
+Index(std::initializer_list<int> il) : v(il.start(), ilend()) { }
+@
+
+Finally, it may also be convenient to initialize an index with a given number
+of elements.  The user can specify the fill value for the vector, but we will
+use -1 (an invalid index) as the default.
+<<Index Constructors>>=
+Index(int n, int val=-1) : v(n, val) { }
+@
+
+Because the index is a wrapper for {\tt std::vector}, we should expose some
+of the vector operations.  Really we just want to allow indexing and size
+to be used.
+
+<<Index Vector Operations>>=
+int& operator[](int i) { return v[i]; }
+std::vector<int>::size_type size() { return v.size(); }
+@
+
+And now that brings us to comparison opeations!  Of course, in order for
+map to work, we have to have the < operator so that the items can
+be sorted.  We also will likely be interested in basic equality and
+greater than operations.  To implement the operators, we will first
+create a compare function, which will compare the present object to the
+right hand sign parameter.  This function will return -1 for less than,
+0 for equal, and 1 for greater than.
+
+The comparison of the n-tuples comprising the indices works as follows.
+First, we will compare by size, and then by elements.  The basic 
+assumption is that the indices are equal.
+
+<<Index Comparison Operations>>=
+int compare(const Index &rhs) const
+{
+   int result=0;  //assume they are equal
+   
+   <<Index Size Comparison>>
+   <<Index Element Comparison>>
+   
+   return result;
+}
+@
+
+Comparison by size is very simple.  If there are uneven numbers of elements
+then the shorter index is said to be the lesser one.  
+<<Index Size Comparison>>=
+if(size() < rhs.size()) return -1;
+if(size() > rhs.size()) return 1;
+@
+
+The element comparisons are a little trickier.  Equality is easily defined,
+but greater than is another thing alltogether!  Because this will be used
+for bounds checking, we will assume that if any one element of the
+left hand side is greater than the corresponding element of the right hand
+side, then the left hand side is greater than the right hand side.  For 
+less than comparisons, all non-equal elements must be less than the 
+corresponding elements in rhs.
+<<Index Element Comparison>>=
+for(int i=0; i<size(); i++) 
+{
+   //check for greater than
+   if(v[i] > rhs.v[i]) 
+   {
+      //that's it!  We're done!
+      result = 1;
+      break;
+   }
+   
+   //check for less than
+   if(v[i] < rhs.v[i])
+   {
+      result =k -1;
+   }
+}
+@
+
+All that remains is to implement the standard set of comparison and
+equality operators.  This is, of course, trivial when we use the compare
+function.
+<<Index Comparison Operations>>=
+bool operator<(const Index &rhs) const { return compare(rhs) < 0; }
+bool operator>(const Index &rhs) const { return compare(rhs) > 0; }
+bool operator==(const Index &rhs) const { return compare(rhs) == 0; }
+bool operator!=(const Index &rhs) {const  return compare(rhs) != 0; }
+@
+
+\section{Contruction}
+Having defined the storage mechanisms of the tensor class that we are 
+creating, we now turn our attention to the construction and definition
+of the tensors themselves.  When the tensors are initialized, we have two
+main properties:
+\begin{itemize}
+\item Upper Bound
+\item Fill Value
+\end{itemize}
+
+The dimension upper bound is an index such that all valid indexes in the
+tensor are strictly less than the upper bound as defined in the previous
+section.
+
+<<Tensor Member Variables>>=
+Index ubound;   //The dimension upper bound
+@
+
+The fill value is the deault value of the tensor.  We are creating a
+very sparse tensor, but the tensor is never actually empty.  This fill
+value is the value of all elements that have not been written to.  
+Furthermore, anytime a default value is written back to the tensor, that
+entry will be erased from the storage map.
+<<Tensor Member Variables>>=
+E fillValue;
+@
+
+So then, after creation a basic {\tt Tensor} object will consist of a 
+tensor of a fixed finite dimension which is filled with a default value.
+The most basic sort of constructor which could accomplish this simply
+populates these two variables.
+<<Tensor Constructors>>=
+Tensor(const Index &ubound, E fillValue=E()) 
+  : ubound(ubound), fillValue(fillValue) { }
+@
+
+Of course, it may be advantageous to allow construction from an initilizer
+list, but this is trivial given the above constructor and as well as the
+{\tt Index} constructor.
+<<Tensor Constructors>>=
+Tensor(std::initializer_list<int> dimensions, E fillValue=E())
+  : Tensor(Index(dimensions), fillValue) { }
+@
+
+In either case, the result is a sparse tensor with no non-fill value
+components.  The tensor as constructed here has a fixed finite dimension.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
