@@ -1039,7 +1039,10 @@ Tensor operator/(const E& s)
 
 \subsection{Tensor Arithmetic Operations}
 In addition to scalar operations, a tensor can also undergo several
-arithmetic operations with other tensors.  The fist, and perhaps easiest,
+arithmetic operations with other tensors.  
+
+\subsubsection{Tensor Addition and Subtraction}
+The fist, and perhaps easiest,
 to implement is Tensor addition.  Tensor addition is performed element by 
 element on two tensors of like dimension.  Given two Tensors $C=A+B$ is 
 defined where each element in $C$ is given as:
@@ -1170,6 +1173,8 @@ for(auto itr=data.begin(); itr != data.end(); itr++)
 }
 @
 
+\subsubsection{Tensor Product}
+The tensor product, or 
 \printindex[functions]
 \end{document}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
