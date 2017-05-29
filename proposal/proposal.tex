@@ -13,90 +13,122 @@
 \maketitle
 
 \section{Introduction}
-\begin{quote}
-\textit{Nam cum pictor praecogitat quae facturus est, habet quidem in intellectu sed nondum intelligit esse quod nondum fecit.}
+\subsection{Impact Metrics}
+The metrics used to measure the performance of an academic author are
+typically based on citation counts.  Sometimes this metric is based on
+the overal citation rate of journals in which pulbications appear or
+they are based on per-paper citations.  As has been noted by several
+uthors, such as Adler et. al~\cite{adler2009}, these meterics are
+often misinterpreted or abused.  For example, Adler cites the
+disparity between the rate of publication of biologists and
+mathematicans as an instance in which entire disciplines are given
+disparaging grades relative to another. Adler also indicates that
+mereley counting citations may not be an entirely accruate way to gage
+influence exerted by a paper on the literature of a field.  Even where
+simple citation counts are employed, the time-delay in actual impact
+in fields like mathematics make this type of metric unreliable.  Adler
+concludes with a survey of common metrics and how they can be used and
+misused.
 
--- Anselm of Canterbury~\cite{anselm}
-\end{quote}
+Building on this notion of accuracy, the present work proposes an
+approach which looks beyond the simple presence or absence of
+citations.  By analyzing the texts of citing and cited documents, the
+goal is to build a model which will indicate the strength of influence
+exerted by a given paper or collection of papers.  In addition, the
+proposed analysis techniques seeks to provide a method by which the
+contributions of the author of a citing document can be evaluated.
+This is allows the model to evaluate the original impact of an author,
+that is to gauge how much original thought an author contributes to
+the overall corpus of documents. 
 
-The written word can be thought of as one of the chief accomplishments
-of mankind.  By recording human thought, our species has managed to
-make steady progress toward some as yet unknown end, always being able
-to make advances by utilizing the works of those that came before us.
-In fact, written documents can even lend a certain degree of
-immortality to their authors in that they remain long after the author
-dies.  As is the case with all human thought, written words are not
-entirely the work of their author.
+\subsection{Proposed Influence Model}
+The proposed model of influence is based on two parts.  First, the
+present work will model documents as tensors which model the text of
+both citing and cited documents. These tensors will the be decomposed
+into rank 1 components which will then be compared for similarity.
+The similarities between factors of cited documents and corresponding
+factors of the citing document is used to assign weights to each
+factor, and by extension to the document comprised of these factors.
+These weights comprise the second part of the model where influence of
+cited documents is used to explain the compositon of the citing
+document.  The residuals of this model are interpreted as the citing
+author's original contribution to the citing document. The proposed
+model is sumarized in equation (\ref{eq:model}). 
 
-Being an extension of the human mind, written documents share in the
-epistymological mystery of thought.  To paraphrase Anselm of
-Canterbury, that which we create must first be in the intellect.  So
-then, that begs the question of where these intellectual insights come
-from.  Of course, this has been the topic of much debate by many
-philosophers of the past, and the present work will make no effort to
-solve this.  Instead, we will make an appeal to Anselm's argument that
-everything that is in the intellect is either conceived within the
-intellect or it stems from some source which exists in outside
-reality.  The present work will also diverge wildly from what Anselm
-originally set out to accomplish.  The formulation of conception from
-internal and external sources stated above was originally the first
-step in the earliest ontological argument which proved the existence
-of God.  What the present work will attempt to do is much more
-difficult, involving something much more elusive than the creator of
-the universe.  What we will be searching for is a reliable way to
-model influence and contribution of human thought.
+\begin{equation}
+    \label{eq:model}
+    C = \sum w_id_i + w_a A
+\end{equation}
 
-\subsection{Influence Modelling}
-The current proposed work seeks to create a novel method of influence
-modelling through tensor decomposition. Influence modelling in this
-context is a model which accomplishes the following goals:
-\begin{enumerate}
-\item The model determines a weight for the influence one document
-  exerts on another.
-\item The model determines a weight for the contribution of an author
-  to their own document. 
-\item The model identifies what concepts are influencing factors and
-  what concepts are original to the document.
-\item Provide a weight for a document's influence over the entire
-  corpus to which it belongs.
-\end{enumerate}
-This sort of model can be used for a variety of tasks, such as
-document recommendation, plagerism detection, and author impact
-evaluation.  
+Here, $C$ is the tensor representation of the citing document.
+Individual cited documents $d_i$ are assigned weights $w_i$.  Finally,
+the tensor representing author contribution $A$ is assigned weight
+$w_a$.  
 
-Stated more formally, given a document $D$, the proposed model creates
-the parameters:
-\[
-\langle I, C, F \rangle 
-\]
-Each of these paramters are a pair of arrays $(W, T)$ where $W$ is an
-array of weights and $T$ is an array of topics such that $w_i$ is the
-weight of topic $t_i$.
+\subsection{Related Work}
 
-\subsection{Approach Overview}
-The proposed approach to influence modeling is based on the premise
-that concepts within a corpus of documents are either created by the
-authors of documents or are transferred from one document to another.
-The view is that a document within a corpus can be modeled as the sum
-of these parts.  Suppose that a document $D_1$ is composed of a set of
-concepts $C_1$, and that document $D_2$ is composed of a set of
-concepts $C_2$.  The intersection $C_1 \cap C_2$ would therefore
-represent the common concepts between these two documents.  If we
-suppose that $D_2$ was influenced by $D_1$, then it is a reasonable
-assumption that the set of influencing concepts is given as $I \subseteq
-C_1 \cap C_2$.  
+\section{Approach}
+\subsection{Tensors and Decomposition}
+The term {\em tensor} carries several different definitions depending
+on the field in which it is used.  For the purposes of the present
+work, the term {\em tensor} will refer to a multi-dimensional array.
+The objective of the tensor models constructed in this approach is to
+decompose the tensor into explanatory factors.  Many methods for this
+decomposition exist, but the most commonly applied decomposition is
+the parallel factors (PARAFAC) decomposition first proposed by by
+Harshman in 1970 \cite{harshman1970}.  In PARAFAC, a tensor is
+decomposed into a set of factors consisting of rank 1 tensors.  The
+decomposition is carried out to satisfy the following equation:
 
-Having arrived at the set of influencing concepts, $I_1$, a natural
-question would be to determine the strength of the relationship.
-Speaking again in broad generalities, suppose we have some set $W_2$
-which weights the concepts $c \in C_2$ according to importance to the
-document.  (This could, of course, be computed in many different
-ways!) For convenience, let $\sum W_2 = 1$.  Now, because $I_1 \subseteq
-C_1 \cap C_2$, it follows that $I_1 \subseteq C_2$.  Therefore, every
-concept $c\in I$ must have a corresponding $w \in W_2$.  Moreoever, we
-can build the set $W_i \subseteq W_2$ by extracting these
-corresponding elements, and we can assign a weight to the influence of
-$D_1$ by simple summation.
+\begin{equation}
+    \label{eq:parafac}
+    T = \displaystyle\sum_{i=1}^{r} F_i + E
+\end{equation}
+
+where $F$ is the set of $r$ rank-1 tensors and $E$ is the error
+residual of the model.  Naturally, the ALS algorithm seeks to minmize
+the size of $E$.  It is also often convenient to express the factor
+tensors in the form of vectors of each component such that the outer
+product of these vectors forms the factor.  For instance,
+a PARAFAC decomposition of a 3-way tensor can be written as:
+\begin{equation}
+    \label{eq:parafac-comp}
+    T = \displaystyle\sum_{i=1}^{r} A_i \circ B_i \circ C_i + E
+\end{equation}
+
+A final common decomposition technique is to normalize the matricies
+of the factors giving the final model's representation of:
+\begin{equation}
+    \label{eq:parafac-lambda}
+    T = \displaystyle\sum_{i=1}^{r} \lambda_i A_i \circ B_i \circ C_i
+    + E
+\end{equation}
+
+Here, the set $\lambda$ indicates the strength of the influence of
+each explanatory factor, and so it is often helpful to list factors
+such that $\lambda_1 \geq \lambda_2 \geq \ldots \lambda_r$.
+
+PARAFAC is a constrained instance of the Tucker decomposition model,
+which in turn is a further constrained principle component analysis
+(PCA) deconstruction \cite{bro1997}.  Where a PARAFAC model fits, the
+other models will fit as well or better.  However, PARAFAC carries
+with it several advantages.  First, it is relatively easy to compute
+using alternating least squares regression.  Second, it is unique
+under rotation given a suffeciently large number of sought factors
+\cite{harsman1970}.  But, perhaps most importantly, PARAFAC
+decompositions typically can be interpreted intuitively.  
+
+\subsection{Document Model}
+\subsection{Influence Model}
+
+\section{Example Problem}
+\subsection{Test Set Creation}
+\subsection{Results}
+
+\section{Proposed Contributions}
+\subsection{Influence Model}
+\subsection{Filtering}
+\subsection{Software}
 
 \section{Bibliography}
 \bibliography{sources}{}

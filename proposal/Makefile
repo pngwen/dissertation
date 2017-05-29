@@ -5,7 +5,7 @@ proposal.pdf: *.tex sources.bib
 	pdflatex proposal.tex
 	bibtex proposal
 	pdflatex proposal.tex
-	pdfpreview proposal.tex
+	pdflatex proposal.tex
 
 
 clean:
