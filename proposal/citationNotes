@@ -1,0 +1,32 @@
+adler2009
+    Citation statistics - Calls for better metrics for determining citation
+    Mentions problems with many other statistics
+    Increasing career determination from impact factors
+    impact factor and h-index
+
+el-arini2011
+    Keyword based influence model recomendation system.
+    Frequency Counting of Keywords
+
+bro1997
+    Tutorial on parfac.  Includes advantages of parafac as well as 
+    treatment of factors as a probability distribution
+    Model constraint hierarchy
+
+bro2003
+    Introduced Corcondia 
+    Core Consistency Diagnostic
+    Tucker Core array superdiagonal
+
+harshman1970
+    Introduced Parafac
+    Uniquness Theorem
+
+dietz2007
+    Uses LDA (latent Direchlet allocation) to model flow of topics
+    Creates directed graph of corpus
+    LDA estimate edge weights
+    Word-level topic model, presusposes knowledge of the topic
+
+blei2003
+    Origin paper for LDA

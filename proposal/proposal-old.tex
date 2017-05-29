@@ -1,0 +1,105 @@
+\documentclass{article}
+\title{Proposal: Influence Modeling Through Tensor Decomposition}
+\author{Robert Lowe}
+
+\usepackage{epigraph}
+\usepackage{cite}
+
+%some custom tensor commands
+\newcommand{\tens}[1]{\mathcal{#1}}
+\newcommand{\ntens}[1]{\hat{\tens{#1}}}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+\begin{quote}
+\textit{Nam cum pictor praecogitat quae facturus est, habet quidem in intellectu sed nondum intelligit esse quod nondum fecit.}
+
+-- Anselm of Canterbury~\cite{anselm}
+\end{quote}
+
+The written word can be thought of as one of the chief accomplishments
+of mankind.  By recording human thought, our species has managed to
+make steady progress toward some as yet unknown end, always being able
+to make advances by utilizing the works of those that came before us.
+In fact, written documents can even lend a certain degree of
+immortality to their authors in that they remain long after the author
+dies.  As is the case with all human thought, written words are not
+entirely the work of their author.
+
+Being an extension of the human mind, written documents share in the
+epistymological mystery of thought.  To paraphrase Anselm of
+Canterbury, that which we create must first be in the intellect.  So
+then, that begs the question of where these intellectual insights come
+from.  Of course, this has been the topic of much debate by many
+philosophers of the past, and the present work will make no effort to
+solve this.  Instead, we will make an appeal to Anselm's argument that
+everything that is in the intellect is either conceived within the
+intellect or it stems from some source which exists in outside
+reality.  The present work will also diverge wildly from what Anselm
+originally set out to accomplish.  The formulation of conception from
+internal and external sources stated above was originally the first
+step in the earliest ontological argument which proved the existence
+of God.  What the present work will attempt to do is much more
+difficult, involving something much more elusive than the creator of
+the universe.  What we will be searching for is a reliable way to
+model influence and contribution of human thought.
+
+\subsection{Influence Modelling}
+The current proposed work seeks to create a novel method of influence
+modelling through tensor decomposition. Influence modelling in this
+context is a model which accomplishes the following goals:
+\begin{enumerate}
+\item The model determines a weight for the influence one document
+  exerts on another.
+\item The model determines a weight for the contribution of an author
+  to their own document. 
+\item The model identifies what concepts are influencing factors and
+  what concepts are original to the document.
+\item Provide a weight for a document's influence over the entire
+  corpus to which it belongs.
+\end{enumerate}
+This sort of model can be used for a variety of tasks, such as
+document recommendation, plagerism detection, and author impact
+evaluation.  
+
+Stated more formally, given a document $D$, the proposed model creates
+the parameters:
+\[
+\langle I, C, F \rangle 
+\]
+Each of these paramters are a pair of arrays $(W, T)$ where $W$ is an
+array of weights and $T$ is an array of topics such that $w_i$ is the
+weight of topic $t_i$.
+
+\subsection{Approach Overview}
+The proposed approach to influence modeling is based on the premise
+that concepts within a corpus of documents are either created by the
+authors of documents or are transferred from one document to another.
+The view is that a document within a corpus can be modeled as the sum
+of these parts.  Suppose that a document $D_1$ is composed of a set of
+concepts $C_1$, and that document $D_2$ is composed of a set of
+concepts $C_2$.  The intersection $C_1 \cap C_2$ would therefore
+represent the common concepts between these two documents.  If we
+suppose that $D_2$ was influenced by $D_1$, then it is a reasonable
+assumption that the set of influencing concepts is given as $I \subseteq
+C_1 \cap C_2$.  
+
+Having arrived at the set of influencing concepts, $I_1$, a natural
+question would be to determine the strength of the relationship.
+Speaking again in broad generalities, suppose we have some set $W_2$
+which weights the concepts $c \in C_2$ according to importance to the
+document.  (This could, of course, be computed in many different
+ways!) For convenience, let $\sum W_2 = 1$.  Now, because $I_1 \subseteq
+C_1 \cap C_2$, it follows that $I_1 \subseteq C_2$.  Therefore, every
+concept $c\in I$ must have a corresponding $w \in W_2$.  Moreoever, we
+can build the set $W_i \subseteq W_2$ by extracting these
+corresponding elements, and we can assign a weight to the influence of
+$D_1$ by simple summation.
+
+\section{Bibliography}
+\bibliography{sources}{}
+\bibliographystyle{plain}
+
+\end{document}
