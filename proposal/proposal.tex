@@ -4,6 +4,7 @@
 
 \usepackage{epigraph}
 \usepackage{cite}
+\usepackage[]{algorithm2e}
 
 %some custom tensor commands
 \newcommand{\tens}[1]{\mathcal{#1}}
@@ -61,7 +62,8 @@ model is sumarized in equation (\ref{eq:model}).
 \end{equation}
 
 Here, $C$ is the tensor representation of the citing document.
-Individual cited documents $d_i$ are assigned weights $w_i$.  Finally,
+Individual cited documents are broken up into a set of factors with
+each element denoted as $d_i$ which are assigned weights $w_i$.  Finally,
 the tensor representing author contribution $A$ is assigned weight
 $w_a$.  
 
@@ -115,11 +117,220 @@ other models will fit as well or better.  However, PARAFAC carries
 with it several advantages.  First, it is relatively easy to compute
 using alternating least squares regression.  Second, it is unique
 under rotation given a suffeciently large number of sought factors
-\cite{harsman1970}.  But, perhaps most importantly, PARAFAC
-decompositions typically can be interpreted intuitively.  
+\cite{harshman1970}.  But, perhaps most importantly, PARAFAC
+decompositions typically can be interpreted
+intuitively~\cite{bro1997}.  
 
 \subsection{Document Model}
+In the proposed approach, documents are modeled by using terms along
+the dimensions of the tensor.  The vocabulary of the corpus is
+represented as words in a sequence $vocab$. 
+The document is then divided into
+$n$-grams, where $n$ is the number of dimensions of the array.  For
+example, a document split into 3-grams would be represented using
+a 3 dimensional tensor.  The values of the resultant document tensor
+$T$, at index $ijk$ would be the number of occurences of the 3 word
+phrase associated with the sequence of words $ijk$. The total
+dimensions of the tensor under this 3-gram scheme would be given 
+This allows the approach to be tuned to phrases of any length.  
+
+Naturally, the tensors for even a modest corpus are quite large and
+very sparse.  The tensors count the number of occurences of every
+permutation of the vocabulary of length $n$, the vast majority of
+which correspond to nonsensical phrases.  Also, the use of the corpus
+vocabulary in the indexing of the tensor further increases the
+sparsity of the resultant document tensors.
+
+The production of the document model is a two stage process.  First
+the corpus is pre-processed according to algorithm \ref{algcorp}.
+This is a simple filtering process which leaves only words in the
+documents.  (Further development may provide more sophisticated
+filtering at this stage.)  After corpus preprocessing is finished,
+each document is then modeled as a tensor according to algorithm
+\ref{algdoc}.  The result is a collection of tensors, one for each
+document, which contains the count of all possible $n$ word phrases.
+
+\begin{algorithm}
+\caption{Prepare Corpus}
+\label{algcorp}
+    Remove Numbers\;
+    Remove Punctuation\;
+    $wl \leftarrow $ split all documents by spaces\;
+    $vocab \leftarrow \emptyset$\;
+    \For{$w$ in $wl$} {
+        \If{$w \notin vocab$}{
+            $vocab$.append($w$)\;
+        }
+    }
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Document Tensor Construction}
+\label{algdoc}
+    $T \leftarrow$ 0 tensor with dimension $|vocab| \times |vocab| \times \ldots
+    |vocab|$\;
+    $phrase \leftarrow \emptyset$ \;
+    \For{$w$ in $d$}{
+        $phrase$.append($w$)\;
+        \If{$|phrase| = n$}{
+            $idx \leftarrow \emptyset$ \;
+            \For{$p$ in $phrase$}{
+                $i \leftarrow vocab.\mathrm{find}(p)$\;
+                $idx.\mathrm{append}(i)$\;
+            }
+            $T[idx] \leftarrow T[idx] + 1$\;
+        }
+    }
+\end{algorithm}
+
+
 \subsection{Influence Model}
+Having modeled the corpus of documents, all that remains to complete
+the model is assign contribution weights to each of the elements in
+cited documents as shown in equation (\ref{eq:model}).   This process
+begins with decomposing the factors in the citing document $C$ into
+the factors $F$ using PARAFAC decomposition.  The components of all
+citing documents are then decomposed into the factors $D$, also by
+parafac decomposition. Because the data represents counts of phrases,
+and is therefore non-negative in nature, a non-negativity constraint
+is applied to the decomposition of the documents. Furhtermore, each
+factor is normalizes as in equation (\ref{eq:parafac-lambda}).
+
+One natural question that arises at this stage is how many factors are
+used for each decomposition. This problem is certainly an open area of
+research as uniqueness of the solution is only guaranteed when the
+number of factors is greater than or equal to the rank of the tensor
+being decomposed \cite{harshman1970}.  However, the determination of
+the rank of a Tensor is an np-complete problem~\cite{haastad1990}!  To
+circumvent this, several metrics can be employed.  Outside knowledge
+could be used to determine the correct number of tensors, however
+given the present problem no such external knowledge is readily
+available.  A more data-based approach is used instead.  The metric
+presently used is the core-consistency or CORCONDIA metric proposed by
+Rasmus Bro in 2003 \cite{bro2003}.  The core consistency model divides
+out each factor in a given tensor and then checks the distance of that
+tensor from a superdiagonal tensor.  Completely consistent models have
+a CORCONDIA of 100\%, where significant deviation indicates the model
+is a poor fit for the given data.  The method employed here is to
+decompose each document into different numbers of factors until the
+CORCONDIA score drops significantly.  The number of factors just
+before the decrease is then selected as this is likely to be greater
+than the rank of the tensor, and will certainly provide a good fit to
+the data.
+
+Once the number of factors for each document has been determined, the
+construction of the model continues with the procedure outlined in
+algorithm \ref{alginfluence}.  
+
+\begin{algorithm}
+    \caption{Citing Factor Weight Assignment}
+    \label{alginfluence}
+    $D \leftarrow$ PARAFAC decompositions of cited documents\;
+    $F \leftarrow$ PARAFAC decomposition of citing document\;
+    $\lambda_d \leftarrow $ Norms of Factors in $D$ (see equation
+    (\ref{eq:parafac-lambda})\;
+    $\lambda_f \leftarrow $ Norms of Factors in $F$\;
+    Normalize $D$ using $\lambda_d$\;
+    Normalize $F$ using $\lambda_f$\;
+    $w \leftarrow $ matrix of dimension $|D| \times |F|$\;
+    \For{$i$ = 1 to $|D|$} {
+        \For{$j$ = 1 to $|F|$} {
+            $w[i,j] \leftarrow \mathrm{similarity(D[i], F[i)}$;
+        }
+    }
+\end{algorithm}
+
+The output of algorithm \ref{alginfluence} is a matrix with similarity
+scores for each of the factors. The columns represent the citing
+document factors, with each row showing the similarity measure for
+each candidate cited factor.  The algorithm leaves out an explicit
+definition of the similarity metric as this is a matter to be explored
+in the proposed research. For now, a simple metric is employed as
+a proof of concept.  
+
+The selection of the similarity metric should be made such that its
+output is between 0 and 1, and it should roughly correspond to the
+proportion of variability of the factor in $F$ which can be explained
+by $D$.  Because the contents of $F$ and $D$ are all proportions,
+given the normalization carried out in the parafac process, one simple
+measure which satisfies this constraint is root mean square deviation
+between the factors.  This is easy to compute and test, and given
+non-negative factors between 0 and 1 it will always yield results in
+that range.  However, this makes a broad range of assumptions, not
+least is a linear relationship between the transfer of topics from the
+source documents to citing document.  This part of the model should
+therefore be regarded as a place holder until further study is carried
+out.  Also, RMSD is a measure of deviation, so really what is needed
+for this place-holder metric is $1-\mathrm{RMSD}(d_i, f_i$, and this
+is what is used in the example application in the next section.
+
+Another open question for the present research is how to combine these
+weights.  The resultant weight matrix could, of course, be normalized
+and treated as the weight distribution for the influence model,
+however this leads to a break down of the goals outlined in the first
+section.  Namely, there would be no residuals.  Such a normalization
+would imply that all of the factors of the citing document were fully
+explained by the factors in the cited documetns.  Stated another way,
+such an assumption would be equivalent to assuming that the citing
+author has contributed nothing!  For the the present example problem,
+the assumption that is made is that each factor in the citing document
+can only be described by one of the cited factors (though any one
+citing factor may be able to explain any number of citing factors).
+This assumpion is, of course, quite dangerous in the general case but
+will work for showing the relative merits of this model in this
+proposal.  Using this assumption, the model is advanced by selecting
+the maximum weighted factor for each column.  The rest of each factor
+being treated as a residual.  This temporary algorithm is shown in
+algorithm \ref{algselection}.
+
+\begin{algorithm}
+    \caption{Temporary Factor Selection}
+    \label{algselection}
+    $indexes \leftarrow \emptyset$\;
+    $weights \leftarrow \emptyset$\;
+    \For{$c$ = 1 to $|F|$}{
+        $i \leftarrow $ index of maximum weight in column $c$ of $w$\;
+        $indexes.\mathrm{append}(i)$\;
+        $weights.\mathrm{append}(w[i,c])$\;
+    }
+\end{algorithm}
+
+The results of algorithm \ref{algselection} are the
+indexes and the weights of the selected factors.  These represent the
+proportion of contributions for each factor.  If every factor had
+a uniform explanatory effect on the citing document, the model would
+be complete at this step.  Of course, this almost never happens.  The
+normalizing scalars $\lambda$ indicate the strength of each factor in
+$f$.  To arrive at the overall weights and proportions for each
+contributing factor requires that the weights be scaled by their
+overall proportion to the citing document.  This final modification of
+the weights is shown in algorithm \ref{algadjust}.
+
+\begin{algorithm}
+    \label{algadjust}
+    \caption{Proportional Weight Adjustment}
+    $s \leftarrow \sum \lambda_f$\;
+    \For{i = 1 to |w|} {
+        $w[i] \leftarrow \lambda_f[i] * w[i] / s$\;
+    }
+\end{algorithm}
+
+At this stage the author's contribution weight can be computed as
+shown in equation (\ref{eq:authorWeight}).  The present method in this
+proposal does not, however, provide a clear way to extract the author
+contribution tensor.  This is left to the future development of this
+work.
+
+\begin{equation}
+    \label{eq:authorWeight}
+    w_a = 1 - \sum w
+\end{equation}
+
+Likewise, the contributions of each document can readily be computed
+by summing the weights associated with each citing document.  This
+mapping is trivial given the $indexes$ list extracted during algorithm
+\ref{algselection}.
 
 \section{Example Problem}
 \subsection{Test Set Creation}
