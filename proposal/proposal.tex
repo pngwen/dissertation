@@ -2,9 +2,12 @@
 \title{Proposal: Influence Modeling Through Tensor Decomposition}
 \author{Robert Lowe}
 
+\usepackage{csquotes}
 \usepackage{epigraph}
 \usepackage{cite}
 \usepackage[]{algorithm2e}
+\usepackage{subfig}
+\usepackage{graphicx}
 
 %some custom tensor commands
 \newcommand{\tens}[1]{\mathcal{#1}}
@@ -14,6 +17,19 @@
 \maketitle
 
 \section{Introduction}
+No document is ever created in a vacuum.  In fact, if a document were
+to be created without reference to others it would probably be judged
+to be untrustworthy.  This is especially true in the realm of
+academic literature where knowledge of source material is absolutely
+required to evaluate and study professional work. 
+
+The presently proposed work seeks to study this problem through
+a novel technique based on tensor analysis.  The goal is to ascribe
+influence to the several documents in a corpus of cited and citing
+documents. A secondary goal of the present work is to model the flow
+of information from cited to citing papers in such a way that the
+topics can be interpreted by intuitively.
+
 \subsection{Impact Metrics}
 The metrics used to measure the performance of an academic author are
 typically based on citation counts.  Sometimes this metric is based on
@@ -68,6 +84,36 @@ the tensor representing author contribution $A$ is assigned weight
 $w_a$.  
 
 \subsection{Related Work}
+Text-based influence modelling is still a fairly sparse field of
+study.  The present work is, however, heavily influenced by a few
+recent works.
+
+First, as has already been noted, Adler et. Al \cite{addler2009}
+outlines the need for robust statistics for modelling the actual
+influence of an author.  While they do not provide any influence
+metrics in the paper, they do propose that such a system should be
+adaptable to the fields and corpora in which it is employed.
+
+Another work of note is Dietz et. Al's 2007 paper \cite{dietz2007} which uses
+Latent Dirichlet Analysis \cite{blei2003} to provide weights to
+a directed graph of topic flow.  Dietz's approach requires
+a pre-existing topic model and uses tokenized documents to in
+conjunction with LDA to provide influence weights.  The present work
+seeks to extract topic models as it models influence, thus requiring
+less preprocessing and manual work.
+
+The notion of frequency counting used in the current work was inspired
+by El-Arini et Al's 2011 paper\cite{el-arini2011}.  In this work,
+influence is modelled by keyword counting.  Again, this requires prior
+knowledge of the keywords to be modelled.  El-Arini makes the
+assumption that source documents contain keywords in higher
+concentrations and uses this to assign influence weights to documents.
+One interesting aspect of El-Arini's work is that it attempts to make
+a document recommendation system which, given a set of documents and
+a set of keywords, can make a set of recommended papers for
+a researcher.  El-Arini's work could possibly be improved upon by
+using a technique such as the one proposed here to serve as its
+influence model.
 
 \section{Approach}
 \subsection{Tensors and Decomposition}
@@ -330,18 +376,263 @@ work.
 Likewise, the contributions of each document can readily be computed
 by summing the weights associated with each citing document.  This
 mapping is trivial given the $indexes$ list extracted during algorithm
-\ref{algselection}.
+\ref{algselection}. 
 
 \section{Example Problem}
+Testing the proposed algorithm is tricky.  As is the case with most
+text modelling, simply reading the texts in question give little
+insight into appropriate numerical weightings of the contribution.  In
+order to alleviate this problem, and produce a test data set with at
+least some element of ground truth knowledge, a simple dataset is
+generated from known contributing elements.  Also, present limitations
+of available software mandates a data set with a relatively small
+vocabulary.
+
+The analysis in this example problem was carried out using Rasmus
+Bro's n-way toolkit \cite{andersson2000} for Matlab (though GNU Octave was used as the
+actual interpreter.)  This package, though it works with Matlab's
+sparse arrays, has a tendency to unfold sparse arrays into dense
+arrays.  As such, it has difficulty handling tensors that will not fit
+into a computer's memory.  
+
+So then the example problem must be generated with two goals in mind.
+First, it must have at lest somewhat knowable proportions.  Second, it
+must have a small enough vocabulary so that its tensors and
+decompositions will not exceed a few gigabytes in size.
+
 \subsection{Test Set Creation}
+The test problem presented here consists of a three document corpus.
+The first two documents are taken from the children's stories {\em The
+Ant and the Dove}~\cite{aesop} and {\em The Seven
+Ravens}~\cite{aesop}.  These documents comprise the cited documents in
+the corpus.  A third document, referred to as the "generated"
+document, is produced using a software package called
+DadaDodo~\cite{dada}.  DadaDodo builds a Markov-Chain based model of
+its source material and generates a new document by sampling the
+Markov chains for word order probability.  The output of DadaDodo
+tends to be at least somewhat grammatically correct, but is generally
+nonsense. 
+
+In fact, in this instance, the generated document has a weak plot
+which is somewhat of a mixture between the plot of the two stories.
+To the extent meaning can be ascribe to the generated story, it is
+a rather grisly tale of a young girl who feeds a dwarf to a raven
+while her father searches for an ant and a dove.  For instance,
+consider the excerpt in figure \ref{fig:gentext}.
+
+\begin{figure}
+  \label{fig:gentext}
+  \begin{displayquote}
+But the glass, she the ring drumstick, of men! 
+
+But a morsel from each of wings and looked at it was true that wish I am
+looking for a little chair as he was once a human mouth. 
+  \end{displayquote}
+  \caption{Excerpt of Generated Text}
+\end{figure}
+
+More interesting, of course, is the statistical situation of the
+samples.  The first stage of the analysis as show in 
+algorithms \ref{algcorp} and \ref{algdoc}, is to generate tensor
+representations of the documents.  For the sake of simplicity,
+a 3-gram analysis is carried out yielding the statistics shown in
+table \ref{tab:docstats}.
+
+\begin{table}
+    \label{docstats}
+    \begin{tabular}{l|r|r}
+    {\bf Document} & {\bf Distinct 3-grams} \\
+    \hline
+    {\em The Ant and the Dove} & 258 \\
+    {\em The Seven Ravens} & 939 \\
+    \hline
+    {\em Generated Document} & 619\\
+    \end{tabular}
+    \caption{Document Phrase Statistics}
+\end{table}
+
+Because the generated document is generated according to the Markov
+assumption, it has the capacity to invent new phrases.  The overall
+probabilities are an even mixture of the word order probabilities of
+the two documents.  As such, both documents should be more or less
+evenly present in the generated document, with some residual left over
+for the mixture of the two.  In this example, the generated document
+contains $619$ distinct 3-grams, $372$ of which do not appear in the
+source material.  Thus the expected contributions for the author and
+the documents can be estimated as shown in table \ref{tab:expected}. The
+high author contribution is reasonable and desirable given the end
+goal of analyzing real-world citing documents.
+
+\begin{table}
+    \label{tab:Expected}
+    \begin{tabular}{l|r}
+    {\bf Document} & {\bf contribution} \\
+    \hline
+    Ant &  0.2261 \\
+    Raven & 0.2261 \\
+    $w_a$ & 0.54 \\
+    \end{tabular}
+    \caption{Expected Contributions}
+\end{table}
+
+All three of the documents in the corpus are well represented by
+a five factor decomposition. This was discovered by means of repeated
+decomposition and observation of the CORCONDIA metric as outlined
+previously.  The data are then processed using algorithms
+\ref{alginfluence}, \ref{algselection}, and \ref{algadjust}.
+
 \subsection{Results}
+The resultant factor statistics are shown in table \ref{tab:results}.  The
+performance of the algorithm is pretty much as expected.  However,
+observing the graphical representation of all the matched factors show
+that most of the matched factors have few features in common with each
+other.  This is attributable to the primitive matching method used,
+and will require further effort to refine.
 
-\section{Proposed Contributions}
+\begin{table}
+    \label{tab:results}
+    \begin{tabular}{l|r|l}
+        {\bf Factor 1} & {\bf Explanatory Weight} & {Source}\\
+        \hline
+        1 & 0.06 & Ant Factor 3\\
+        2 & 0.04 & Ant Factor 3\\
+        3 & 0.12 & Raven Factor 3\\
+        4 & 0.14 & Ant Factor 1\\
+        5 & 0.10 & Raven Factor 1\\
+    \end{tabular}
+    \caption{Factor Results}
+\end{table}
+
+
+Summing these results and calculating the residual yields the document
+and author contributions shown in table \ref{tab:docresults}.  These
+results match the expected results fairly closely indicating that the
+decomposition and matching worked as expected.
+
+\begin{table}
+    \label{tab:docresults}
+    \begin{tabular}{l|r}
+        {\bf Source} & {\bf Contribution} \\
+        \hline
+        {\em The Ant and the Dove} & 0.24 \\
+        {\em The Seven Ravens} & 0.22 \\
+        $w_a$ & 0.54
+    \end{tabular}
+    \caption{Document Contribution Results}
+\end{table}
+
+\begin{figure}%
+    \centering
+    \subfloat{{\includegraphics[width=5cm]{plots/gen1} }}%
+    \qquad
+    \subfloat{{\includegraphics[width=5cm]{plots/ant3}
+    }}%
+    \caption{Component 1 Match}%
+    \label{fig:com1}%
+\end{figure}
+
+\begin{figure}%
+    \centering
+    \subfloat{{\includegraphics[width=5cm]{plots/gen2} }}%
+    \qquad
+    \subfloat{{\includegraphics[width=5cm]{plots/ant3}
+    }}%
+    \caption{Component 2 Match}%
+    \label{fig:com2}%
+\end{figure}
+
+\begin{figure}%
+    \centering
+    \subfloat{{\includegraphics[width=5cm]{plots/gen3} }}%
+    \qquad
+    \subfloat{{\includegraphics[width=5cm]{plots/rav3}
+    }}%
+    \caption{Component 3 Match}%
+    \label{fig:com3}%
+\end{figure}
+
+\begin{figure}%
+    \centering
+    \subfloat{{\includegraphics[width=5cm]{plots/gen4} }}%
+    \qquad
+    \subfloat{{\includegraphics[width=5cm]{plots/ant1}
+    }}%
+    \caption{Component 4 Match}%
+    \label{fig:com4}%
+\end{figure}
+
+\begin{figure}%
+    \centering
+    \subfloat{{\includegraphics[width=5cm]{plots/gen5} }}%
+    \qquad
+    \subfloat{{\includegraphics[width=5cm]{plots/rav1}
+    }}%
+    \caption{Component 5 Match}%
+    \label{fig:com5}%
+\end{figure}
+
+\section{Proposed Contributions and Further Work}
+The preliminary results appear encouraging, and so the proposed work
+is to continue development of this influence modelling technique.  The
+key contributions of the proposed work are outlined in this section.
+
 \subsection{Influence Model}
-\subsection{Filtering}
-\subsection{Software}
+The influence model itself warrants further study and analysis.
+Particularly, a more sophisticated metric is needed for comparing the
+factors of the decomposed tensors.  This will be accomplished through
+comparison of the performance of several metrics.
 
-\section{Bibliography}
+Another related contribution sought by the proposed work is a method
+to evaluate the validity of a tensor-based influence model.  This
+will, of course, be heavily influenced by the selected method or
+methods of modeling factor contributions.
+
+\subsection{Filtering}
+This technique, as it stands now, assumes that the originating sources
+of all n-grams are contained within the document corpus being
+analyzed. This is, of course, not true.  In fact, there will be many
+phrases and even groups of phrases common to many different documents
+within a corpus.  A filtering technique would be useful to avoid
+attribution of these common phrases.
+
+On the other hand, these common phrases may indicate some level of
+stylistic influence exerted by an author.  In either case, determining
+commonalities among the several documents within the corpus prior to
+assigning attribution weights should prove an interesting area of
+study and validation of the proposed model.
+
+\subsection{Software}
+Another contribution sought is in tensor software creation.  The size
+and complexity of the tensors in the present work demand more robust
+tensor factoring software.  Current packages cannot handle the very
+large sparse tensors present in a real-world application.  As such,
+the proposed work will include a tensor library written in C++ which
+will be able to handle the task of large sparse tensors.  This
+software will be released under some suitable open source license.
+
+\subsection{Additional Applications}
+Once a working model is in hand, additional extensions of application
+will be tried. Some proposed future directions include:
+\begin{itemize}
+    \item Topological sorting to determine chronology of documents
+    based on influence modelling.
+    \item Identification of uncited documents in a corpus which appear
+    to have exerted an influence.
+    \item Modelling of transitive influence by observing the flow of
+    factors through the influence network.
+\end{itemize}
+
+
+\section{Conclusion}
+Modelling document influence is an interesting computational problem
+with potentially interesting applications.  The present proposal is to
+build a solution of this model using tensor decomposition to analyze
+the flow of ideas from cited paper to citing paper in a corpus of
+scientific literature.  The proposed solution to this problem will
+work without prior knowledge of the contents of corpora, and so it
+should prove to be a generally useful modelling technique.
+
+
 \bibliography{sources}{}
 \bibliographystyle{plain}
 
