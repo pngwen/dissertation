@@ -17,14 +17,14 @@
 \subsection{Impact Metrics}
 The metrics used to measure the performance of an academic author are
 typically based on citation counts.  Sometimes this metric is based on
-the overal citation rate of journals in which pulbications appear or
+the overall citation rate of journals in which publications appear or
 they are based on per-paper citations.  As has been noted by several
-uthors, such as Adler et. al~\cite{adler2009}, these meterics are
+authors, such as Adler et. al~\cite{adler2009}, these metrics are
 often misinterpreted or abused.  For example, Adler cites the
 disparity between the rate of publication of biologists and
-mathematicans as an instance in which entire disciplines are given
+mathematicians as an instance in which entire disciplines are given
 disparaging grades relative to another. Adler also indicates that
-mereley counting citations may not be an entirely accruate way to gage
+merely counting citations may not be an entirely accurate way to gage
 influence exerted by a paper on the literature of a field.  Even where
 simple citation counts are employed, the time-delay in actual impact
 in fields like mathematics make this type of metric unreliable.  Adler
@@ -51,10 +51,10 @@ The similarities between factors of cited documents and corresponding
 factors of the citing document is used to assign weights to each
 factor, and by extension to the document comprised of these factors.
 These weights comprise the second part of the model where influence of
-cited documents is used to explain the compositon of the citing
+cited documents is used to explain the composition of the citing
 document.  The residuals of this model are interpreted as the citing
 author's original contribution to the citing document. The proposed
-model is sumarized in equation (\ref{eq:model}). 
+model is summarized in equation (\ref{eq:model}). 
 
 \begin{equation}
     \label{eq:model}
@@ -88,7 +88,7 @@ decomposition is carried out to satisfy the following equation:
 \end{equation}
 
 where $F$ is the set of $r$ rank-1 tensors and $E$ is the error
-residual of the model.  Naturally, the ALS algorithm seeks to minmize
+residual of the model.  Naturally, the ALS algorithm seeks to minimize
 the size of $E$.  It is also often convenient to express the factor
 tensors in the form of vectors of each component such that the outer
 product of these vectors forms the factor.  For instance,
@@ -98,7 +98,7 @@ a PARAFAC decomposition of a 3-way tensor can be written as:
     T = \displaystyle\sum_{i=1}^{r} A_i \circ B_i \circ C_i + E
 \end{equation}
 
-A final common decomposition technique is to normalize the matricies
+A final common decomposition technique is to normalize the matrices
 of the factors giving the final model's representation of:
 \begin{equation}
     \label{eq:parafac-lambda}
@@ -116,7 +116,7 @@ which in turn is a further constrained principle component analysis
 other models will fit as well or better.  However, PARAFAC carries
 with it several advantages.  First, it is relatively easy to compute
 using alternating least squares regression.  Second, it is unique
-under rotation given a suffeciently large number of sought factors
+under rotation given a sufficiently large number of sought factors
 \cite{harshman1970}.  But, perhaps most importantly, PARAFAC
 decompositions typically can be interpreted
 intuitively~\cite{bro1997}.  
@@ -129,13 +129,13 @@ The document is then divided into
 $n$-grams, where $n$ is the number of dimensions of the array.  For
 example, a document split into 3-grams would be represented using
 a 3 dimensional tensor.  The values of the resultant document tensor
-$T$, at index $ijk$ would be the number of occurences of the 3 word
+$T$, at index $ijk$ would be the number of occurrences of the 3 word
 phrase associated with the sequence of words $ijk$. The total
 dimensions of the tensor under this 3-gram scheme would be given 
 This allows the approach to be tuned to phrases of any length.  
 
 Naturally, the tensors for even a modest corpus are quite large and
-very sparse.  The tensors count the number of occurences of every
+very sparse.  The tensors count the number of occurrences of every
 permutation of the vocabulary of length $n$, the vast majority of
 which correspond to nonsensical phrases.  Also, the use of the corpus
 vocabulary in the indexing of the tensor further increases the
@@ -192,9 +192,9 @@ cited documents as shown in equation (\ref{eq:model}).   This process
 begins with decomposing the factors in the citing document $C$ into
 the factors $F$ using PARAFAC decomposition.  The components of all
 citing documents are then decomposed into the factors $D$, also by
-parafac decomposition. Because the data represents counts of phrases,
+PARAFAC decomposition. Because the data represents counts of phrases,
 and is therefore non-negative in nature, a non-negativity constraint
-is applied to the decomposition of the documents. Furhtermore, each
+is applied to the decomposition of the documents. Furthermore, each
 factor is normalizes as in equation (\ref{eq:parafac-lambda}).
 
 One natural question that arises at this stage is how many factors are
@@ -253,7 +253,7 @@ The selection of the similarity metric should be made such that its
 output is between 0 and 1, and it should roughly correspond to the
 proportion of variability of the factor in $F$ which can be explained
 by $D$.  Because the contents of $F$ and $D$ are all proportions,
-given the normalization carried out in the parafac process, one simple
+given the normalization carried out in the PARAFAC process, one simple
 measure which satisfies this constraint is root mean square deviation
 between the factors.  This is easy to compute and test, and given
 non-negative factors between 0 and 1 it will always yield results in
@@ -271,13 +271,13 @@ and treated as the weight distribution for the influence model,
 however this leads to a break down of the goals outlined in the first
 section.  Namely, there would be no residuals.  Such a normalization
 would imply that all of the factors of the citing document were fully
-explained by the factors in the cited documetns.  Stated another way,
+explained by the factors in the cited documents.  Stated another way,
 such an assumption would be equivalent to assuming that the citing
 author has contributed nothing!  For the the present example problem,
 the assumption that is made is that each factor in the citing document
 can only be described by one of the cited factors (though any one
 citing factor may be able to explain any number of citing factors).
-This assumpion is, of course, quite dangerous in the general case but
+This assumption is, of course, quite dangerous in the general case but
 will work for showing the relative merits of this model in this
 proposal.  Using this assumption, the model is advanced by selecting
 the maximum weighted factor for each column.  The rest of each factor
