@@ -40,7 +40,7 @@ often misinterpreted or abused.  For example, Adler cites the
 disparity between the rate of publication of biologists and
 mathematicians as an instance in which entire disciplines are given
 disparaging grades relative to another. Adler also indicates that
-merely counting citations may not be an entirely accurate way to gage
+merely counting citations may not be an entirely accurate way to gauge
 influence exerted by a paper on the literature of a field.  Even where
 simple citation counts are employed, the time-delay in actual impact
 in fields like mathematics make this type of metric unreliable.  Adler
@@ -62,7 +62,7 @@ the overall corpus of documents.
 The proposed model of influence is based on two parts.  First, the
 present work will model documents as tensors which model the text of
 both citing and cited documents. These tensors will the be decomposed
-into rank 1 components which will then be compared for similarity.
+into rank-1 components which will then be compared for similarity.
 The similarities between factors of cited documents and corresponding
 factors of the citing document is used to assign weights to each
 factor, and by extension to the document comprised of these factors.
@@ -188,17 +188,17 @@ vocabulary in the indexing of the tensor further increases the
 sparsity of the resultant document tensors.
 
 The production of the document model is a two stage process.  First
-the corpus is pre-processed according to algorithm \ref{algcorp}.
+the corpus is pre-processed according to algorithm \ref{alg:corp}.
 This is a simple filtering process which leaves only words in the
 documents.  (Further development may provide more sophisticated
 filtering at this stage.)  After corpus preprocessing is finished,
 each document is then modeled as a tensor according to algorithm
-\ref{algdoc}.  The result is a collection of tensors, one for each
+\ref{alg:doc}.  The result is a collection of tensors, one for each
 document, which contains the count of all possible $n$ word phrases.
 
 \begin{algorithm}
 \caption{Prepare Corpus}
-\label{algcorp}
+\label{alg:corp}
     Remove Numbers\;
     Remove Punctuation\;
     $wl \leftarrow $ split all documents by spaces\;
@@ -213,7 +213,7 @@ document, which contains the count of all possible $n$ word phrases.
 
 \begin{algorithm}
 \caption{Document Tensor Construction}
-\label{algdoc}
+\label{alg:doc}
     $T \leftarrow$ 0 tensor with dimension $|vocab| \times |vocab| \times \ldots
     |vocab|$\;
     $phrase \leftarrow \emptyset$ \;
@@ -267,11 +267,11 @@ the data.
 
 Once the number of factors for each document has been determined, the
 construction of the model continues with the procedure outlined in
-algorithm \ref{alginfluence}.  
+algorithm \ref{alg:influence}.  
 
 \begin{algorithm}
     \caption{Citing Factor Weight Assignment}
-    \label{alginfluence}
+    \label{alg:influence}
     $D \leftarrow$ PARAFAC decompositions of cited documents\;
     $F \leftarrow$ PARAFAC decomposition of citing document\;
     $\lambda_d \leftarrow $ Norms of Factors in $D$ (see equation
@@ -287,7 +287,7 @@ algorithm \ref{alginfluence}.
     }
 \end{algorithm}
 
-The output of algorithm \ref{alginfluence} is a matrix with similarity
+The output of algorithm \ref{alg:influence} is a matrix with similarity
 scores for each of the factors. The columns represent the citing
 document factors, with each row showing the similarity measure for
 each candidate cited factor.  The algorithm leaves out an explicit
@@ -328,11 +328,11 @@ will work for showing the relative merits of this model in this
 proposal.  Using this assumption, the model is advanced by selecting
 the maximum weighted factor for each column.  The rest of each factor
 being treated as a residual.  This temporary algorithm is shown in
-algorithm \ref{algselection}.
+algorithm \ref{alg:selection}.
 
 \begin{algorithm}
     \caption{Temporary Factor Selection}
-    \label{algselection}
+    \label{alg:selection}
     $indexes \leftarrow \emptyset$\;
     $weights \leftarrow \emptyset$\;
     \For{$c$ = 1 to $|F|$}{
@@ -342,7 +342,7 @@ algorithm \ref{algselection}.
     }
 \end{algorithm}
 
-The results of algorithm \ref{algselection} are the
+The results of algorithm \ref{alg:selection} are the
 indexes and the weights of the selected factors.  These represent the
 proportion of contributions for each factor.  If every factor had
 a uniform explanatory effect on the citing document, the model would
@@ -351,11 +351,11 @@ normalizing scalars $\lambda$ indicate the strength of each factor in
 $f$.  To arrive at the overall weights and proportions for each
 contributing factor requires that the weights be scaled by their
 overall proportion to the citing document.  This final modification of
-the weights is shown in algorithm \ref{algadjust}.
+the weights is shown in algorithm \ref{alg:adjust}.
 
 \begin{algorithm}
-    \label{algadjust}
     \caption{Proportional Weight Adjustment}
+    \label{alg:adjust}
     $s \leftarrow \sum \lambda_f$\;
     \For{i = 1 to |w|} {
         $w[i] \leftarrow \lambda_f[i] * w[i] / s$\;
@@ -376,7 +376,7 @@ work.
 Likewise, the contributions of each document can readily be computed
 by summing the weights associated with each citing document.  This
 mapping is trivial given the $indexes$ list extracted during algorithm
-\ref{algselection}. 
+\ref{alg:selection}. 
 
 \section{Example Problem}
 Testing the proposed algorithm is tricky.  As is the case with most
@@ -421,7 +421,6 @@ while her father searches for an ant and a dove.  For instance,
 consider the excerpt in figure \ref{fig:gentext}.
 
 \begin{figure}
-  \label{fig:gentext}
   \begin{displayquote}
 But the glass, she the ring drumstick, of men! 
 
@@ -429,17 +428,17 @@ But a morsel from each of wings and looked at it was true that wish I am
 looking for a little chair as he was once a human mouth. 
   \end{displayquote}
   \caption{Excerpt of Generated Text}
+  \label{fig:gentext}
 \end{figure}
 
 More interesting, of course, is the statistical situation of the
 samples.  The first stage of the analysis as show in 
-algorithms \ref{algcorp} and \ref{algdoc}, is to generate tensor
+algorithms \ref{alg:corp} and \ref{alg:doc}, is to generate tensor
 representations of the documents.  For the sake of simplicity,
 a 3-gram analysis is carried out yielding the statistics shown in
 table \ref{tab:docstats}.
 
 \begin{table}
-    \label{docstats}
     \begin{tabular}{l|r|r}
     {\bf Document} & {\bf Distinct 3-grams} \\
     \hline
@@ -449,6 +448,7 @@ table \ref{tab:docstats}.
     {\em Generated Document} & 619\\
     \end{tabular}
     \caption{Document Phrase Statistics}
+    \label{tab:docstats}
 \end{table}
 
 Because the generated document is generated according to the Markov
@@ -464,7 +464,6 @@ high author contribution is reasonable and desirable given the end
 goal of analyzing real-world citing documents.
 
 \begin{table}
-    \label{tab:Expected}
     \begin{tabular}{l|r}
     {\bf Document} & {\bf contribution} \\
     \hline
@@ -473,13 +472,14 @@ goal of analyzing real-world citing documents.
     $w_a$ & 0.54 \\
     \end{tabular}
     \caption{Expected Contributions}
+    \label{tab:expected}
 \end{table}
 
 All three of the documents in the corpus are well represented by
 a five factor decomposition. This was discovered by means of repeated
 decomposition and observation of the CORCONDIA metric as outlined
 previously.  The data are then processed using algorithms
-\ref{alginfluence}, \ref{algselection}, and \ref{algadjust}.
+\ref{alg:influence}, \ref{alg:selection}, and \ref{alg:adjust}.
 
 \subsection{Results}
 The resultant factor statistics are shown in table \ref{tab:results}.  The
@@ -490,7 +490,6 @@ other.  This is attributable to the primitive matching method used,
 and will require further effort to refine.
 
 \begin{table}
-    \label{tab:results}
     \begin{tabular}{l|r|l}
         {\bf Factor 1} & {\bf Explanatory Weight} & {Source}\\
         \hline
@@ -501,6 +500,7 @@ and will require further effort to refine.
         5 & 0.10 & Raven Factor 1\\
     \end{tabular}
     \caption{Factor Results}
+    \label{tab:results}
 \end{table}
 
 
@@ -510,7 +510,6 @@ results match the expected results fairly closely indicating that the
 decomposition and matching worked as expected.
 
 \begin{table}
-    \label{tab:docresults}
     \begin{tabular}{l|r}
         {\bf Source} & {\bf Contribution} \\
         \hline
@@ -519,6 +518,7 @@ decomposition and matching worked as expected.
         $w_a$ & 0.54
     \end{tabular}
     \caption{Document Contribution Results}
+    \label{tab:docresults}
 \end{table}
 
 \begin{figure}%
@@ -527,7 +527,7 @@ decomposition and matching worked as expected.
     \qquad
     \subfloat{{\includegraphics[width=5cm]{plots/ant3}
     }}%
-    \caption{Component 1 Match}%
+    \caption{Factor 1 Match}%
     \label{fig:com1}%
 \end{figure}
 
@@ -537,7 +537,7 @@ decomposition and matching worked as expected.
     \qquad
     \subfloat{{\includegraphics[width=5cm]{plots/ant3}
     }}%
-    \caption{Component 2 Match}%
+    \caption{Factor 2 Match}%
     \label{fig:com2}%
 \end{figure}
 
@@ -547,7 +547,7 @@ decomposition and matching worked as expected.
     \qquad
     \subfloat{{\includegraphics[width=5cm]{plots/rav3}
     }}%
-    \caption{Component 3 Match}%
+    \caption{Factor 3 Match}%
     \label{fig:com3}%
 \end{figure}
 
@@ -557,7 +557,7 @@ decomposition and matching worked as expected.
     \qquad
     \subfloat{{\includegraphics[width=5cm]{plots/ant1}
     }}%
-    \caption{Component 4 Match}%
+    \caption{Factor 4 Match}%
     \label{fig:com4}%
 \end{figure}
 
@@ -567,7 +567,7 @@ decomposition and matching worked as expected.
     \qquad
     \subfloat{{\includegraphics[width=5cm]{plots/rav1}
     }}%
-    \caption{Component 5 Match}%
+    \caption{Factor 5 Match}%
     \label{fig:com5}%
 \end{figure}
 
