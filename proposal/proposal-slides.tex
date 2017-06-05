@@ -1,4 +1,4 @@
-\documentclass[handout]{beamer}
+\documentclass{beamer}
 \mode<presentation>
 {
   \usetheme{Warsaw}
@@ -139,7 +139,7 @@
     \begin{itemize}[<+->]
         \item Popularized by Richard Harshman \cite{harshman1970} as a means of analyzing multi-modal parallel factors.
         \item Decomposes a tensor as a sum of component tensors.
-        \item The component tensors are represented as a set of loading vectors such that the tensor $X$ is created by:
+        \item The component tensors are represented as a set of loading vectors such that the tensor $T$ is created by:
         \[
     T = \displaystyle\sum_{i=1}^{r} \lambda_i A_i \circ B_i \circ C_i + E
         \]
@@ -221,7 +221,7 @@
     $w \leftarrow $ matrix of dimension $|D| \times |F|$\;
     \For{$i$ = 1 to $|D|$} {
         \For{$j$ = 1 to $|F|$} {
-            $w[i,j] \leftarrow \mathrm{similarity(D[i], F[i)}$;
+            $w[i,j] \leftarrow \mathrm{similarity(D[i], F[i])}$;
         }
     }
 \end{algorithm}
@@ -258,7 +258,7 @@
 \section{Example Problem}
 \begin{frame}{Test Set Formulation}
     \begin{itemize}[<+->]
-        \item To keep vocabulary small, childrens' stories are used.
+        \item To keep vocabulary small, children's' stories are used.
         \begin{itemize}
             \item {\em The Ant and the Dove} from Aesop's Fables~\cite{aesop}
             \item {\em The Seven Ravens} from Grimm's Fairy Tales~\cite{grimm}
@@ -291,7 +291,7 @@ looking for a little chair as he was once a human mouth.
         \column{0.5\textwidth}
         \begin{itemize}[<+->]
             \item The DadaDodo software draws evenly from both document.
-            \item Because we are using Markov chaining, only next-word probabilities are used, hence the sytem can invent new phrases.
+            \item Because we are using Markov chaining, only next-word probabilities are used, hence the system can invent new phrases.
             \item The software invented 372 new phrases which appear in the generated documents.
         \end{itemize}
         \column{0.5\textwidth}

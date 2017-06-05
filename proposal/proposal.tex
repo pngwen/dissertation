@@ -23,12 +23,12 @@ to be untrustworthy.  This is especially true in the realm of
 academic literature where knowledge of source material is absolutely
 required to evaluate and study professional work. 
 
-The presently proposed work seeks to study this problem through
+The proposed work seeks to study this problem through
 a novel technique based on tensor analysis.  The goal is to ascribe
 influence to the several documents in a corpus of cited and citing
 documents. A secondary goal of the present work is to model the flow
 of information from cited to citing papers in such a way that the
-topics can be interpreted by intuitively.
+topics can be interpreted intuitively.
 
 \subsection{Impact Metrics}
 The metrics used to measure the performance of an academic author are
@@ -70,7 +70,7 @@ These weights comprise the second part of the model where influence of
 cited documents is used to explain the composition of the citing
 document.  The residuals of this model are interpreted as the citing
 author's original contribution to the citing document. The proposed
-model is summarized in equation (\ref{eq:model}). 
+model is summarized in Equation (\ref{eq:model}). 
 
 \begin{equation}
     \label{eq:model}
@@ -88,7 +88,7 @@ Text-based influence modelling is still a fairly sparse field of
 study.  The present work is, however, heavily influenced by a few
 recent works.
 
-First, as has already been noted, Adler et. Al \cite{addler2009}
+First, as has already been noted, Adler et. Al \cite{adler2009}
 outlines the need for robust statistics for modelling the actual
 influence of an author.  While they do not provide any influence
 metrics in the paper, they do propose that such a system should be
@@ -134,7 +134,14 @@ decomposition is carried out to satisfy the following equation:
 \end{equation}
 
 where $F$ is the set of $r$ rank-1 tensors and $E$ is the error
-residual of the model.  Naturally, the ALS algorithm seeks to minimize
+residual of the model.  A typical approach to solving Equation
+(\ref{eq:parafac}) is to use alternating least squares.  ALS was 
+recommended in Harshamn's paper \cite{harshman1970}.  A concise
+explanation of ALS can be found in Rasmus Bro's paper \cite{bro1997},
+and a more complete treatment of tensor decomposition algorithms in
+general can be found in Comon's paper \cite{comon2009}.  
+
+Naturally, the ALS algorithm seeks to minimize
 the size of $E$.  It is also often convenient to express the factor
 tensors in the form of vectors of each component such that the outer
 product of these vectors forms the factor.  For instance,
@@ -176,9 +183,10 @@ $n$-grams, where $n$ is the number of dimensions of the array.  For
 example, a document split into 3-grams would be represented using
 a 3 dimensional tensor.  The values of the resultant document tensor
 $T$, at index $ijk$ would be the number of occurrences of the 3 word
-phrase associated with the sequence of words $ijk$. The total
-dimensions of the tensor under this 3-gram scheme would be given 
-This allows the approach to be tuned to phrases of any length.  
+phrase associated with the sequence of words $ijk$.  Using 3-gram
+analysis therefore corresponds to a 3 dimension tensor.  Any size of
+phrase may be analyzed by adjusting the number of dimension of the
+tensor.
 
 Naturally, the tensors for even a modest corpus are quite large and
 very sparse.  The tensors count the number of occurrences of every
@@ -188,11 +196,11 @@ vocabulary in the indexing of the tensor further increases the
 sparsity of the resultant document tensors.
 
 The production of the document model is a two stage process.  First
-the corpus is pre-processed according to algorithm \ref{alg:corp}.
+the corpus is pre-processed according to Algorithm \ref{alg:corp}.
 This is a simple filtering process which leaves only words in the
 documents.  (Further development may provide more sophisticated
 filtering at this stage.)  After corpus preprocessing is finished,
-each document is then modeled as a tensor according to algorithm
+each document is then modeled as a tensor according to Algorithm
 \ref{alg:doc}.  The result is a collection of tensors, one for each
 document, which contains the count of all possible $n$ word phrases.
 
@@ -234,14 +242,14 @@ document, which contains the count of all possible $n$ word phrases.
 \subsection{Influence Model}
 Having modeled the corpus of documents, all that remains to complete
 the model is assign contribution weights to each of the elements in
-cited documents as shown in equation (\ref{eq:model}).   This process
+cited documents as shown in Equation (\ref{eq:model}).   This process
 begins with decomposing the factors in the citing document $C$ into
 the factors $F$ using PARAFAC decomposition.  The components of all
 citing documents are then decomposed into the factors $D$, also by
 PARAFAC decomposition. Because the data represents counts of phrases,
 and is therefore non-negative in nature, a non-negativity constraint
 is applied to the decomposition of the documents. Furthermore, each
-factor is normalizes as in equation (\ref{eq:parafac-lambda}).
+factor is normalizes as in Equation (\ref{eq:parafac-lambda}).
 
 One natural question that arises at this stage is how many factors are
 used for each decomposition. This problem is certainly an open area of
@@ -267,14 +275,14 @@ the data.
 
 Once the number of factors for each document has been determined, the
 construction of the model continues with the procedure outlined in
-algorithm \ref{alg:influence}.  
+Algorithm \ref{alg:influence}.  
 
 \begin{algorithm}
     \caption{Citing Factor Weight Assignment}
     \label{alg:influence}
     $D \leftarrow$ PARAFAC decompositions of cited documents\;
     $F \leftarrow$ PARAFAC decomposition of citing document\;
-    $\lambda_d \leftarrow $ Norms of Factors in $D$ (see equation
+    $\lambda_d \leftarrow $ Norms of Factors in $D$ (see Equation
     (\ref{eq:parafac-lambda})\;
     $\lambda_f \leftarrow $ Norms of Factors in $F$\;
     Normalize $D$ using $\lambda_d$\;
@@ -282,12 +290,12 @@ algorithm \ref{alg:influence}.
     $w \leftarrow $ matrix of dimension $|D| \times |F|$\;
     \For{$i$ = 1 to $|D|$} {
         \For{$j$ = 1 to $|F|$} {
-            $w[i,j] \leftarrow \mathrm{similarity(D[i], F[i)}$;
+            $w[i,j] \leftarrow \mathrm{similarity(D[i], F[i])}$;
         }
     }
 \end{algorithm}
 
-The output of algorithm \ref{alg:influence} is a matrix with similarity
+The output of Algorithm \ref{alg:influence} is a matrix with similarity
 scores for each of the factors. The columns represent the citing
 document factors, with each row showing the similarity measure for
 each candidate cited factor.  The algorithm leaves out an explicit
@@ -328,7 +336,7 @@ will work for showing the relative merits of this model in this
 proposal.  Using this assumption, the model is advanced by selecting
 the maximum weighted factor for each column.  The rest of each factor
 being treated as a residual.  This temporary algorithm is shown in
-algorithm \ref{alg:selection}.
+Algorithm \ref{alg:selection}.
 
 \begin{algorithm}
     \caption{Temporary Factor Selection}
@@ -342,7 +350,7 @@ algorithm \ref{alg:selection}.
     }
 \end{algorithm}
 
-The results of algorithm \ref{alg:selection} are the
+The results of Algorithm \ref{alg:selection} are the
 indexes and the weights of the selected factors.  These represent the
 proportion of contributions for each factor.  If every factor had
 a uniform explanatory effect on the citing document, the model would
@@ -351,7 +359,7 @@ normalizing scalars $\lambda$ indicate the strength of each factor in
 $f$.  To arrive at the overall weights and proportions for each
 contributing factor requires that the weights be scaled by their
 overall proportion to the citing document.  This final modification of
-the weights is shown in algorithm \ref{alg:adjust}.
+the weights is shown in Algorithm \ref{alg:adjust}.
 
 \begin{algorithm}
     \caption{Proportional Weight Adjustment}
@@ -363,7 +371,7 @@ the weights is shown in algorithm \ref{alg:adjust}.
 \end{algorithm}
 
 At this stage the author's contribution weight can be computed as
-shown in equation (\ref{eq:authorWeight}).  The present method in this
+shown in Equation (\ref{eq:authorWeight}).  The present method in this
 proposal does not, however, provide a clear way to extract the author
 contribution tensor.  This is left to the future development of this
 work.
@@ -375,7 +383,7 @@ work.
 
 Likewise, the contributions of each document can readily be computed
 by summing the weights associated with each citing document.  This
-mapping is trivial given the $indexes$ list extracted during algorithm
+mapping is trivial given the $indexes$ list extracted during Algorithm
 \ref{alg:selection}. 
 
 \section{Example Problem}
@@ -396,8 +404,8 @@ arrays.  As such, it has difficulty handling tensors that will not fit
 into a computer's memory.  
 
 So then the example problem must be generated with two goals in mind.
-First, it must have at lest somewhat knowable proportions.  Second, it
-must have a small enough vocabulary so that its tensors and
+First, its influence model must be deducable from the test data itself.
+Second, it must have a small enough vocabulary so that its tensors and
 decompositions will not exceed a few gigabytes in size.
 
 \subsection{Test Set Creation}
@@ -418,7 +426,7 @@ which is somewhat of a mixture between the plot of the two stories.
 To the extent meaning can be ascribe to the generated story, it is
 a rather grisly tale of a young girl who feeds a dwarf to a raven
 while her father searches for an ant and a dove.  For instance,
-consider the excerpt in figure \ref{fig:gentext}.
+consider the excerpt in Figure \ref{fig:gentext}.
 
 \begin{figure}
   \begin{displayquote}
@@ -433,7 +441,7 @@ looking for a little chair as he was once a human mouth.
 
 More interesting, of course, is the statistical situation of the
 samples.  The first stage of the analysis as show in 
-algorithms \ref{alg:corp} and \ref{alg:doc}, is to generate tensor
+Algorithms \ref{alg:corp} and \ref{alg:doc}, is to generate tensor
 representations of the documents.  For the sake of simplicity,
 a 3-gram analysis is carried out yielding the statistics shown in
 table \ref{tab:docstats}.
@@ -478,12 +486,12 @@ goal of analyzing real-world citing documents.
 All three of the documents in the corpus are well represented by
 a five factor decomposition. This was discovered by means of repeated
 decomposition and observation of the CORCONDIA metric as outlined
-previously.  The data are then processed using algorithms
+previously.  The data are then processed using Algorithms
 \ref{alg:influence}, \ref{alg:selection}, and \ref{alg:adjust}.
 
 \subsection{Results}
 The resultant factor statistics are shown in table \ref{tab:results}.  The
-performance of the algorithm is pretty much as expected.  However,
+performance of the Algorithm is pretty much as expected.  However,
 observing the graphical representation of all the matched factors show
 that most of the matched factors have few features in common with each
 other.  This is attributable to the primitive matching method used,
@@ -491,7 +499,7 @@ and will require further effort to refine.
 
 \begin{table}
     \begin{tabular}{l|r|l}
-        {\bf Factor 1} & {\bf Explanatory Weight} & {Source}\\
+        {\bf Citing Factor} & {\bf Explanatory Weight} & {Source}\\
         \hline
         1 & 0.06 & Ant Factor 3\\
         2 & 0.04 & Ant Factor 3\\
@@ -508,6 +516,13 @@ Summing these results and calculating the residual yields the document
 and author contributions shown in table \ref{tab:docresults}.  These
 results match the expected results fairly closely indicating that the
 decomposition and matching worked as expected.
+
+The individual factor matches are shown in Figures \ref{fig:com1}
+through \ref{fig:com5}.  In each figure, the graph on the left is the
+factor in the citing document and the figure on the right is the
+matching factor from the cited document.  In each graph, the x-axis is
+the component of the factor, the y-axis is the word, and the z-axis is
+the proportion of that word given the component.
 
 \begin{table}
     \begin{tabular}{l|r}
@@ -529,6 +544,8 @@ decomposition and matching worked as expected.
     }}%
     \caption{Factor 1 Match}%
     \label{fig:com1}%
+    Influence Source: Ant Factor 3 
+    \par Influence Weight = 0.06
 \end{figure}
 
 \begin{figure}%
@@ -539,6 +556,8 @@ decomposition and matching worked as expected.
     }}%
     \caption{Factor 2 Match}%
     \label{fig:com2}%
+    Influence Source: Ant Factor 3 
+    \par Influence Weight = 0.04
 \end{figure}
 
 \begin{figure}%
@@ -549,6 +568,8 @@ decomposition and matching worked as expected.
     }}%
     \caption{Factor 3 Match}%
     \label{fig:com3}%
+    Influence Source: Raven Factor 3 
+    \par Influence Weight = 0.12
 \end{figure}
 
 \begin{figure}%
@@ -559,6 +580,8 @@ decomposition and matching worked as expected.
     }}%
     \caption{Factor 4 Match}%
     \label{fig:com4}%
+    Influence Source: Ant Factor 1 
+    \par Influence Weight = 0.14
 \end{figure}
 
 \begin{figure}%
@@ -569,6 +592,8 @@ decomposition and matching worked as expected.
     }}%
     \caption{Factor 5 Match}%
     \label{fig:com5}%
+    Influence Source: Raven Factor 1 
+    \par Influence Weight = 0.10
 \end{figure}
 
 \section{Proposed Contributions and Further Work}
