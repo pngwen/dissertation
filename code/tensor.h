@@ -161,34 +161,34 @@ Iterator end()
 {
    return Iterator(ubound, this);
 }
-#line 1060 "tensor.nw"
+#line 1063 "tensor.nw"
 Tensor& operator+=(Tensor &rhs) 
 {
    //the new fill value is the sum of the two fill values
    E newFill = fillValue + rhs.fillValue;
    
    
-#line 1081 "tensor.nw"
+#line 1084 "tensor.nw"
 for(auto itr = data.begin(); itr != data.end(); itr++) 
 {
    itr->second += rhs[itr->first];
 }
-#line 1066 "tensor.nw"
+#line 1069 "tensor.nw"
    
-#line 1092 "tensor.nw"
+#line 1095 "tensor.nw"
 for(auto itr = rhs.data.begin(); itr != rhs.data.end(); itr++) 
 {
    if(data.find(itr->first) == data.end()) {
       data[itr->first] = fillValue + itr->second;
    }
 }
-#line 1067 "tensor.nw"
+#line 1070 "tensor.nw"
   
    //use the new fillValue
    fillValue = newFill;
    
    
-#line 1164 "tensor.nw"
+#line 1167 "tensor.nw"
 for(auto itr=data.begin(); itr != data.end(); itr++) 
 {
    if(itr->second == fillValue) 
@@ -196,44 +196,44 @@ for(auto itr=data.begin(); itr != data.end(); itr++)
       data.erase(itr);
    }
 }
-#line 1072 "tensor.nw"
+#line 1075 "tensor.nw"
    
    return *this;
 }
-#line 1106 "tensor.nw"
+#line 1109 "tensor.nw"
 Tensor operator+(Tensor &rhs) 
 {
    Tensor result(*this);
    return result+=rhs;
 }
-#line 1116 "tensor.nw"
+#line 1119 "tensor.nw"
 Tensor& operator-=(Tensor &rhs) 
 {
    //the new fill value is the sum of the two fill values
    E newFill = fillValue - rhs.fillValue;
    
    
-#line 1136 "tensor.nw"
+#line 1139 "tensor.nw"
 for(auto itr = data.begin(); itr != data.end(); itr++) 
 {
    itr->second -= rhs[itr->first];
 }
-#line 1122 "tensor.nw"
+#line 1125 "tensor.nw"
    
-#line 1143 "tensor.nw"
+#line 1146 "tensor.nw"
 for(auto itr = rhs.data.begin(); itr != rhs.data.end(); itr++) 
 {
    if(data.find(itr->first) == data.end()) {
       data[itr->first] = fillValue - itr->second;
    }
 }
-#line 1123 "tensor.nw"
+#line 1126 "tensor.nw"
   
    //use the new fillValue
    fillValue = newFill;
    
    
-#line 1164 "tensor.nw"
+#line 1167 "tensor.nw"
 for(auto itr=data.begin(); itr != data.end(); itr++) 
 {
    if(itr->second == fillValue) 
@@ -241,11 +241,11 @@ for(auto itr=data.begin(); itr != data.end(); itr++)
       data.erase(itr);
    }
 }
-#line 1128 "tensor.nw"
+#line 1131 "tensor.nw"
    
    return *this;
 }
-#line 1152 "tensor.nw"
+#line 1155 "tensor.nw"
 Tensor operator-(Tensor &rhs) 
 {
    Tensor result(*this);
