@@ -9,10 +9,10 @@
 
 \section{Introduction}
 This is a template of a tensor class.  A tensor is a multi-dimensional
-array whihc is a generalization of matrices, vectors, and scalars.
+array which is a generalization of matrices, vectors, and scalars.
 A scalar can be represented as an order 0 tensor, a vector is an order 1 
 tensor, and a matrix is an order 2 tensor.  We can extend the notion of
-tensor above 2 by imagining prisms, and hyperprisms of data.  
+tensor above two dimensions by imagining prisms, and hyperprisms of data.  
 
 The elements of a tensor are scalar values, and it is useful to be able to 
 use a wide range of numeric types to define these arrays.  This
@@ -134,7 +134,7 @@ be a vector which is named {\tt v}.
 std::vector<int> v;
 @
 
-Construction an index can be accomplished in multiple ways.  For example,
+Construction of an index can be accomplished in multiple ways.  For example,
 we could simply pass a vector into a constructor:
 <<Index Constructors>>=
 Index(std::vector<int> index) : v(index.begin(), index.end()) { }
@@ -145,7 +145,7 @@ to initialize the Index:
 #include <initializer_list>
 @
 
-\index[functions]{Tensor::Index::Index(il)}
+\index[functions]{\tt Tensor::Index::Index(il)}
 <<Index Constructors>>=
 Index(std::initializer_list<int> il) : v(il.begin(), il.end()) { }
 @
@@ -154,7 +154,7 @@ It may also be convenient to initialize an index with a given number
 of elements.  The user can specify the fill value for the vector, but we will
 use -1 (an invalid index) as the default.
 
-\index[functions]{Tensor::Index::Index(n, val=-1)}
+\index[functions]{\tt Tensor::Index::Index(n, val=-1)}
 <<Index Constructors>>=
 Index(int n, int val=-1) : v(n, val) { }
 @
@@ -162,7 +162,7 @@ Index(int n, int val=-1) : v(n, val) { }
 Finally, we provide a no-argument constructor that allows the creation of a
 zero-dimensional index.  It's not useful in and of itself, but rather
 creates an object we are expecting to append to or overwrite.
-\index[functions]{Tensor::Index::Index()}
+\index[functions]{\tt Tensor::Index::Index()}
 <<Index Constructors>>=
 Index() { /* do nothing */ }
 @
@@ -171,7 +171,7 @@ Because the index is a wrapper for {\tt std::vector}, we should expose some
 of the vector operations.  Really we just want to allow indexing and size
 to be used.
 
-\index[functions]{Tensor::Index::operator[](i)}
+\index[functions]{\tt Tensor::Index::operator[](i)}
 <<Index Vector Operations>>=
 int& operator[](int i) { return v[i]; }
 std::vector<int>::size_type size() const { return v.size(); }
@@ -189,7 +189,7 @@ The comparison of the n-tuples comprising the indices works as follows.
 First, we will compare by size, and then by elements.  The basic 
 assumption is that the indices are equal.
 
-\index[functions]{Tensor::Index::compare(rhs)}
+\index[functions]{\tt Tensor::Index::compare(rhs)}
 <<Index Comparison Operations>>=
 int compare(const Index &rhs) const
 {
@@ -234,12 +234,12 @@ for(int i=0; i<size(); i++)
 All that remains is to implement the standard set of comparison and
 equality operators.  This is, of course, trivial when we use the compare
 function.
-\index[functions]{Tensor::Index::operator<(rhs)}
-\index[functions]{Tensor::Index::operator<=(rhs)}
-\index[functions]{Tensor::Index::operator>(rhs)}
-\index[functions]{Tensor::Index::operator>=(rhs)}
-\index[functions]{Tensor::Index::operator==(rhs)}
-\index[functions]{Tensor::Index::operator!=(rhs)}
+\index[functions]{\tt Tensor::Index::operator<(rhs)}
+\index[functions]{\tt Tensor::Index::operator<=(rhs)}
+\index[functions]{\tt Tensor::Index::operator>(rhs)}
+\index[functions]{\tt Tensor::Index::operator>=(rhs)}
+\index[functions]{\tt Tensor::Index::operator==(rhs)}
+\index[functions]{\tt Tensor::Index::operator!=(rhs)}
 <<Index Comparison Operations>>=
 bool operator<(const Index &rhs)  const { return compare(rhs)  < 0; }
 bool operator<=(const Index &rhs) const { return compare(rhs) <= 0; }
@@ -253,7 +253,7 @@ bool operator!=(const Index &rhs) const { return compare(rhs) != 0; }
 Another type of comparison we are interested in is bounds checking.
 For this, we need to see if the index contains only 
 elements that are all strictly less than some upper bound.  
-\index[functions]{Tensor::Index::within(bound)}
+\index[functions]{\tt Tensor::Index::within(bound)}
 <<Index Comparison Operations>>=
 bool within(const Index &bound) const
 {
@@ -301,7 +301,7 @@ So then, after creation a basic {\tt Tensor} object will consist of a
 tensor of a fixed finite dimension which is filled with a default value.
 The most basic sort of constructor which could accomplish this simply
 populates these two variables.
-\index[functions]{Tensor::Tensor(ubound, fillValue=E())}
+\index[functions]{\tt Tensor::Tensor(ubound, fillValue=E())}
 <<Tensor Constructors>>=
 Tensor(const Index &ubound, E fillValue=E()) 
   : ubound(ubound), fillValue(fillValue) { }
@@ -310,7 +310,7 @@ Tensor(const Index &ubound, E fillValue=E())
 Of course, it may be advantageous to allow construction from an initilizer
 list, but this is trivial given the above constructor and as well as the
 {\tt Index} constructor.
-\index[functions]{Tensor::Tensor(dimensions, fillValue=E())}
+\index[functions]{\tt Tensor::Tensor(dimensions, fillValue=E())}
 <<Tensor Constructors>>=
 Tensor(std::initializer_list<int> dimensions, E fillValue=E())
   : Tensor(Index(dimensions), fillValue) { }
@@ -325,7 +325,7 @@ create a function which alters the fill value (thus filling the  ``empty''
 cells with the specified value:
 
 
-\index[functions]{Tensor::setFillValue(val)}
+\index[functions]{\tt Tensor::setFillValue(val)}
 <<Tensor Operations>>=
 void setFillValue(E val) 
 {
@@ -336,7 +336,7 @@ void setFillValue(E val)
 Another useful operation is to completely fill a tensor with a value, 
 which is also trivial given our storage mechanism:
 
-\index[functions]{Tensor::fill(val)}
+\index[functions]{\tt Tensor::fill(val)}
 <<Tensor Operations>>=
 void fill(E val)
 {
@@ -478,7 +478,7 @@ As mentioned before, the constructor will be a private constructor, and as
 implied in the previous subsection it will need to take a reference to a 
 {\tt Tensor} and an index.
 
-\index[functions]{Tensor::Accessor::Accessor(t, index)}
+\index[functions]{\tt Tensor::Accessor::Accessor(t, index)}
 <<Accessor Constructor>>=
 Accessor(Tensor &t, const Index& index) : t(t), index(index) {}
 @
@@ -498,7 +498,7 @@ occur when using the multiple integer index form of tensor access
 (as in {\tt t[i][j][k]}).  This will be an index operation with the following
 shape.
 
-\index[functions]{Tensor::Accessor::operator[](i)}
+\index[functions]{\tt Tensor::Accessor::operator[](i)}
 <<Accessor Operations>>=
 Accessor operator[](int i)
 {
@@ -546,7 +546,7 @@ a.index[di] = i;
 Now all that remain is to build the operations of the Acessor.  Chief among
 these is the cast to type {\tt E}.  
 
-\index[functions]{Tensor::Accessor::operatorE()}
+\index[functions]{\tt Tensor::Accessor::operatorE()}
 <<Accessor Operations>>=
 operator E()
 {
@@ -591,7 +591,7 @@ type.  The reason for this is that we must maintain careful control over
 assignment so as to maintain the sparse nature of the array.  So we will
 create an assignment operator:
 
-\index[functions]{Tensor::Accessor::operator=(rhs)}
+\index[functions]{\tt Tensor::Accessor::operator=(rhs)}
 <<Accessor Operations>>=
 E operator=(const E &rhs)
 {
@@ -625,10 +625,10 @@ For convenience, we'll add some other arithemtic assignment operators.
 Generally, we expect to get floating point types in the tensor, so 
 operations like modulous and bitwise operators are not provided here.
 Of course, given the above operators, these are trivial.
-\index[functions]{Tensor::Accessor::operator+=(rhs)}
-\index[functions]{Tensor::Accessor::operator-=(rhs)}
-\index[functions]{Tensor::Accessor::operator*=(rhs)}
-\index[functions]{Tensor::Accessor::operator/=(rhs)}
+\index[functions]{\tt Tensor::Accessor::operator+=(rhs)}
+\index[functions]{\tt Tensor::Accessor::operator-=(rhs)}
+\index[functions]{\tt Tensor::Accessor::operator*=(rhs)}
+\index[functions]{\tt Tensor::Accessor::operator/=(rhs)}
 <<Accessor Operations>>=
 E operator+=(const E &rhs) { return (*this) = (E)(*this) + rhs; }
 E operator-=(const E &rhs) { return (*this) = (E)(*this) - rhs; }
@@ -646,7 +646,7 @@ In addition to the tensor data, we also need to provide access to the
 tensor dimensions.  Clearly, this will fascilitate the construction of
 general case functions and loops.  This is of course a trivial function.
 
-\index[functions]{Tensor::dim()}
+\index[functions]{\tt Tensor::dim()}
 <<Tensor Operations>>=
 Index dim() 
 {
@@ -709,7 +709,7 @@ Index ubound; //the upper bound of the tensor we are iterating over
 Construction of the iterator is a fairly straightforward task.  First, we
 will have a no argument constructor which will do nothing.
 
-\index[functions]{Tensor::Iterator::Iterator()}
+\index[functions]{\tt Tensor::Iterator::Iterator()}
 <<Tensor Iterator Constructors>>=
 Iterator() 
 {
@@ -719,7 +719,7 @@ Iterator()
 
 Next, we should provide a copy constructor, which is trivial.
 
-\index[functions]{Tensor::Iterator::Iterator(rhs)}
+\index[functions]{\tt Tensor::Iterator::Iterator(rhs)}
 <<Tensor Iterator Constructors>>=
 Iterator(const Iterator& rhs)
 {
@@ -740,7 +740,7 @@ and in fact we need to add begin and end operations to {\tt Tensor}.
 
 Iteration begins at an index of all 0's.
 
-\index[functions]{Tensor::begin()}
+\index[functions]{\tt Tensor::begin()}
 <<Tensor Operations>>=
 Iterator begin()
 {
@@ -751,7 +751,7 @@ Iterator begin()
 The iterator that is just past the end of the {\tt Tensor} is the one who's
 index is equal to the ubound of the tensor.
 
-\index[functions]{Tensor::end()}
+\index[functions]{\tt Tensor::end()}
 <<Tensor Operations>>=
 Iterator end()
 {
@@ -808,8 +808,8 @@ Iterator& operator--(int)
 And finally, the arithmetic operators for adding and subtracting by 
 integers.
 
-\index[functions]{Tensor::Iterator::operator+(int rhs)}
-\index[functions]{Tensor::Iterator::operator-(int rhs)}
+\index[functions]{\tt Tensor::Iterator::operator+(int rhs)}
+\index[functions]{\tt Tensor::Iterator::operator-(int rhs)}
 <<Tensor Iterator Movement>>=
 Iterator operator+(int rhs)
 {
@@ -833,7 +833,7 @@ position in either the positive or negative direction.  It will visit
 each item in the tensor in a left-most index major way, advance the 
 other indices as the left ones over or under flow.
 
-\index[functions]{Tensor::Iterator::move(d)}
+\index[functions]{\tt Tensor::Iterator::move(d)}
 <<Tensor Iterator Private Members>>=
 void move(int d) 
 {
@@ -911,12 +911,12 @@ for(int i=0; i<cur.size(); i++)
 We will not do anything about stepping beyond an all 0 index, and will 
 instead leave that to the programmer who uses this class.
 
-\index[functions]{Tensor::Iterator::operator<(rhs)}
-\index[functions]{Tensor::Iterator::operator<=(rhs)}
-\index[functions]{Tensor::Iterator::operator>(rhs)}
-\index[functions]{Tensor::Iterator::operator>=(rhs)}
-\index[functions]{Tensor::Iterator::operator==(rhs)}
-\index[functions]{Tensor::Iterator::operator!=(rhs)}
+\index[functions]{\tt Tensor::Iterator::operator<(rhs)}
+\index[functions]{\tt Tensor::Iterator::operator<=(rhs)}
+\index[functions]{\tt Tensor::Iterator::operator>(rhs)}
+\index[functions]{\tt Tensor::Iterator::operator>=(rhs)}
+\index[functions]{\tt Tensor::Iterator::operator==(rhs)}
+\index[functions]{\tt Tensor::Iterator::operator!=(rhs)}
 \subsection{Tensor Iterator Comparison}
 Comparison of the iterators is really just comparison of the indexes.
 <<Tensor Iterator Comparison>>=
@@ -932,7 +932,7 @@ bool operator!=(const Iterator &rhs) { return cur != rhs.cur; }
 Element access, as provided by dereferencing an {\tt Iterator} object 
 provides access to a Tensor Accessor, just as we would when indexing.
 Thus we can avoid repeating a great deal of logic.
-\index[functions]{Tensor::Iterator::operator*()}
+\index[functions]{\tt Tensor::Iterator::operator*()}
 <<Tensor Iterator Accessors>>=
 Accessor operator*()
 {
@@ -942,7 +942,7 @@ Accessor operator*()
 
 Another point of interest is the index itself.  For this, we add a 
 function which returns the index.
-\index[functions]{Tensor::Iterator::index()}
+\index[functions]{\tt Tensor::Iterator::index()}
 <<Tensor Iterator Accessors>>=
 Index index()
 {
@@ -963,7 +963,7 @@ are simply applied to all elements within the tensor.  The first operation
 is multiplication.  This operation is most easily expressed in terms of 
 the assignment multiplication operator:
 
-\index[functions]{Tensor::operator*=(s)}
+\index[functions]{\tt Tensor::operator*=(s)}
 <<Tensor Scalar Operations>>=
 Tensor& operator*=(const E& s)
 {
@@ -995,7 +995,7 @@ Of course, it is also desirable to implement the * operator, so that we
 can return a scaled copy of a Tensor.  This is trivial given the above
 operator.
 
-\index[functions]{Tensor::operator*(s)}
+\index[functions]{\tt Tensor::operator*(s)}
 <<Tensor Scalar Operations>>=
 Tensor operator*(const E& s)
 {
@@ -1008,8 +1008,8 @@ Tensor operator*(const E& s)
 Likewise, scalar division is simply dividing all the elements by the scalar
 value.
 
-\index[functions]{Tensor::operator/=(s)}
-\index[functions]{Tensor::operator/(s)}
+\index[functions]{\tt Tensor::operator/=(s)}
+\index[functions]{\tt Tensor::operator/(s)}
 <<Tensor Scalar Operations>>=
 Tensor& operator/=(const E& s)
 {
@@ -1058,7 +1058,7 @@ Tensors, we can do better by only adding the non-fill values together.
 
 We will start with the addition assignment operator.
 
-\index[functions]{Tensor::operator+=(rhs)}
+\index[functions]{\tt Tensor::operator+=(rhs)}
 <<Tensor Operations>>=
 Tensor& operator+=(Tensor &rhs) 
 {
@@ -1104,7 +1104,7 @@ for(auto itr = rhs.data.begin(); itr != rhs.data.end(); itr++)
 As with other addition operators, we can now implement the addition of
 two {\tt Tensor} objects using the addition assignment operator.
 
-\index[functions]{Tensor::operator+(rhs)}
+\index[functions]{\tt Tensor::operator+(rhs)}
 <<Tensor Operations>>=
 Tensor operator+(Tensor &rhs) 
 {
@@ -1133,8 +1133,8 @@ Tensor& operator-=(Tensor &rhs)
 }
 @
 
-\index[functions]{Tensor::operator-=(rhs)}
-\index[functions]{Tensor::operator-(rhs)}
+\index[functions]{\tt Tensor::operator-=(rhs)}
+\index[functions]{\tt Tensor::operator-(rhs)}
 <<Subtract non-fill positions from the left>>=
 for(auto itr = data.begin(); itr != data.end(); itr++) 
 {
