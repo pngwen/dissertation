@@ -3,6 +3,7 @@
 \makeindex[name=functions,title=Functions and Classes]
 
 \usepackage{noweb}
+\usepackage{fullpage}
 \pagestyle{noweb}
 \noweboptions{}
 \begin{document}
@@ -172,9 +173,10 @@ of the vector operations.  Really we just want to allow indexing and size
 to be used.
 
 \index[functions]{\tt Tensor::Index::operator[](i)}
+\index[functions]{\tt Tensor::Index::size()}
 <<Index Vector Operations>>=
-int& operator[](int i) { return v[i]; }
-std::vector<int>::size_type size() const { return v.size(); }
+virtual int& operator[](int i) { return v[i]; }
+virtual std::vector<int>::size_type size() const { return v.size(); }
 @
 
 And now that brings us to comparison opeations!  Of course, in order for
@@ -241,12 +243,12 @@ function.
 \index[functions]{\tt Tensor::Index::operator==(rhs)}
 \index[functions]{\tt Tensor::Index::operator!=(rhs)}
 <<Index Comparison Operations>>=
-bool operator<(const Index &rhs)  const { return compare(rhs)  < 0; }
-bool operator<=(const Index &rhs) const { return compare(rhs) <= 0; }
-bool operator>(const Index &rhs)  const { return compare(rhs)  > 0; }
-bool operator>=(const Index &rhs) const { return compare(rhs) >= 0; }
-bool operator==(const Index &rhs) const { return compare(rhs) == 0; }
-bool operator!=(const Index &rhs) const { return compare(rhs) != 0; }
+virtual bool operator<(const Index &rhs)  const { return compare(rhs)  < 0; }
+virtual bool operator<=(const Index &rhs) const { return compare(rhs) <= 0; }
+virtual bool operator>(const Index &rhs)  const { return compare(rhs)  > 0; }
+virtual bool operator>=(const Index &rhs) const { return compare(rhs) >= 0; }
+virtual bool operator==(const Index &rhs) const { return compare(rhs) == 0; }
+virtual bool operator!=(const Index &rhs) const { return compare(rhs) != 0; }
 @
 
 
@@ -255,7 +257,7 @@ For this, we need to see if the index contains only
 elements that are all strictly less than some upper bound.  
 \index[functions]{\tt Tensor::Index::within(bound)}
 <<Index Comparison Operations>>=
-bool within(const Index &bound) const
+virtual bool within(const Index &bound) const
 {
    //bounds must match
    if(size() != bound.size()) return false;
@@ -327,7 +329,7 @@ cells with the specified value:
 
 \index[functions]{\tt Tensor::setFillValue(val)}
 <<Tensor Operations>>=
-void setFillValue(E val) 
+virtual void setFillValue(E val) 
 {
    this->fillValue = val;
 }
@@ -338,7 +340,7 @@ which is also trivial given our storage mechanism:
 
 \index[functions]{\tt Tensor::fill(val)}
 <<Tensor Operations>>=
-void fill(E val)
+virtual void fill(E val)
 {
    setFillValue(val);
    data.clear();
@@ -500,7 +502,7 @@ shape.
 
 \index[functions]{\tt Tensor::Accessor::operator[](i)}
 <<Accessor Operations>>=
-Accessor operator[](int i)
+virtual Accessor operator[](int i)
 {
    <<Find Dimension Index>>
    <<Construct New Accessor>>
@@ -548,7 +550,7 @@ these is the cast to type {\tt E}.
 
 \index[functions]{\tt Tensor::Accessor::operatorE()}
 <<Accessor Operations>>=
-operator E()
+virtual operator E()
 {
    <<Check for Complete Index>>
    <<Access the Element>>
@@ -593,7 +595,7 @@ create an assignment operator:
 
 \index[functions]{\tt Tensor::Accessor::operator=(rhs)}
 <<Accessor Operations>>=
-E operator=(const E &rhs)
+virtual E operator=(const E &rhs)
 {
    <<Tensor Item Assignment>>
 }
@@ -630,10 +632,10 @@ Of course, given the above operators, these are trivial.
 \index[functions]{\tt Tensor::Accessor::operator*=(rhs)}
 \index[functions]{\tt Tensor::Accessor::operator/=(rhs)}
 <<Accessor Operations>>=
-E operator+=(const E &rhs) { return (*this) = (E)(*this) + rhs; }
-E operator-=(const E &rhs) { return (*this) = (E)(*this) - rhs; }
-E operator*=(const E &rhs) { return (*this) = (E)(*this) * rhs; }
-E operator/=(const E &rhs) { return (*this) = (E)(*this) / rhs; }
+virtual E operator+=(const E &rhs) { return (*this) = (E)(*this) + rhs; }
+virtual E operator-=(const E &rhs) { return (*this) = (E)(*this) - rhs; }
+virtual E operator*=(const E &rhs) { return (*this) = (E)(*this) * rhs; }
+virtual E operator/=(const E &rhs) { return (*this) = (E)(*this) / rhs; }
 @
 
 And now we have a completed accessor object, and thus each element of the
@@ -648,7 +650,7 @@ general case functions and loops.  This is of course a trivial function.
 
 \index[functions]{\tt Tensor::dim()}
 <<Tensor Operations>>=
-Index dim() 
+virtual Index dim() 
 {
    return ubound;
 }
@@ -742,7 +744,7 @@ Iteration begins at an index of all 0's.
 
 \index[functions]{\tt Tensor::begin()}
 <<Tensor Operations>>=
-Iterator begin()
+virtual Iterator begin()
 {
    return Iterator(Index(ubound.size(), 0), this);
 }
@@ -753,7 +755,7 @@ index is equal to the ubound of the tensor.
 
 \index[functions]{\tt Tensor::end()}
 <<Tensor Operations>>=
-Iterator end()
+virtual Iterator end()
 {
    return Iterator(ubound, this);
 }
@@ -771,13 +773,13 @@ First, we create the increment operations.
 \index{function}{Tensor::Iterator::operator++()}
 \index{function}{Tensor::Iterator::operator++(int)}
 <<Tensor Iterator Movement>>=
-Iterator& operator++()
+virtual Iterator& operator++()
 {
    move(1);
    return *this;
 }
 
-Iterator operator++(int) 
+virtual Iterator operator++(int) 
 {
    Iterator result(*this);
    move(1);
@@ -789,7 +791,7 @@ Iterator operator++(int)
 \index{function}{Tensor::Iterator::operator--(int)}
 Now we create the decrement operations
 <<Tensor Iterator Movement>>=
-Iterator& operator--()
+virtual Iterator& operator--()
 {
    move(-1);
    return *this;
@@ -797,7 +799,7 @@ Iterator& operator--()
 
 
 <<Tensor Iterator Movement>>=
-Iterator& operator--(int)
+virtual Iterator operator--(int)
 {
    Iterator result(*this);
    move(-1);
@@ -811,7 +813,7 @@ integers.
 \index[functions]{\tt Tensor::Iterator::operator+(int rhs)}
 \index[functions]{\tt Tensor::Iterator::operator-(int rhs)}
 <<Tensor Iterator Movement>>=
-Iterator operator+(int rhs)
+virtual Iterator operator+(int rhs)
 {
    Iterator result(*this);
    result.move(rhs);
@@ -819,7 +821,7 @@ Iterator operator+(int rhs)
 }
 
 
-Iterator operator-(int rhs)
+virtual Iterator operator-(int rhs)
 {
    Iterator result(*this);
    result.move(-rhs);
@@ -835,7 +837,7 @@ other indices as the left ones over or under flow.
 
 \index[functions]{\tt Tensor::Iterator::move(d)}
 <<Tensor Iterator Private Members>>=
-void move(int d) 
+virtual void move(int d) 
 {
    if(d > 0) 
    {
@@ -920,12 +922,12 @@ instead leave that to the programmer who uses this class.
 \subsection{Tensor Iterator Comparison}
 Comparison of the iterators is really just comparison of the indexes.
 <<Tensor Iterator Comparison>>=
-bool operator<(const Iterator &rhs)  { return cur <  rhs.cur; }
-bool operator<=(const Iterator &rhs) { return cur <= rhs.cur; }
-bool operator>(const Iterator &rhs)  { return cur >  rhs.cur; }
-bool operator>=(const Iterator &rhs) { return cur >= rhs.cur; }
-bool operator==(const Iterator &rhs) { return cur == rhs.cur; }
-bool operator!=(const Iterator &rhs) { return cur != rhs.cur; }
+virtual bool operator<(const Iterator &rhs)  { return cur <  rhs.cur; }
+virtual bool operator<=(const Iterator &rhs) { return cur <= rhs.cur; }
+virtual bool operator>(const Iterator &rhs)  { return cur >  rhs.cur; }
+virtual bool operator>=(const Iterator &rhs) { return cur >= rhs.cur; }
+virtual bool operator==(const Iterator &rhs) { return cur == rhs.cur; }
+virtual bool operator!=(const Iterator &rhs) { return cur != rhs.cur; }
 @
 
 \subsection{Tensor Iterator Accessors}
@@ -934,7 +936,7 @@ provides access to a Tensor Accessor, just as we would when indexing.
 Thus we can avoid repeating a great deal of logic.
 \index[functions]{\tt Tensor::Iterator::operator*()}
 <<Tensor Iterator Accessors>>=
-Accessor operator*()
+virtual Accessor operator*()
 {
    return (*t)[cur];
 }
@@ -944,7 +946,7 @@ Another point of interest is the index itself.  For this, we add a
 function which returns the index.
 \index[functions]{\tt Tensor::Iterator::index()}
 <<Tensor Iterator Accessors>>=
-Index index()
+virtual Index index()
 {
    return cur;
 }
@@ -965,7 +967,7 @@ the assignment multiplication operator:
 
 \index[functions]{\tt Tensor::operator*=(s)}
 <<Tensor Scalar Operations>>=
-Tensor& operator*=(const E& s)
+virtual Tensor& operator*=(const E& s)
 {
    //multiply the "empty" cells
    fillValue *= s;
@@ -997,7 +999,7 @@ operator.
 
 \index[functions]{\tt Tensor::operator*(s)}
 <<Tensor Scalar Operations>>=
-Tensor operator*(const E& s)
+virtual Tensor operator*(const E& s)
 {
    Tensor result(*this);
    
@@ -1011,7 +1013,7 @@ value.
 \index[functions]{\tt Tensor::operator/=(s)}
 \index[functions]{\tt Tensor::operator/(s)}
 <<Tensor Scalar Operations>>=
-Tensor& operator/=(const E& s)
+virtual Tensor& operator/=(const E& s)
 {
    //multiply the "empty" cells
    fillValue /= s;
@@ -1029,7 +1031,7 @@ Tensor& operator/=(const E& s)
 
 
 <<Tensor Scalar Operations>>=
-Tensor operator/(const E& s)
+virtual Tensor operator/(const E& s)
 {
    Tensor result(*this);
    
@@ -1060,7 +1062,7 @@ We will start with the addition assignment operator.
 
 \index[functions]{\tt Tensor::operator+=(rhs)}
 <<Tensor Operations>>=
-Tensor& operator+=(Tensor &rhs) 
+virtual Tensor& operator+=(Tensor &rhs) 
 {
    //the new fill value is the sum of the two fill values
    E newFill = fillValue + rhs.fillValue;
@@ -1106,7 +1108,7 @@ two {\tt Tensor} objects using the addition assignment operator.
 
 \index[functions]{\tt Tensor::operator+(rhs)}
 <<Tensor Operations>>=
-Tensor operator+(Tensor &rhs) 
+virtual Tensor operator+(Tensor &rhs) 
 {
    Tensor result(*this);
    return result+=rhs;
@@ -1114,9 +1116,11 @@ Tensor operator+(Tensor &rhs)
 @
 
 Subtraction is implemented the same way.
+\index[functions]{\tt Tensor::operator-=(rhs)}
+\index[functions]{\tt Tensor::operator-(rhs)}
 
 <<Tensor Operations>>=
-Tensor& operator-=(Tensor &rhs) 
+virtual Tensor& operator-=(Tensor &rhs) 
 {
    //the new fill value is the sum of the two fill values
    E newFill = fillValue - rhs.fillValue;
@@ -1133,8 +1137,6 @@ Tensor& operator-=(Tensor &rhs)
 }
 @
 
-\index[functions]{\tt Tensor::operator-=(rhs)}
-\index[functions]{\tt Tensor::operator-(rhs)}
 <<Subtract non-fill positions from the left>>=
 for(auto itr = data.begin(); itr != data.end(); itr++) 
 {
@@ -1152,7 +1154,7 @@ for(auto itr = rhs.data.begin(); itr != rhs.data.end(); itr++)
 @
 
 <<Tensor Operations>>=
-Tensor operator-(Tensor &rhs) 
+virtual Tensor operator-(Tensor &rhs) 
 {
    Tensor result(*this);
    return result-=rhs;
