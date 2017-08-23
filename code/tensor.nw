@@ -64,7 +64,6 @@ public:
     
 private:
     <<Tensor Member Variables>>
-    <<Tensor Friends>>
 };
 
 #endif
@@ -335,6 +334,16 @@ virtual void setFillValue(E val)
 }
 @
 
+Of course, we should also provide a mechanism for retrieving the fill
+value.
+\index[functions]{\tt Tensor::getFillValue()}
+<<Tensor Operations>>=
+virtual E getFillValue()
+{
+   return this->fillValue;
+}
+@
+
 Another useful operation is to completely fill a tensor with a value, 
 which is also trivial given our storage mechanism:
 
@@ -360,6 +369,75 @@ throw an exception.
 #include <exception>
 @
 
+When accessing an element, it will come from one of two places. The
+first is that it could be in the data map of the tensor.  If it is
+not, then it must be the fill value.
+
+\index{functions}{\tt Tensor::get(index)}
+<<Tensor Operations>>=
+virtual E get(const Index &index)
+{
+   <<Bounds Check>>
+
+   //find the element in the data map
+   if(data.find(index) != data.end()) {
+      return data[index];
+   } else {
+      return getFillValue();
+   }
+}
+@
+
+When setting values, we place them into the datamap if they are not
+the fill value.  If, on the other hand, we are asked to assign a fill
+value, then we we will not place in the map.  If we are overwriting
+a value in the map, in order to maintain sparsity, we must delete the
+entry.
+
+\index{functions}{\tt Tensor::set(index, value)}
+<<Tensor Operations>>=
+virtual void set(const Index &index, const E& value) 
+{
+   <<Bounds Check>>
+
+   //handle storage of the fill value
+   if(value == getFillValue()) {
+      if(data.find(index) != data.end()) {
+         data.erase(index);
+      }
+   } else {
+      data[index] = value;
+   }
+}
+@
+
+Of course, bounds checking is trivial given our ability to compare {\tt Index}
+objects.  We will respond to an out of bounds error by throwing 
+{\tt std::out\_of\_range}.
+
+<<Bounds Check>>=
+if(not index.within(ubound))
+{
+   throw std::out_of_range("Tensor index is out of range.");
+}
+@
+
+Another out of range error exists in that the index may contain
+elements which are less than  0 (that is, it is an incomplete index).
+In that case, we also want to through an exception.
+
+<<Bounds check>>=
+for(int i=0; i<ubound.size; i++) {
+   if(index[i] < 0) {
+      throw std::out_of_range("Tensor index is out of range.");
+   }
+}
+@
+
+Indexing by objects will work, and this approach makes a lot of sense
+for a tensor object, but it is inconvenient.  A better way to go about
+this would be to contruct a series of operators to allow tensors to
+be accessed using stanadard array syntax.  
 A na\"{\i}ve approach to this would be to build an operator with a signature
 like this:
 
@@ -381,7 +459,7 @@ to access only one element at a time.  For now, we can assume that we
 have an inner class {\tt Accessor} which can handle this for us, thus
 our corrected index operator will look like this:
 
-\index{function}{Tensor::operator[](index)}
+\index{functions}{\tt Tensor::operator[](index)}
 <<Tensor Operations>>=
 virtual Accessor operator[](const Index &index) 
 {
@@ -391,16 +469,6 @@ virtual Accessor operator[](const Index &index)
 }
 @
 
-Of course, bounds checking is trivial given our ability to compare {\tt Index}
-objects.  We will respond to an out of bounds error by throwing 
-{\tt std::out\_of\_range}.
-
-<<Bounds Check>>=
-if(not index.within(ubound))
-{
-   throw std::out_of_range("Tensor index is out of range.");
-}
-@
 
 \subsection{Accessing by Integers}
 Another desirable method of accessing the elements in the tensor is by 
@@ -418,7 +486,6 @@ the basic shape of:
 Accessor operator[](int i) 
 {
    <<Build Partial Index>>
-   <<Bounds Check>>
    
    return Accessor(*this, index);
 }
@@ -486,13 +553,9 @@ Accessor(Tensor &t, const Index& index) : t(t), index(index) {}
 @
 
 Of course, {\tt Tensor} needs access to the private constructor, and 
-it should be obvious that {\tt Accessor} is going to need access to the
-map inside {\tt Tensor}, hence the two need to be mutual friends.
+so it is a friend of the {\tt Accessor} class.
 <<Accessor Friends>>=
 friend Tensor;
-@
-<<Tensor Friends>>=
-friend Accessor;
 @
 
 We now turn our attention to the indexing of Accessor objects.  This will
@@ -531,12 +594,6 @@ will not work.
 if(di == index.size()) throw std::out_of_range("Too many dimensions in Tensor Access");
 @
 
-Moreover, there is also the chance that the dimension is too big, 
-we should handle that too.
-<<Find Dimension Index>>=
-if(i >= t.ubound[di]) throw std::out_of_range("Tensor index is out of range.");
-@
-
 Now, we can move on to the business of actually building the new 
 {\tt Accessor}, which will call {\tt a}.
 
@@ -545,82 +602,32 @@ Accessor a(t, index);
 a.index[di] = i;  
 @
 
-Now all that remain is to build the operations of the Acessor.  Chief among
+Now all that remains is to build the operations of the Acessor.  Chief among
 these is the cast to type {\tt E}.  
 
 \index[functions]{\tt Tensor::Accessor::operatorE()}
 <<Accessor Operations>>=
 virtual operator E()
 {
-   <<Check for Complete Index>>
-   <<Access the Element>>
+   return t.get(index);
 }
 @
 
-The first thing to do is check to see that the {\tt Accessor}'s index is
-complete.  If it is not, then we should throw a bad cast.  So we just need
-to look to see that everything is greater than 0.
-<<Check for Complete Index>>=
-for(int i=0; i<index.size(); i++) 
-{
-   if(index[i] < 0) 
-   {
-      throw std::bad_cast();
-   }
-}
-@
 
-<<Includes>>=
-#include <typeinfo>
-@
-
-Now to access the element.  There are two places the element may be.  It is 
-either in the {\tt Tensor}'s map or it is the default fill value.
-
-<<Access the Element>>=
-//absence means fill value
-if(t.data.find(index) == t.data.end()) 
-{
-   return t.fillValue;
-}
-
-//return it!
-return t.data[index];
-@
 
 The astitute reader will notice that the cast does not return a reference
 type.  The reason for this is that we must maintain careful control over 
 assignment so as to maintain the sparse nature of the array.  So we will
-create an assignment operator:
+create an assignment operator, which makes use of the {\tt set}
+operation and returns the assigned value.
 
 \index[functions]{\tt Tensor::Accessor::operator=(rhs)}
 <<Accessor Operations>>=
 virtual E operator=(const E &rhs)
 {
-   <<Tensor Item Assignment>>
+   t.set(index, rhs);
+   return rhs;
 }
-@
-
-We begin by putting the item into the data map.
-<<Tensor Item Assignment>>=
-t.data[index] = rhs;
-@
-
-Next, we check to see if it is a default fill value.  If it is, we 
-erase it.
-
-<<Tensor Item Assignment>>=
-if(rhs == t.fillValue) 
-{
-   t.data.erase(index);
-}
-@
-
-Finally we return the item that was just assigned, noting that this is not
-a reference return for reasons already explained.
-
-<<Tensor Item Assignment>>=
-return rhs;
 @
 
 For convenience, we'll add some other arithemtic assignment operators.
