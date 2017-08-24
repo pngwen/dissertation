@@ -3,7 +3,6 @@
 \makeindex[name=functions,title=Functions and Classes]
 
 \usepackage{noweb}
-\usepackage{fullpage}
 \pagestyle{noweb}
 \noweboptions{}
 \begin{document}
@@ -24,6 +23,7 @@ the same, though some functions will need to be passed into the template for
 the operations to work.  By default, the tensor will operate on doubles, and
 so all the template parameters will be geared toward that.
 
+
 The template specification for this tensor is as follows:
 
 <<Includes>>=
@@ -34,10 +34,25 @@ The template specification for this tensor is as follows:
 template<typename E=double, E(*SQRT)(E)=std::sqrt>
 @
 
-
 Where {\tt E} is the element type and {\tt SQRT} is a function pointer 
 type for a  square root function for the elements.  The overall layout of 
 the template file (named ``{\tt tensor.h}'') is as follows:
+
+In order to conserve memory, this tensor template uses sparse storage.
+This has an impact on the selection of {\tt E} as the algorithms used
+throughout this template assume that the default value of type {\tt E}
+functions mathematically as a zero.  That is, the usual rules around
+zero should befollowed.  The key principles which must be adhered
+to in the selection of {\tt E} are:
+\begin{itemize}
+    \item {\tt x * E() == 0} for all values of {\tt x}
+    \item {\tt x + E() == x} for all values of {\tt x}
+    \item {\tt x - E() == x} for all values of {\tt x}
+    \item {\tt E() - x == -x} for all values of {\tt x}
+\end{itemize}
+All of the algorithms which follow will make this basic assumption.
+Violating them could have some interesting results!
+
 
 <<tensor.h>>=
 #ifndef TENSOR_H
@@ -178,8 +193,33 @@ virtual int& operator[](int i) { return v[i]; }
 virtual std::vector<int>::size_type size() const { return v.size(); }
 @
 
+Another useful vector operation for an index is to allow appending to
+the index.  One scenario would be to add a new individual element to
+the index.
+
+\index[functions]{\tt Tensor::Index::append(i)}
+<<Index Vector Operations>>=
+virtual void append(int i) 
+{
+    v.push_back(i);
+}
+@
+
+The other key type of appending is to append an entire index onto the
+end of an existing one.  This type of operation is common in some
+tensor operations
+
+\index[functions]{\tt Tensor::Index::append(rhs)}
+<<Index Vector Operations>>=
+virtual void append(const Index& rhs) 
+{
+    v.reserve(v.size() + rhs.size());
+    v.insert(v.end(), rhs.v.begin(), rhs.v.end());
+}
+@
+
 And now that brings us to comparison opeations!  Of course, in order for
-map to work, we have to have the < operator so that the items can
+map to work, we have to have the {\tt <} operator so that the items can
 be sorted.  We also will likely be interested in basic equality and
 greater than operations.  To implement the operators, we will first
 create a compare function, which will compare the present object to the
@@ -274,87 +314,40 @@ virtual bool within(const Index &bound) const
 \section{Construction}
 Having defined the storage mechanisms of the tensor class that we are 
 creating, we now turn our attention to the construction and definition
-of the tensors themselves.  When the tensors are initialized, we have two
-main properties:
-\begin{itemize}
-\item Upper Bound
-\item Fill Value
-\end{itemize}
+of the tensors themselves.  When the tensors are first created, they
+are filled with {\tt E() } values, and are defined by their dimension.
+In this template, dimensions are immutable.
 
-The dimension upper bound is an index such that all valid indexes in the
-tensor are strictly less than the upper bound as defined in the previous
-section.
 
 <<Tensor Member Variables>>=
 Index ubound;   //The dimension upper bound
 @
 
-The fill value is the deault value of the tensor.  We are creating a
-very sparse tensor, but the tensor is never actually empty.  This fill
-value is the value of all elements that have not been written to.  
-Furthermore, anytime a default value is written back to the tensor, that
-entry will be erased from the storage map.
-<<Tensor Member Variables>>=
-E fillValue;
-@
 
 So then, after creation a basic {\tt Tensor} object will consist of a 
 tensor of a fixed finite dimension which is filled with a default value.
 The most basic sort of constructor which could accomplish this simply
-populates these two variables.
-\index[functions]{\tt Tensor::Tensor(ubound, fillValue=E())}
+populates thedimension
+\index[functions]{\tt Tensor::Tensor(ubound)}
 <<Tensor Constructors>>=
-Tensor(const Index &ubound, E fillValue=E()) 
-  : ubound(ubound), fillValue(fillValue) { }
+Tensor(const Index &ubound)
+  : ubound(ubound) { }
 @
 
-Of course, it may be advantageous to allow construction from an initilizer
-list, but this is trivial given the above constructor and as well as the
-{\tt Index} constructor.
-\index[functions]{\tt Tensor::Tensor(dimensions, fillValue=E())}
+Of course, it may be advantageous to allow construction from an
+initilizer list for the dimension, but this is trivial given the above
+constructor and as well as the {\tt Index} constructor.
+
+\index[functions]{\tt Tensor::Tensor(dimensions)}
 <<Tensor Constructors>>=
-Tensor(std::initializer_list<int> dimensions, E fillValue=E())
-  : Tensor(Index(dimensions), fillValue) { }
+Tensor(std::initializer_list<int> dimensions)
+  : Tensor(Index(dimensions)) { }
 @
 
-In either case, the result is a sparse tensor with no non-fill value
-components.  The tensor as constructed here has a fixed finite dimension.
+In either case, the result is a sparse tensor with no non-default value
+components.  The tensor as constructed here has an immutable finite
+dimension.
 
-Of course, the storage mechanism of the tensors that we are using does 
-lend itself to the easy filling of the tensors.  We can trivially
-create a function which alters the fill value (thus filling the  ``empty''
-cells with the specified value:
-
-
-\index[functions]{\tt Tensor::setFillValue(val)}
-<<Tensor Operations>>=
-virtual void setFillValue(E val) 
-{
-   this->fillValue = val;
-}
-@
-
-Of course, we should also provide a mechanism for retrieving the fill
-value.
-\index[functions]{\tt Tensor::getFillValue()}
-<<Tensor Operations>>=
-virtual E getFillValue()
-{
-   return this->fillValue;
-}
-@
-
-Another useful operation is to completely fill a tensor with a value, 
-which is also trivial given our storage mechanism:
-
-\index[functions]{\tt Tensor::fill(val)}
-<<Tensor Operations>>=
-virtual void fill(E val)
-{
-   setFillValue(val);
-   data.clear();
-}
-@
 
 \section{Accessing Elements}
 \subsection{Accessing by {\tt Index} Objects}
@@ -383,14 +376,14 @@ virtual E get(const Index &index)
    if(data.find(index) != data.end()) {
       return data[index];
    } else {
-      return getFillValue();
+      return E();
    }
 }
 @
 
 When setting values, we place them into the datamap if they are not
-the fill value.  If, on the other hand, we are asked to assign a fill
-value, then we we will not place in the map.  If we are overwriting
+the default value.  If, on the other hand, we are asked to assign
+a default value, then we we will not place in the map.  If we are overwriting
 a value in the map, in order to maintain sparsity, we must delete the
 entry.
 
@@ -400,8 +393,8 @@ virtual void set(const Index &index, const E& value)
 {
    <<Bounds Check>>
 
-   //handle storage of the fill value
-   if(value == getFillValue()) {
+   //handle storage of the default value
+   if(value == E()) {
       if(data.find(index) != data.end()) {
          data.erase(index);
       }
@@ -422,17 +415,6 @@ if(not index.within(ubound))
 }
 @
 
-Another out of range error exists in that the index may contain
-elements which are less than  0 (that is, it is an incomplete index).
-In that case, we also want to through an exception.
-
-<<Bounds check>>=
-for(int i=0; i<ubound.size; i++) {
-   if(index[i] < 0) {
-      throw std::out_of_range("Tensor index is out of range.");
-   }
-}
-@
 
 Indexing by objects will work, and this approach makes a lot of sense
 for a tensor object, but it is inconvenient.  A better way to go about
@@ -491,14 +473,12 @@ Accessor operator[](int i)
 }
 @
 
-Building the partial index is easy enough.  We will just construct an index
-of the correct size, and prepopulate it with -1.  This will pass the 
-check as it will not be greater than the {\tt ubound} index.  Then we just
-fill in the first value.
+Building the partial index is easy enough.  We will construct an empty
+index and append the given index. 
 
 <<Build Partial Index>>=
-Index index(ubound.size(), -1);
-index[0] = i;
+Index index;
+index.append(i);
 @
 
 \subsection{The {\tt Accessor} Class}
@@ -545,11 +525,17 @@ Index index;
 
 As mentioned before, the constructor will be a private constructor, and as 
 implied in the previous subsection it will need to take a reference to a 
-{\tt Tensor} and an index.
+{\tt Tensor} and an index. Also, we should throw an exception if we
+try to create an accessor with too many dimensions.
 
 \index[functions]{\tt Tensor::Accessor::Accessor(t, index)}
 <<Accessor Constructor>>=
-Accessor(Tensor &t, const Index& index) : t(t), index(index) {}
+Accessor(Tensor &t, const Index& index) : t(t), index(index) 
+{
+    if(index.size() > t.dim().size()) {
+        throw std::out_of_range("Too many dimensions in Tensor Access");
+    }
+}
 @
 
 Of course, {\tt Tensor} needs access to the private constructor, and 
@@ -560,47 +546,24 @@ friend Tensor;
 
 We now turn our attention to the indexing of Accessor objects.  This will
 occur when using the multiple integer index form of tensor access 
-(as in {\tt t[i][j][k]}).  This will be an index operation with the following
-shape.
+(as in {\tt t[i][j][k]}). Each index is added to the end of the
+accessor index to form a new accessor 
 
 \index[functions]{\tt Tensor::Accessor::operator[](i)}
 <<Accessor Operations>>=
 virtual Accessor operator[](int i)
 {
-   <<Find Dimension Index>>
-   <<Construct New Accessor>>
-   
+   Accessor a(t, index);   //copy present accessor
+   a.index.append(i);      //add to the end
+
    return a; //return the new accessor
 }
 @
-
-The first step will be to find the dimension we need to fill.  This will
-be the first dimension where the index is -1.
-<<Find Dimension Index>>=
-int di;  //dimension index
-for(di=0; di<index.size(); di++)
-{
-   if(index[di] == -1) {
-     break;
-   }
-}
-@
-
-We should also check to make sure that there is a remaining index.  For 
-example, building a 4 dimensional reference into a 3 dimensional array
-will not work. 
 
 <<Find Dimension Index>>=
 if(di == index.size()) throw std::out_of_range("Too many dimensions in Tensor Access");
 @
 
-Now, we can move on to the business of actually building the new 
-{\tt Accessor}, which will call {\tt a}.
-
-<<Construct New Accessor>>=
-Accessor a(t, index);
-a.index[di] = i;  
-@
 
 Now all that remains is to build the operations of the Acessor.  Chief among
 these is the cast to type {\tt E}.  
@@ -976,9 +939,6 @@ the assignment multiplication operator:
 <<Tensor Scalar Operations>>=
 virtual Tensor& operator*=(const E& s)
 {
-   //multiply the "empty" cells
-   fillValue *= s;
-   
    //multiply all the "non-empty" cells
    for(auto itr = data.begin(); itr != data.end(); itr++) 
    {
@@ -991,10 +951,10 @@ virtual Tensor& operator*=(const E& s)
 @
 
 We have to clean up a bit as there is a chance that the scalar results
-in a fillValue being stored in the data map.  
+in a zero being stored in the data map.  
 <<Tensor Iterator Cleanup>>=
-//cleanup if this has become the fillValue!
-if(itr->second == fillValue) 
+//cleanup if this has become zero
+if(itr->second == E()) 
 {
    data.erase(itr);
 }
@@ -1022,9 +982,6 @@ value.
 <<Tensor Scalar Operations>>=
 virtual Tensor& operator/=(const E& s)
 {
-   //multiply the "empty" cells
-   fillValue /= s;
-   
    //multiply all the "non-empty" cells
    for(auto itr = data.begin(); itr != data.end(); itr++) 
    {
@@ -1072,15 +1029,10 @@ We will start with the addition assignment operator.
 virtual Tensor& operator+=(Tensor &rhs) 
 {
    //the new fill value is the sum of the two fill values
-   E newFill = fillValue + rhs.fillValue;
-   
    <<Add non-fill positions from the left>>
    <<Add non-fill positions from the right>>
   
-   //use the new fillValue
-   fillValue = newFill;
-   
-   <<Remove Fill Values>>
+   <<Remove Zeroes>>
    
    return *this;
 }
@@ -1104,7 +1056,7 @@ entry in the left's {\tt data} map.
 for(auto itr = rhs.data.begin(); itr != rhs.data.end(); itr++) 
 {
    if(data.find(itr->first) == data.end()) {
-      data[itr->first] = fillValue + itr->second;
+      data[itr->first] = itr->second;
    }
 }
 @
@@ -1129,16 +1081,10 @@ Subtraction is implemented the same way.
 <<Tensor Operations>>=
 virtual Tensor& operator-=(Tensor &rhs) 
 {
-   //the new fill value is the sum of the two fill values
-   E newFill = fillValue - rhs.fillValue;
-   
    <<Subtract non-fill positions from the left>>
    <<Subtract non-fill positions from the right>>
   
-   //use the new fillValue
-   fillValue = newFill;
-   
-   <<Remove Fill Values>>
+   <<Remove Zeroes>>
    
    return *this;
 }
@@ -1155,7 +1101,7 @@ for(auto itr = data.begin(); itr != data.end(); itr++)
 for(auto itr = rhs.data.begin(); itr != rhs.data.end(); itr++) 
 {
    if(data.find(itr->first) == data.end()) {
-      data[itr->first] = fillValue - itr->second;
+      data[itr->first] = E() - itr->second;
    }
 }
 @
@@ -1168,14 +1114,14 @@ virtual Tensor operator-(Tensor &rhs)
 }
 @
 
-There is a chance that each of the operations will result in the
-fillValue being added to the tensor, and so we need to clean up any fill 
+There is a chance that each of the operations will result in 
+zero being added to the tensor, and so we need to clean up any fill 
 values in the data array.
 
-<<Remove Fill Values>>=
+<<Remove Zeroes>>=
 for(auto itr=data.begin(); itr != data.end(); itr++) 
 {
-   if(itr->second == fillValue) 
+   if(itr->second == E()) 
    {
       data.erase(itr);
    }

@@ -33,7 +33,7 @@ int main()
     t1[1][1] = 4;
     printTensor(t1);
     
-    t2.fill(3);
+    t2[0][0] = 1;
     cout << "T2" << endl;
     printTensor(t2);
     
@@ -43,7 +43,6 @@ int main()
     
     
     //accessor tests
-    t2.fill(2);
     t2[0][0]*=3;
     t2[1][0]+=2;
     t2[0][1]-=5;
@@ -78,59 +77,47 @@ int main()
     
     //scalar tests
     cout << "Scalar Multiply"<< endl;
-    t2.fill(2);
     t2[0][0]=3;
     t3 = t2 * 2;
     printTensor(t3);
     
     cout << "In Place Scalar Multiply" << endl;
-    t2.fill(2);
     t2[0][0]=3;
     t2*=2;
     
     cout << "Scalar Divide"<< endl;
-    t2.fill(2);
     t2[0][0]=3;
     t3 = t2 / 2;
     printTensor(t3);
     
     cout << "In Place Scalar Divide" << endl;
-    t2.fill(2);
     t2[0][0]=3;
     t2/=2;
     printTensor(t2);
     
     cout << "Tensor Add" << endl;
-    t1.fill(2);
     t1[0][0]=3;
-    t2.fill(1);
     t2[0][0]=2;
     t2[1][0]=3;
     t3=t1+t2;
     printTensor(t3);
     
     cout << "In place Tensor Add" << endl;
-    t1.fill(2);
     t1[0][0]=3;
-    t2.fill(1);
     t2[0][0]=2;
     t2[1][0]=3;
     t1+=t2;
     printTensor(t1);
     
     cout << "Tensor Subtract" << endl;
-    t1.fill(2);
     t1[0][0]=3;
-    t2.fill(1);
     t2[0][0]=2;
     t2[1][0]=3;
     t3=t1-t2;
     printTensor(t3);
     
     cout << "In place Tensor Subtract" << endl;
-    t1.fill(2);
     t1[0][0]=3;
-    t2.fill(1);
     t2[0][0]=2;
     t2[1][0]=3;
     t1-=t2;
