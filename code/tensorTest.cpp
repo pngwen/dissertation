@@ -12,117 +12,56 @@ void printTensor(Tensor<> &t)
 
 int main()
 {
-    Tensor<> t1{2,2};
-    Tensor<> t2{2,2};
-    Tensor<> t3(t2);
-    Tensor<>::Index i(2);
-    Tensor<>::Index j(2);
-    Tensor<>::Iterator itr;
-    
-    i[0] = 0;
-    i[1] = 1;
-    j[0] = 1;
-    j[1] = 1;
-    cout << (i<j) << endl;
-    cout << (j<i) << endl;
-    
-    cout << "T1" << endl;
-    t1[0][0] = 1;
-    t1[0][1] = 3;
-    t1[1][0] = 2;
-    t1[1][1] = 4;
-    printTensor(t1);
-    
-    t2[0][0] = 1;
-    cout << "T2" << endl;
-    printTensor(t2);
-    
-    t3 = t1 + t2;
-    cout << "T3" << endl;
-    printTensor(t3);
-    
-    
-    //accessor tests
-    t2[0][0]*=3;
-    t2[1][0]+=2;
-    t2[0][1]-=5;
-    t2[1][1]/=8;
-    cout << "After Accessor Arithmetic Test" << endl;
-    printTensor(t2);
-  
-    //index tests
-    i=t2.dim();
-    cout << i[0] << ", " << i[1] << endl;
-    
-    //iterator tests
-    i=t2.begin().index();
-    cout << i[0] << ", " << i[1] << endl;
-    
-    itr=t2.begin();
-    i=itr.index();
-    cout << i[0] << ", " << i[1] << endl;
-    
-    itr=t2.begin()+3;
-    i=itr.index();
-    cout << i[0] << ", " << i[1] << endl;
-    
-    itr=itr-1;
-    i=itr.index();
-    cout << i[0] << ", " << i[1] << endl;
-    
-    itr=t2.begin()+7;
-    i=itr.index();
-    cout << i[0] << ", " << i[1] << endl;
-    
-    
-    //scalar tests
-    cout << "Scalar Multiply"<< endl;
-    t2[0][0]=3;
-    t3 = t2 * 2;
-    printTensor(t3);
-    
-    cout << "In Place Scalar Multiply" << endl;
-    t2[0][0]=3;
-    t2*=2;
-    
-    cout << "Scalar Divide"<< endl;
-    t2[0][0]=3;
-    t3 = t2 / 2;
-    printTensor(t3);
-    
-    cout << "In Place Scalar Divide" << endl;
-    t2[0][0]=3;
-    t2/=2;
-    printTensor(t2);
-    
-    cout << "Tensor Add" << endl;
-    t1[0][0]=3;
-    t2[0][0]=2;
-    t2[1][0]=3;
-    t3=t1+t2;
-    printTensor(t3);
-    
-    cout << "In place Tensor Add" << endl;
-    t1[0][0]=3;
-    t2[0][0]=2;
-    t2[1][0]=3;
-    t1+=t2;
-    printTensor(t1);
-    
-    cout << "Tensor Subtract" << endl;
-    t1[0][0]=3;
-    t2[0][0]=2;
-    t2[1][0]=3;
-    t3=t1-t2;
-    printTensor(t3);
-    
-    cout << "In place Tensor Subtract" << endl;
-    t1[0][0]=3;
-    t2[0][0]=2;
-    t2[1][0]=3;
-    t1-=t2;
-    printTensor(t1);
-    
+    Tensor<> a{2,2,2};
+    Tensor<> b{2,2,2};
+    Tensor<> c{2,2,2};
+
+    //initialize a and b
+    a[0][0][0]  = 1;
+    a[1][1][1]  = 1;
+    b[0][1][0]  = 2;
+    b[1][1][1]  = 2;
+
+
+    //print a and b
+    cout << "A" << endl;
+    printTensor(a);
+    cout << endl << "B" << endl; 
+    printTensor(b);
+    cout << endl << "A+B" << endl;
+    c = a+b;
+    printTensor(c);
+    c = a;
+    c+=b;
+    cout << endl << "C=8; C+=b" << endl;
+    printTensor(c);
+    cout << endl << "A-B" << endl;
+    c = a-b;
+    printTensor(c);
+    c = a;
+    c-=b;
+    cout << endl << "C=a; C-=b" << endl;
+    printTensor(c);
+
+    c = a * 4;
+    cout << endl << "A * 4" << endl;
+    printTensor(c);
+
+
+    cout << endl << "C=A; C*=4" << endl;
+    c = a;
+    c *= 4;
+
+    c = a / 4;
+    cout << endl << "A / 4" << endl;
+    printTensor(c);
+
+
+    cout << endl << "C=A; C/=4" << endl;
+    c = a;
+    c /= 4;
+    printTensor(c);
+
     return 0;
 }
 
