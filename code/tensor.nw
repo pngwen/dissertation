@@ -922,7 +922,7 @@ virtual Index index()
 }
 @
 
-\section {Tensor Arithmetic Operations}
+\section {Tensor Arithmetic}
 Having constructed, accessed, and stored tensor data, we now turn our 
 attention to the arithmetic operations of the tensor.  These fall into two
 groups, scalor and tensor operations.  Scalar operations are interactions
@@ -1128,8 +1128,66 @@ for(auto itr=data.begin(); itr != data.end(); itr++)
 }
 @
 
-\subsubsection{Tensor Product}
-The tensor product, or 
+\subsection{Tensor Products}
+Several product operations are possible for tensors. The products
+implemented for this tensor are:
+\begin{itemize}
+    \item Outer or Tensor Product
+    \item Hadamard Product
+    \item Kronecker Product
+    \item Khatri-Rao Product
+\end{itemize}
+
+\subsubsection{Outer Product}
+The outer product, also known as the tensor product, is a product
+between two tensors and yields another tensor.  Given two tensors $A$
+and $B$, the outer product can be written as $C = A \circ B$. 
+
+This productis implemented by the {\tt outer} function, which
+multiplies the current object (which we will call $A$) with another
+tensor object (which we will refer to as $B$).
+
+<<Tensor Operations>>=
+virtual Tensor Tensor::outer(Tensor &B)
+{
+    <<Outer Product Dimension>>
+    <<Outer Product Multiplication>>
+
+    return C;
+}
+@
+
+The new tensor, $C$, must be generated with the proper dimension.  The
+result of the outer product will have the dimensions 
+\[
+C.\mathrm{dim} \leftarrow A.\mathrm{dim} \oplus B.\mathrm{dim}
+\]
+
+<<Outer Product Dimension>>=
+Tensor::Index d = dim();
+d.append(B.dim());
+Tensor C(d);
+@
+
+To complete the product, we populate the tensor $C$ with the actual
+multiplications.  Suppose $A$ is a tensor of order $k$ and $B$ is
+a tensor of order $l$. Clearly, $C$ is a tensor of order $k+l$. Each
+element of $C$ is computed as
+\[
+C_{i_1\ldots i_k,j_1\ldots j_l} = A_{i_1\ldots i_k}
+B_{j_1\ldots j_l}
+\]
+
+This operation can be made more effecient by taking advantage of the
+sparse expectation of the tensor object.  Any element populated by
+a zero need to be multiplied, and so we can arrive at this product by
+simply iterating over the non-zero elements in both $A$ and $B$.  All
+other elements in the tensor will, of course, be 0.
+
+
+<<Outer Product Multiplication>>=
+@
+
 \printindex[functions]
 \end{document}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
