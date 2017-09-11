@@ -83,6 +83,19 @@ int main()
     cout << endl << "Outer Product: [1 2] o [3 4] o [1 2]"<<endl;
     printTensor(c);
 
+    cout << endl << "Outer Product: [1 2] o [3 4] o [0]"<<endl;
+    a = Tensor<>{2};
+    a[0] = 1;
+    a[1] = 2;
+    b = Tensor<>{2};
+    b[0] = 3;
+    b[1] = 4;
+    c = a.outer(b);
+    b = Tensor<>{1};
+    b[0] = 0;
+    c = c.outer(b);
+    printTensor(c);
+
     return 0;
 }
 
