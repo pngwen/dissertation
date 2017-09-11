@@ -1,11 +1,14 @@
 \documentclass{article}
 \usepackage[splitindex]{imakeidx}
 \makeindex[name=functions,title=Functions and Classes]
+\title{Tensor and Tensor Operations}
 
 \usepackage{noweb}
 \pagestyle{noweb}
 \noweboptions{}
 \begin{document}
+\maketitle
+\tableofcontents
 
 \section{Introduction}
 This is a template of a tensor class.  A tensor is a multi-dimensional
@@ -867,7 +870,7 @@ Backward motion begins with a special case, namely the case where we are
 at the {\tt end()} position.  In this situation, we go to the last
 valid index, which takes care of going back by 1 index.
 
-<<Tensor Iterator Backward Movement>>=
+<<Tensor iterator Backward Movement>>=
 if(cur == ubound) 
 {
   for(int i=0; i<cur.size(); i++) 
