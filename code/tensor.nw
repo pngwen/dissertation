@@ -165,6 +165,22 @@ to initialize the Index:
 Index(std::initializer_list<int> il) : v(il.begin(), il.end()) { }
 @
 
+For some tensor operations, we need to be able to create dimensions
+and indexes from several index lists.  This is a relatively simple
+task, an will be made even better by using an initializer list of
+indices.
+\index[functions]{\tt Tensor::Index::Index(std::initializer\_list<Index>)}
+
+<<Index Constructors>>=
+Index(std::initializer_list<Index> il) 
+{
+    //append the lists
+    for(auto itr = il.begin(); itr != il.end(); itr++) {
+        append(*itr);
+    }
+}
+@
+
 It may also be convenient to initialize an index with a given number
 of elements.  The user can specify the fill value for the vector, but we will
 use -1 (an invalid index) as the default.
@@ -1148,7 +1164,7 @@ multiplies the current object (which we will call $A$) with another
 tensor object (which we will refer to as $B$).
 
 <<Tensor Operations>>=
-virtual Tensor Tensor::outer(Tensor &B)
+virtual Tensor outer(Tensor &B)
 {
     <<Outer Product Dimension>>
     <<Outer Product Multiplication>>
@@ -1164,9 +1180,7 @@ C.\mathrm{dim} \leftarrow A.\mathrm{dim} \oplus B.\mathrm{dim}
 \]
 
 <<Outer Product Dimension>>=
-Tensor::Index d = dim();
-d.append(B.dim());
-Tensor C(d);
+Tensor C(Index{dim(), B.dim()});
 @
 
 To complete the product, we populate the tensor $C$ with the actual
@@ -1180,12 +1194,18 @@ B_{j_1\ldots j_l}
 
 This operation can be made more effecient by taking advantage of the
 sparse expectation of the tensor object.  Any element populated by
-a zero need to be multiplied, and so we can arrive at this product by
+a zero need not be multiplied, and so we can arrive at this product by
 simply iterating over the non-zero elements in both $A$ and $B$.  All
 other elements in the tensor will, of course, be 0.
 
 
 <<Outer Product Multiplication>>=
+for(auto aitr = data.begin(); aitr!=data.end(); aitr++) {
+    for(auto bitr = B.data.begin(); bitr!=B.data.end(); bitr++) {
+        C.set(Index{aitr->first, bitr->first}, 
+              aitr->second * bitr->second);
+    }
+}
 @
 
 \printindex[functions]

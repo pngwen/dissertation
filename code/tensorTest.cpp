@@ -1,12 +1,20 @@
 #include <iostream>
+#include <iomanip>
 #include "tensor.h"
 
 using namespace std;
 
 void printTensor(Tensor<> &t)
 {
-    for(auto itr=t.begin(); itr != t.end(); itr++) {
-        cout << *itr << endl;
+    Tensor<>::Index d = t.dim();
+    for(auto k = 0; k<d[2]; k++) {
+        for(auto i = 0; i<d[0]; i++) {
+            for(auto j = 0; j<d[1]; j++) {
+                cout << setw(5) << t[i][j][k]; 
+            }
+            cout << endl;  //new row
+        }
+        cout << endl; //blank line
     }
 }
 
@@ -60,6 +68,19 @@ int main()
     cout << endl << "C=A; C/=4" << endl;
     c = a;
     c /= 4;
+    printTensor(c);
+
+
+    //test the outer product
+    a = Tensor<>{2};
+    a[0] = 1;
+    a[1] = 2;
+    b = Tensor<>{2};
+    b[0] = 3;
+    b[1] = 4;
+    c = a.outer(b);
+    c = c.outer(a);
+    cout << endl << "Outer Product: [1 2] o [3 4] o [1 2]"<<endl;
     printTensor(c);
 
     return 0;
