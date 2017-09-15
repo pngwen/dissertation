@@ -654,7 +654,16 @@ don't know the order of the tensor at coding time.  Being able to iterate
 over each element is, of course, a fundamental operation of any container,
 and our multidimensional tensor is no exception!
 
-So then, let's think about the anatomy of an iterator for a tensor.  We
+Another form iteration that we are interested in is iterating over the
+non-sparse elements.  This is a crucial step for some tensor
+operations, and it is also needed for storing tensors in files.
+
+\subsection{Full (Dense) Iterator} 
+The first type of iterator to consider is the full, or dense,
+iterator.  This iterator will visit every possible index in the
+tensor, even if it is a sparse element.
+
+First, let's think about the anatomy of an iterator for a tensor.  We
 will, of course, need an inner class to handle this.
 
 <<Tensor Inner Class Prototypes>>=
@@ -671,7 +680,7 @@ public:
     <<Tensor Iterator Movement>>
     <<Tensor Iterator Comparison>>
     <<Tensor Iterator Accessors>>
-private:
+protected:
     <<Tensor Iterator Private Members>>
 };
 @
@@ -696,7 +705,7 @@ and so we can safely store a ubound for convenience.
 Index ubound; //the upper bound of the tensor we are iterating over
 @
 
-\subsection{Tensor Iterator Construction}
+\subsubsection{Tensor Iterator Construction}
 Construction of the iterator is a fairly straightforward task.  First, we
 will have a no argument constructor which will do nothing.
 
@@ -751,7 +760,7 @@ virtual Iterator end()
 @
 
 
-\subsection{Tensor Iterator Movement}
+\subsubsection{Tensor Iterator Movement}
 The {\tt Iterator} object is a biderectional iterator, so we will provide
 both increment and decrement operations.  In addition, we also provide
 arithmetic operations.  All of these will be faciliated by a private
@@ -908,7 +917,9 @@ instead leave that to the programmer who uses this class.
 \index[functions]{\tt Tensor::Iterator::operator>=(rhs)}
 \index[functions]{\tt Tensor::Iterator::operator==(rhs)}
 \index[functions]{\tt Tensor::Iterator::operator!=(rhs)}
-\subsection{Tensor Iterator Comparison}
+
+
+\subsubsection{Tensor Iterator Comparison}
 Comparison of the iterators is really just comparison of the indexes.
 <<Tensor Iterator Comparison>>=
 virtual bool operator<(const Iterator &rhs)  { return cur <  rhs.cur; }
@@ -919,7 +930,7 @@ virtual bool operator==(const Iterator &rhs) { return cur == rhs.cur; }
 virtual bool operator!=(const Iterator &rhs) { return cur != rhs.cur; }
 @
 
-\subsection{Tensor Iterator Accessors}
+\subsubsection{Tensor Iterator Accessors}
 Element access, as provided by dereferencing an {\tt Iterator} object 
 provides access to a Tensor Accessor, just as we would when indexing.
 Thus we can avoid repeating a great deal of logic.
@@ -940,6 +951,95 @@ virtual Index index()
    return cur;
 }
 @
+
+
+\subsection{Sparse Iterator}
+Sparse iteration is useful in situations where we only care about the
+non-sparse elements of the tensor.  This is the case when we are
+trying to store it in a file, or in some algorithms associated with
+tensor arithmetic.  Fortunately, the beavior of a sparse iterator is
+close enough to that of a dense iterator that we can simply inherit
+it.  The chief difference will be in construction and movement.
+
+<<Tensor Inner Class Prototypes>>=
+class SparseIterator;
+@
+
+<<Tensor Inner Classes>>=
+class SparseIterator : public Iterator
+{
+public:
+    <<Sparse Iterator Constructors>>
+    <<Sparse Iterator Movement>>
+
+protected:
+    <<Sparse Iterator Private Members>>
+};
+@
+
+Clearly, this iterator will only need concern itself with the elements
+actually stored in the data map within the tensor object.  We may be
+tempted to store an iterator into this map and then move from there,
+however this could lead to a problem which will be further explained
+in a later section.  Instead, what we want to do is store a pointer to
+the map we will be exploring.
+
+<<Sparse Iterator Private Membes>>=
+map<Index, E> *dptr;
+@
+
+The rest of the fields will simply come from the base class.
+
+\subsubsection{Sparse Iterator Construction}
+Constructing a sparse iterator is similar to the construction of
+a dense iterator.  First, for convenience, we'll include a no argument
+constructor which does nothing.
+
+<<Sparse Iterator Constructors>>=
+SparseIterator()
+{
+    //do nothing
+}
+@
+
+We should also create a copy constructor, which again is simply
+copying the fields of the iterator and using the base copy constructor
+for the base stuff.
+<<Sparse Iterator Constructors>>=
+SparseIterator(const SparseIterator &rhs) : Iterator(rhs)
+{
+    dptr = rhs.dptr;
+}
+@
+
+
+The final constructor to consider is the one actually associates the
+iterator with its container.  This has an analagous relationship to
+the same constructor in the dense iterator, and we can use the dense
+constructor.  The only extra step is the storage of the datamap
+pointer, and so this can all be accomplished using the initializer
+list of the constructor.
+
+<<Sparse Iterator Constructors>>=
+SparseIterator(const Index &cur, Tensor *t, map<Index, E> *dptr)
+  : Iterator(cur, t), dptr(dptr) { }
+@
+
+
+The final construction consideration is in the production of the begin
+and end point of the sparse iterator.  This is an addition to the
+tensor operations.
+<<Tensor Operations>>=
+virtual SparseIterator sparseBegin()
+{
+    Index idx;   //the beginning index
+
+    <<Find First Non-Sparse Index>>
+
+    return SparseIterator(idx, this, &data);
+}
+@
+
 
 \section {Tensor Arithmetic}
 Having constructed, accessed, and stored tensor data, we now turn our 
