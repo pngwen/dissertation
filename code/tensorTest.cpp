@@ -6,16 +6,31 @@ using namespace std;
 
 void printTensor(Tensor<> &t)
 {
-    Tensor<>::Index d = t.dim();
-    for(auto k = 0; k<d[2]; k++) {
-        for(auto i = 0; i<d[0]; i++) {
-            for(auto j = 0; j<d[1]; j++) {
-                cout << setw(5) << t[i][j][k]; 
+    Tensor<>::Index lidx;  //index for determininig line shifts
+    auto itr = t.begin();  //start the iterator
+
+    //capture the initial index for the first line
+    lidx = itr.index();
+
+    //display all the tensor elements with some tabbing action
+    for(itr; itr != t.end(); itr++) {
+        //detect end of line for each index after the first one
+        for(int i=1; i<lidx.size(); i++) {
+            //each mismatched higher dimension results in an endl
+            if(lidx[i] != itr.index()[i]) {
+                cout << endl;
             }
-            cout << endl;  //new row
         }
-        cout << endl; //blank line
+
+        //print the element
+        cout << "\t" << *itr;
+
+        //the current index is now our new basis index
+        lidx = itr.index();
     }
+
+    //end the last line
+    cout << endl;
 }
 
 int main()
@@ -95,6 +110,23 @@ int main()
     b[0] = 0;
     c = c.outer(b);
     printTensor(c);
+
+    //test the prints
+    cout << endl << "Print Test" << endl;
+    printTensor(a);
+    cout << "-----" << endl;
+    printTensor(b);
+    cout << "-----" << endl;
+    c=a.outer(a);
+    c=c.outer(a);
+    c=c.outer(a);
+    cout << c.dim().size() << " Modes ["; 
+    for(int i=0; i<c.dim().size(); i++) {
+       cout << " " << c.dim()[i];
+    }
+    cout << "]" << endl;
+    printTensor(c);
+
 
     return 0;
 }
