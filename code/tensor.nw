@@ -1035,8 +1035,12 @@ virtual SparseIterator sparseBegin()
 {
     Index idx;   //the beginning index
 
-    //Find the first non-sparse index
-    idx = data.begin()->first;
+    //Find the first non-sparse index (if there is one)
+    if(data.empty()) {
+       idx = ubound;
+    } else {
+        idx = data.begin()->first;
+    }
 
     return SparseIterator(idx, this, &data);
 }
@@ -1136,23 +1140,11 @@ the assignment multiplication operator:
 virtual Tensor& operator*=(const E& s)
 {
    //multiply all the "non-empty" cells
-   for(auto itr = data.begin(); itr != data.end(); itr++) 
-   {
-      itr->second *= s;
-      <<Tensor Iterator Cleanup>>
+   for(auto itr = sparseBegin(); itr != sparseEnd(); itr++) {
+      *itr *= s;
    }
    
    return *this;
-}
-@
-
-We have to clean up a bit as there is a chance that the scalar results
-in a zero being stored in the data map.  
-<<Tensor Iterator Cleanup>>=
-//cleanup if this has become zero
-if(itr->second == E()) 
-{
-   data.erase(itr);
 }
 @
 
@@ -1179,10 +1171,8 @@ value.
 virtual Tensor& operator/=(const E& s)
 {
    //multiply all the "non-empty" cells
-   for(auto itr = data.begin(); itr != data.end(); itr++) 
-   {
-      itr->second /= s;
-      <<Tensor Iterator Cleanup>>
+   for(auto itr = sparseBegin(); itr != sparseEnd(); itr++) {
+      *itr= s;
    }
    
    return *this;
@@ -1227,8 +1217,6 @@ virtual Tensor& operator+=(Tensor &rhs)
    //the new fill value is the sum of the two fill values
    <<Add non-fill positions from the left>>
    <<Add non-fill positions from the right>>
-  
-   <<Remove Zeroes>>
    
    return *this;
 }
@@ -1238,9 +1226,9 @@ Starting with the left hand side, we will pull the non-fill positions
 and add the corresponding elements from the right hand side.
 
 <<Add non-fill positions from the left>>=
-for(auto itr = data.begin(); itr != data.end(); itr++) 
+for(auto itr = sparseBegin(); itr != sparseEnd(); itr++) 
 {
-   itr->second += rhs[itr->first];
+   *itr += rhs[itr.index()];
 }
 @
 
@@ -1249,10 +1237,10 @@ been added yet.  These will be the ones without a corresponding
 entry in the left's {\tt data} map.
 
 <<Add non-fill positions from the right>>=
-for(auto itr = rhs.data.begin(); itr != rhs.data.end(); itr++) 
+for(auto itr = rhs.sparseBegin(); itr != sparseEnd(); itr++) 
 {
-   if(data.find(itr->first) == data.end()) {
-      data[itr->first] = itr->second;
+   if(data.find(itr.index()) == data.end()) {
+      set(itr.index(), *itr);
    }
 }
 @
@@ -1279,25 +1267,22 @@ virtual Tensor& operator-=(Tensor &rhs)
 {
    <<Subtract non-fill positions from the left>>
    <<Subtract non-fill positions from the right>>
-  
-   <<Remove Zeroes>>
-   
    return *this;
 }
 @
 
 <<Subtract non-fill positions from the left>>=
-for(auto itr = data.begin(); itr != data.end(); itr++) 
+for(auto itr = sparseBegin(); itr != sparseEnd(); itr++) 
 {
-   itr->second -= rhs[itr->first];
+   *itr -= rhs[itr.index()];
 }
 @
 
 <<Subtract non-fill positions from the right>>=
-for(auto itr = rhs.data.begin(); itr != rhs.data.end(); itr++) 
+for(auto itr = rhs.sparseBegin(); itr != rhs.sparseEnd(); itr++) 
 {
-   if(data.find(itr->first) == data.end()) {
-      data[itr->first] = E() - itr->second;
+   if(data.find(itr.index()) == data.end()) {
+      set(itr.index(), E() - *itr);
    }
 }
 @
@@ -1307,20 +1292,6 @@ virtual Tensor operator-(Tensor &rhs)
 {
    Tensor result(*this);
    return result-=rhs;
-}
-@
-
-There is a chance that each of the operations will result in 
-zero being added to the tensor, and so we need to clean up any fill 
-values in the data array.
-
-<<Remove Zeroes>>=
-for(auto itr=data.begin(); itr != data.end(); itr++) 
-{
-   if(itr->second == E()) 
-   {
-      data.erase(itr);
-   }
 }
 @
 
@@ -1380,10 +1351,9 @@ other elements in the tensor will, of course, be 0.
 
 
 <<Outer Product Multiplication>>=
-for(auto aitr = data.begin(); aitr!=data.end(); aitr++) {
-    for(auto bitr = B.data.begin(); bitr!=B.data.end(); bitr++) {
-        C.set(Index{aitr->first, bitr->first}, 
-              aitr->second * bitr->second);
+for(auto aitr = sparseBegin(); aitr!=sparseEnd(); aitr++) {
+    for(auto bitr = B.sparseBegin(); bitr!=B.sparseEnd(); bitr++) {
+        C.set(Index{aitr.index(), bitr.index()}, *aitr * *bitr);
     }
 }
 @
