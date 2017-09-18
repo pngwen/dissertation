@@ -33,6 +33,24 @@ void printTensor(Tensor<> &t)
     cout << endl;
 }
 
+
+void sparsePrint(Tensor<> &t)
+{
+    auto d = t.dim();
+    cout << "Dimensions: [";
+    for(int i=0; i<d.size(); i++) {
+        cout << ' ' << d[i];
+    }
+    cout << " ]" << endl;
+
+    for(auto itr=t.sparseBegin(); itr != t.sparseEnd(); itr++) {
+        for(int i=0; i<d.size(); i++) {
+            cout << itr.index()[i] << ' ';
+        }
+        cout << *itr << endl;
+    }
+}
+
 int main()
 {
     Tensor<> a{2,2,2};
@@ -127,6 +145,13 @@ int main()
     cout << "]" << endl;
     printTensor(c);
 
+    //sparse tensor test
+    cout << endl << "Sparse Iterator Test" << endl;
+    a=Tensor<>{20000,20000,35000};
+    a[1][2][0] = 25.0;
+    a[1000][200][10000] = 75.0;
+    a[19000][19000][1985] = 90.0;
+    sparsePrint(a);
 
     return 0;
 }

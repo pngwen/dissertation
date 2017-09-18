@@ -970,10 +970,10 @@ class SparseIterator : public Iterator
 {
 public:
     <<Sparse Iterator Constructors>>
-    <<Sparse Iterator Movement>>
 
 protected:
-    <<Sparse Iterator Private Members>>
+    <<Sparse Iterator Movement>>
+    <<Sparse Iterator Private Variables>>
 };
 @
 
@@ -984,8 +984,8 @@ however this could lead to a problem which will be further explained
 in a later section.  Instead, what we want to do is store a pointer to
 the map we will be exploring.
 
-<<Sparse Iterator Private Membes>>=
-map<Index, E> *dptr;
+<<Sparse Iterator Private Variables>>=
+std::map<Index, E> *dptr;
 @
 
 The rest of the fields will simply come from the base class.
@@ -1021,25 +1021,102 @@ pointer, and so this can all be accomplished using the initializer
 list of the constructor.
 
 <<Sparse Iterator Constructors>>=
-SparseIterator(const Index &cur, Tensor *t, map<Index, E> *dptr)
+SparseIterator(const Index &cur, Tensor *t, std::map<Index, E> *dptr)
   : Iterator(cur, t), dptr(dptr) { }
 @
 
 
 The final construction consideration is in the production of the begin
 and end point of the sparse iterator.  This is an addition to the
-tensor operations.
+tensor operations.  The first index in the map is the first non-sparse index.
+
 <<Tensor Operations>>=
 virtual SparseIterator sparseBegin()
 {
     Index idx;   //the beginning index
 
-    <<Find First Non-Sparse Index>>
+    //Find the first non-sparse index
+    idx = data.begin()->first;
 
     return SparseIterator(idx, this, &data);
 }
 @
 
+Of course, we also need to find the end of the tensor.  This could be
+more complicated, but as we shall see in the movement functions, all
+we need to do is use the ubound.
+
+<<Tensor Operations>>=
+virtual SparseIterator sparseEnd()
+{
+    return SparseIterator(ubound, this, &data);
+}
+@
+
+\subsection{Sparse Iterator Movement}
+All that is let is to create the sparse iterator's movement.  Recall
+that we have opted to not create an internal iterator with reference
+to the data map.  The reason for this is that it is entirely possible
+that a user will assign the 0 value to the iterator.  This would, in
+turn, result in the current index being removed from the data map,
+which would invalidate our internal iterator.  Instead, what we need
+is to base everything off of the index. The indexes are always value,
+though sometimes they will refer to a sparse element, so the real
+trick is finding indexes within the map at all times.
+
+<<Sparse Iterator Movement>>=
+virtual void move(int d)
+{
+    typename std::map<Index, E>::iterator itr;   //map iterator
+
+    <<Find Map Iterator to Current Index>>
+    <<Move Sparse Index>>
+    <<Cleanup Map>>
+}
+@
+
+To find the current map iterator, we just have to find the current
+index within the map.  However, because this may be an index that is
+absent (assigned the E() value), we need to visit it once to ensure
+that it is present in sorted order within the map. (for iteration
+purposes.)
+
+<<Find Map Iterator to Current Index>>=
+(*dptr)[Iterator::cur];  //get the element in the map (perhaps temporarily)
+itr = dptr->find(Iterator::cur);  //get an iterator to that index
+@
+
+Now we just move the iterator and extract the current index.
+
+<<Move Sparse Index>>=
+if(d < 0) {
+    //move backwards
+    itr--;
+} else  {
+    //move forwards
+    itr++;
+}
+@
+
+Extracting the index has two possibilities.  One is that we've reached
+the end of the map, in which case we set it to the upper boundary
+(dimension) of the tensor.  Otherwise, it just comes from the iterator
+<<Move Sparse Index>>=
+if(itr == dptr->end()) {
+    Iterator::cur = Iterator::t->dim();
+} else {
+    Iterator::cur = itr->first;
+}
+@
+
+
+Finally, there exists a potential for our method of getting the index
+to put zero elements into the data map.  We need to fix this.
+<<Cleanup Map>>=
+if(itr->second == E()) {  //remove zero elements
+    dptr->erase(itr->first);
+}
+@
 
 \section {Tensor Arithmetic}
 Having constructed, accessed, and stored tensor data, we now turn our 
