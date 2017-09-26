@@ -879,7 +879,7 @@ Backward motion begins with a special case, namely the case where we are
 at the {\tt end()} position.  In this situation, we go to the last
 valid index, which takes care of going back by 1 index.
 
-<<Tensor iterator Backward Movement>>=
+<<Tensor Iterator Backward Movement>>=
 if(cur == ubound) 
 {
   for(int i=0; i<cur.size(); i++) 
