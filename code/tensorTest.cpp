@@ -14,8 +14,10 @@ void printTensor(Tensor<> &t)
 
     //display all the tensor elements with some tabbing action
     for(itr; itr != t.end(); itr++) {
-        //detect end of line for each index after the first one
-        for(int i=1; i<lidx.size(); i++) {
+        //detect end of line for everything except the column
+        for(int i=0; i<lidx.size(); i++) {
+            if(i==1)  continue;  //skip columns
+
             //each mismatched higher dimension results in an endl
             if(lidx[i] != itr.index()[i]) {
                 cout << endl;

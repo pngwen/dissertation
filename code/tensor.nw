@@ -837,31 +837,73 @@ other indices as the left ones over or under flow.
 <<Tensor Iterator Private Members>>=
 virtual void move(int d) 
 {
-   if(d > 0) 
-   {
-      <<Tensor Iterator Forward Movement>>
-   } 
-   else if(d < 0) 
-   {
-      <<Tensor Iterator Backward Movement>>
-   }
+    int i;          //a general index variable
+
+    if(d > 0) 
+    {
+       <<Tensor Iterator Forward Movement>>
+    } 
+    else if(d < 0) 
+    {
+       <<Tensor Iterator Backward Movement>>
+    }
 }
 @
 
-Forward movement is achieved by adding {\tt d} to the left most index until
-we have no existing overflows. When that condition is met, we return.
+If we imagine tensors as multi-dimensional arrays, then it follows
+that we adopt an indexing convention $i_1, i_2, \ldots, i_k$ where
+$i_1$ is analagous to a ``row'', and $i_2$ is analagous to
+a ``column''.  Moreover $i_3$ is a layer, thus giving us a series of
+stackedmatrices.  Indexes $i_4, \ldots, i_k$ would be higher
+dimensional constracts without any readily apparent intuitive meaning.  
+
+Given this arrangement of indexes, a natural way for an iterator to
+move through the tensor is in row-major order.  That is, it iterates
+through all columns within a row before moving on to the next.
+Following the exhaustion of all rows, it increments the layer index,
+after which it will move on to the higher dimensional layers each in
+turn.  The only complication lies in the initial row-major traversal.
+That is, we must increment the second index before the first (If such
+an index exists.)  
+
+The task for iterator increment is thus summarized as:
+
 <<Tensor Iterator Forward Movement>>=
-for(int i=0; i<cur.size(); i++) 
-{
-   cur[i] += d;
-   if(cur[i] < ubound[i]) 
-   {
-      return;  //done!
-   }
-   
-   //Fix the overflow!
-   d=cur[i]/ubound[i];
-   cur[i] %= ubound[i];
+<<Select Starting Index>>
+while(i < cur.size()) {
+    //increment the index, if is valid we are done!
+    cur[i] += d;
+    if(cur[i] < ubound[i]) {
+        return;  
+    }
+
+    //Fix the overflow!
+    d=cur[i]/ubound[i];
+    cur[i] %= ubound[i];
+
+    <<Select Next Index>>
+}
+@
+
+Selecting the starting index is really just contingent on whether
+there is more than one index to increment.
+<<Select Starting Index>>=
+if(cur.size() > 1) {
+    i = 1;
+} else {
+    i = 0;
+}
+@
+
+Updating the next index is relatively simple.  There are only two
+special cases (when i=1 and i=0).
+<<Select Next Index>>=
+if(i == 1) {
+    i = 0;  //update the row next
+} else if(i == 0) {
+    i = 2;  //update the layer next
+} else {
+    i++;    //go to the next high-dimensional layer
 }
 @
 
@@ -891,20 +933,25 @@ if(cur == ubound)
 @
 
 Now, we finish the backward motion by the same type of addition and 
-overflow pattern.
+correction pattern.  We again move in a row-major fashion, the only
+real difference is in the underflow mechanism.
+
 <<Tensor Iterator Backward Movement>>=
-for(int i=0; i<cur.size(); i++) 
-{
-   cur[i]+=d;
-   if(cur[i] >= 0) 
-   {
-      return;  //all done!
-   } 
+<<Select Starting Index>>
+while(i < cur.size()) {
+    //increment and validate
+    cur[i]+=d;
+    if(cur[i] >= 0) 
+    {
+        return;  //all done!
+    } 
    
    //find out how much to "borrow" form the next column and adjust this
    //column accordingly
    d = cur[i] / ubound[i] - (cur[i] % ubound[i] ? 1 : 0);
    cur[i] += ubound[i] * -d;
+
+   <<Select Next Index>>
 }
 @
 
