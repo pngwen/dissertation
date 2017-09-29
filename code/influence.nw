@@ -1,0 +1,74 @@
+\documentclass{article}
+\usepackage[splitindex]{imakeidx}
+\title{Tensor Influence Modelling}
+
+\usepackage{noweb}
+\pagestyle{noweb}
+\noweboptions{}
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+This is a collection of classes and utilities which are used to create
+tensor representations of corpora of documents.  These tensors are
+then analyzed in order to create an influence model among the several
+documents in the corpus. 
+
+TODO: More writeup of what I am doing here
+
+
+\section{Vocabulary}
+The first class to be created is one to represent the vocabulary of
+the corpus.  For our purposes, the vocabulary of the corpus is
+a bijective function from terms to index numbers.  The index numbers
+are zero based.  
+
+The overall layout of the vocabulary file is as follows:
+<<vocabulary.h>>=
+#include <vector>
+#include <map>
+#include <string>
+#include <functional>
+
+#ifndef VOCABULARY_H
+#define VOCABULARY_H
+class Vocabulary
+{
+public:
+    <<Vocabulary Constructors>>
+    <<Vocabulary Methods>>
+    <<Vocabulary Operators>>
+
+private:
+    <<Vocabulary Data>>
+};
+#endif
+@
+
+\subsection{Vocabulary Storage}
+Vocabularies are maps of words, represented here by strings, onto
+index numbers. Because we we want to establish a bidirectional
+mapping, in order to conserve space, we store a common pool of the
+distinct terms as a vector.
+
+<<Vocabulary Data>>=
+std::vector<std::string> terms;     //pool of terms
+@
+
+The map from numbers to terms is trivial.
+<<Vocabulary Data>>=
+std::map<int, std::string*> toTerm;
+@
+
+The map from terms to numbers is a little more involved.  Because we
+are mapping string pointers, we require a comparison in order to
+search by string content.  
+
+<<Vocabulary Data>>=
+std::map<std::string*, int, 
+         std::function<bool(const string*&, const string*&)>> toNum;
+@
+
+The comparion function itself is, of course, trivial.  
+\end{document}
