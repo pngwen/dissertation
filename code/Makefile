@@ -8,6 +8,12 @@ tensorTest.o: tensorTest.cpp tensor.h
 tensor.h: tensor.nw
 	notangle -Rtensor.h -L'#line %L "%F"%N' tensor.nw > tensor.h
 
+vocabulary.h: influence.nw
+	notangle -Rvocabulary.h -L'#line %L "%F"%N' influence.nw > vocabulary.h
+vocabulary.cpp: influence.nw
+	notangle -Rvocabulary.cpp -L'#line %L "%F"%N' influence.nw > vocabulary.cpp
+vocabulary.o: vocabulary.h vocabulary.cpp
+
 tensor.tex: tensor.nw
 	noweave -delay tensor.nw > tensor.tex
 
