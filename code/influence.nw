@@ -30,6 +30,7 @@ The overall layout of the vocabulary file is as follows:
 #include <map>
 #include <string>
 #include <functional>
+#include <algorithm>
 
 #ifndef VOCABULARY_H
 #define VOCABULARY_H
@@ -106,10 +107,162 @@ Vocabulary::Vocabulary() : toNum(<<Vocabulary Term Comparison>>)
 }
 @
 
+We also should create a copy constructor.  This is a little more
+complex than most because we also need to establish the pointer links.
+Because this will also be needed for an assignment operator, we will
+implement this using the assignment operator.
 
-<<Vocabulary Methods>>=
+<<Vocabulary Constructors>>=
+Vocabulary(const Vocabulary &rhs);
 @
 
 <<Vocabulary Operators>>=
+Vocabulary operator=(const Vocabulary &rhs);
 @
+
+<<vocabulary.cpp>>=
+Vocabulary::Vocabulary(const Vocabulary &rhs) : Vocabulary()
+{
+    *this = rhs;
+}
+@
+
+For the assignment operator, and therefore also the copy constructor,
+we carry out the following:
+<<vocabulary.cpp>>=
+Vocabulary Vocabulary::operator=(const Vocabulary &rhs) 
+{
+    <<Copy the Terms>>
+    <<Copy the toNum Map>>
+    <<Create the toTerm Map>>
+
+    return *this;
+}
+@
+
+The simplest operation is copying the terms.  We simply replace our
+terms with the ones from the right hand side.
+<<Copy the Terms>>=
+//copy the other side's terms
+terms = rhs.terms;
+@
+
+Copying the toTerm map is a little more involved.  We cannot simply
+copy it because that would establish pointers into the rhs object's
+vector, which we don't want.  Instead, we basically have to recreate
+it by finding the terms in the vector we just copied.
+<<Copy the toNum Map>>=
+toNum.clear();
+for(auto itr = rhs.toNum.begin(); itr != rhs.toNum.end(); itr++) {
+    //find the term in our vector
+    auto t = std::find(terms.begin(), terms.end(), *(itr->first));
+
+    //add the term to our map
+    toNum[&(*t)] = itr->second;
+}
+@
+
+Now we can construct the toTerm map the toNum map.
+<<Create the toTerm Map>>=
+toTerm.clear();
+for(auto itr = toNum.begin(); itr != toNum.end(); itr++) {
+    //set up the map
+    toTerm[itr->second] = itr->first;
+}
+@
+
+\subsection{Adding Terms}
+The primary operation of the vocabulary is to acception new terms.
+This can be done with either the autoassignment of a number, or
+a number can be specified (for example, if an existing vocabulary were
+being loaded.)
+<<Vocabulary Methods>>=
+void add(const std::string &term);
+void add(const std::string &term, int num);
+@
+
+Of the two, the most generic is the method which adds with respect to
+a given number.  To that end, the first can be written in terms of the
+second one.
+<<vocabulary.cpp>>=
+void Vocabulary::add(const std::string &term)
+{
+    //add using the nextNum as the number
+    add(term, nextNum);
+}
+@
+
+Now for the task of adding the number by value.  
+<<vocabulary.cpp>>=
+void Vocabulary::add(const std::string &term, int num)
+{
+    <<Verify Uniqueness>>
+    <<Insert the Term>>
+    <<Populate the Maps>>
+    <<Advance nextNum>>
+}
+@
+
+Every term and number within the vocabulary must be unique, and so we
+must check for the existence of either.  If either are found to be
+already present, we return without inserting anything.  
+<<Verify Uniqueness>>=
+if(std::find(terms.begin(), terms.end(), term) != terms.end() or 
+   toTerm.find(num) != toTerm.end()) 
+{
+   return;
+}
+@
+
+Inserting the term is trivial.
+<<Insert the Term>>=
+terms.push_back(term);
+@
+
+Populating the maps is also fairly simple.  We will need a pointer to
+the term in question, however, to establish the links.
+<<Populate the Maps>>=
+std::string *sptr = &(terms.back());  //a pointer to the term
+toNum[sptr] = num;
+toTerm[num] = sptr;
+@
+
+Finally, we need to advance the number.  The logic is that we want
+nxtNum to be the largest number in play, so if we've just inserted
+a larger one, we increment it to get the next largest number.
+<<Advance nextNum>>=
+if(num >= nextNum) {
+    nextNum = num+1;
+}
+@
+
+\subsection{Iterators}
+Because the {\tt Vocabulary} object is really just a bidirectional
+wrapper for {\tt std::map}, we can allow iteration using the {\tt
+std::map::iterator} objects.
+
+<<Vocabulary Methods>>=
+std::map<std::string*, int>::iterator begin();
+std::map<std::string*, int>::iterator end();
+@
+
+Both of these will just use the toNum map.  The real aim of this
+activity is to allow the user to step through all terms in the
+vocabulary.
+
+<<vocabulary.cpp>>=
+std::map<std::string*, int>::iterator Vocabulary::begin()
+{
+    return toNum.begin();
+}
+
+std::map<std::string*, int>::iterator Vocabulary::end()
+{
+}
+@
+
+Of course, we are playing with fire here.  We could alter the string
+at the end of the pointer, but we shouldn't do that, so we won't.
+
+
 \end{document}

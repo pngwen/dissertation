@@ -17,6 +17,9 @@ vocabulary.o: vocabulary.h vocabulary.cpp
 tensor.tex: tensor.nw
 	noweave -delay tensor.nw > tensor.tex
 
+influence.tex: influence.nw
+	noweave -delay influence.nw > influence.tex
+
 tensor.pdf: tensor.tex
 	pdflatex tensor.tex
 	pdflatex tensor.tex
@@ -24,5 +27,14 @@ tensor.pdf: tensor.tex
 	makeindex tensor
 	splitindex tensor
 	pdflatex tensor.tex
+
+influence.pdf: influence.tex
+	pdflatex influence.tex
+	pdflatex influence.tex
+	pdflatex influence.tex
+	makeindex influence
+	splitindex influence 
+	pdflatex influence.tex
+
 clean:
 	rm -f $(ALL) *.o a.out *.pdf *.aux *.idx *.ilg *ind *.log
