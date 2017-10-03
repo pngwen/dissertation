@@ -72,16 +72,20 @@ are mapping string pointers, we require a comparison in order to
 search by string content.  
 
 <<Vocabulary Data>>=
-std::map<std::string*, int,
-         std::function<bool(const std::string*&, const std::string*&)>> toNum;
+struct vocabCmp {
+    <<Vocabulary Term Comparison>>
+};
+std::map<std::string*, int, vocabCmp> toNum;
 @
 
-The comparion function itself is, of course, trivial.  Here it is
-presented as a lambda function which will be used at construction
-time.
+The comparion functor itself is, of course, trivial.  Here it is
+presented as the function call operator for the vocabCmp struct.
 
 <<Vocabulary Term Comparison>>=
-[](const std::string*& a, const std::string*& b){ return *a < *b; }
+bool operator()(std::string* const & a, std::string* const &b) 
+{
+    return *a < *b;
+}
 @
 
 Finally, we need to store the next available number for automatically
@@ -98,10 +102,10 @@ As is common practice, we first provide a no argument constructor.
 Vocabulary();   //no argument constructor
 @
 
-The implementation of this constructor sets up the comparison for the
-toNum map, and initilializes the nextNum index.
+The implementation of this constructor simply initializes the nextNum
+index.
 <<vocabulary.cpp>>=
-Vocabulary::Vocabulary() : toNum(<<Vocabulary Term Comparison>>)
+Vocabulary::Vocabulary() 
 {
     nextNum = 0;   //begin at zero
 }
@@ -167,7 +171,7 @@ Now we can construct the toTerm map the toNum map.
 toTerm.clear();
 for(auto itr = toNum.begin(); itr != toNum.end(); itr++) {
     //set up the map
-    toTerm[itr->second] = itr->first;
+    toTerm[itr->second] = (std::string*) itr->first;
 }
 @
 
@@ -258,6 +262,7 @@ std::map<std::string*, int>::iterator Vocabulary::begin()
 
 std::map<std::string*, int>::iterator Vocabulary::end()
 {
+    return toNum.end();
 }
 @
 
