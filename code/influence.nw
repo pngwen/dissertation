@@ -195,6 +195,18 @@ if(num >= nextNum) {
 }
 @
 
+We may also be interested in the number of items in the vocabulary.
+<<Vocabulary Methods>>=
+int size() const;
+@
+
+<<vocabulary.cpp>>=
+int Vocabulary::size()
+{
+    return toTerm.size();
+}
+@
+
 \subsection{Iterators}
 Because the {\tt Vocabulary} object is really just a bidirectional
 wrapper for {\tt std::map}, we can allow iteration using the {\tt
@@ -403,4 +415,112 @@ through the vocab filter.
 cat `find . -name '*.txt'` | vocab > vocabulary
 @
 
+\subsection{doctns - Document Tensors}
+The {\tt doctns} utility converts documents into tensors.  The tensor
+representation of documents in this model are based on $n$-grams,
+where $n$ is the number of modes in the tensor.  The tensor is
+a $\mathtt{TERM}_1 \times \mathtt{TERM}_2 \times \ldots
+\times \mathtt{TERM}_n$ tensor.  The tensor can handle $n$-grams of
+any length, but the model depends on a constant size for the tensor
+throughout the corpose.  Hence we can do 3-gram, 4-gram, 5-gram, etc.
+but it must be the same for each document in the corpus.  
+
+The tensors count the frequency of each $n$-gram as follows.  For ease
+of explanation, we will focus on a 3-gram model.  Tensor element
+$T_{ijk}$ would be the frequency of the 3-gram formed by the sequence
+of words {\tt vocabulary($i) vocabualry($j$) vocabulary($j$)}. Note
+that orderingof the words within the $n$-gram is a distinguishing
+feature of the 3-grams.  
+
+The {\tt doctns} utility creates this tensor based on the desired
+$n$-gram length and the given vocabulary.  The basic outline of the
+program is as follows.
+
+<<doctns.cpp>>=
+/* A utility to convert a document into a tensor.
+   The command line arguments are: n vocabulary document.
+   The output is printed to standard out. */
+#include <iostream>
+#include <ifstream>
+#include <cstdlib>
+#include "tensor.h"
+#include "vocabulary.h"
+
+using namespace std;
+
+int main(int argc, char** argv)
+{
+    int n;           //length of the n-grams
+    Vocabulary v;    //the vocabulary
+    Tensor<> t;      //the tensor
+    ifstream file;   //input file
+
+    <<Process doctns Arguments>>
+    <<Count n-grams>>
+    <<Print the Document Tensor>>
+}
+@
 \end{document}
+
+
+The first step is to process the command line arguments.
+<<Process doctns Arguments>>=
+<<Check doctns Usage>>
+<<Load doctns Vocabulary>>
+<<Instantiate doctns Tensor>>
+<<Open Document File>>
+@
+
+doctns requires 4 arguments, so we just need to verify that we have
+them all!
+<<Check doctns Usage>>=
+//handle errors
+if(argc != 4) {
+    cerr << "Usage: " << argv[0] << " n vocabulary document";
+    exit(1);
+}
+@
+
+
+To load the vocabulary, we open the file and then read the vocabulary
+in.
+<<Load doctns Vocabulary>>=
+//open vocabulary file and check for errors
+file.open(argv[2]);
+if(!file) {
+    cerr << "Could not open vocabulary file: " << argv[2] << enld;
+    exit(3);
+}
+
+//read the vocabulary file
+v = readVocabulary(file);
+
+file.close();
+@
+
+To instantiate the tensor, we need to build a tensor index where we
+repeat the size of the vocabulary $n$ tims.
+<<Instantiate Tensor>>=
+//get n-gram size
+n = atoi(argv[1]);
+
+//build the tensor dimensions
+Tensor<>::Index dim;
+for(int i=0; i<n; i++) {
+    dim.append(v.size());
+}
+
+//create the tensor
+t = Tensor<>(dim);
+@
+
+
+Finally, we open the document file, checking for errors.
+<<Open Document File>>=
+//open document and handle errors
+file.open(argv[3]);
+if(!file) {
+    cerr << "Could not open document file: " << argv[3] << endl;
+    exit(2);
+}
+@
