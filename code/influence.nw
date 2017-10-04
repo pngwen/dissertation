@@ -269,5 +269,30 @@ std::map<std::string*, int>::iterator Vocabulary::end()
 Of course, we are playing with fire here.  We could alter the string
 at the end of the pointer, but we shouldn't do that, so we won't.
 
+\subsection{Vocabulary Functor}
+The final addition to the vocabulary class is the functor.  This is
+the set of operators which map terms to numbers and numbers to terms.
+
+<<Vocabulary Operators>>=
+int operator()(std::string &term);
+std::string operator()(int num);
+@
+
+These are, of course trivial given the maps.
+
+<<vocabulary.cpp>>=
+int Vocabulary::operator()(std::string &term) 
+{
+    return toNum[&term];
+}
+@
+
+
+<<vocabulary.cpp>>=
+std::string Vocabulary::operator()(int num) 
+{
+    return *toTerm[num];
+}
+@
 
 \end{document}
