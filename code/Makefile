@@ -42,8 +42,8 @@ influence.pdf: influence.tex
 	pdflatex influence.tex
 	pdflatex influence.tex
 	pdflatex influence.tex
-	makeindex influence
-	splitindex influence 
+	#makeindex influence
+	#splitindex influence 
 	pdflatex influence.tex
 
 clean:

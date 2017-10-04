@@ -31,6 +31,7 @@ The overall layout of the vocabulary file is as follows:
 #include <string>
 #include <functional>
 #include <algorithm>
+#include <iostream>
 
 #ifndef VOCABULARY_H
 #define VOCABULARY_H
@@ -44,6 +45,9 @@ public:
 private:
     <<Vocabulary Data>>
 };
+
+
+<<Vocabulary IO Functions>>
 #endif
 @
 
@@ -220,7 +224,7 @@ std::map<std::string, int>::iterator Vocabulary::end()
 Of course, we are playing with fire here.  We could alter the string
 at the end of the pointer, but we shouldn't do that, so we won't.
 
-\subsection{Vocabulary Functor}
+\subsection{Vocabulary Functors}
 The final addition to the vocabulary class is the functor.  This is
 the set of operators which map terms to numbers and numbers to terms.
 
@@ -246,7 +250,51 @@ std::string Vocabulary::operator()(int num)
 }
 @
 
-\section{vocab - Filter Vocabulary Extractor}
+
+\subsection{Vocabulary IO Functions}
+In addition to the vocabulary object, we need some way to read and
+write vocabulary objects from iostream.  Our convention for
+translating them is to state the term followed by the term's number.
+This is, of course, quite easy to do.  The signature of the Input and
+Output functions are:
+
+<<Vocabulary IO Functions>>=
+Vocabulary readVocabulary(std::istream &is);
+void writeVocabulary(std::ostream &os, Vocabulary &v);
+@
+
+Reading is just a matter of repeatedly calling "add" until the stream
+ends.
+
+<<vocabulary.cpp>>=
+Vocabulary readVocabulary(std::istream &is) 
+{
+    Vocabulary v;
+    std::string term;
+    int num;
+
+    //read until the end of the stream (or first error)
+    while(is >> term>> num) {
+        v.add(term, num);
+    }
+
+    return v;
+}
+@
+
+Writing is just a simple act of iteration. We put each pair on a line
+by itself with a tab delimiter in between.
+
+<<vocabulary.cpp>>=
+void writeVocabulary(std::ostream &os, Vocabulary &v)
+{
+    for(auto itr = v.begin(); itr != v.end(); itr++) {
+        os << itr->first << '\t' << itr->second << std::endl;
+    }
+}
+@
+
+\subsection{vocab - Filter Vocabulary Extractor}
 In this section, we will create a filter program which extracts the
 vocabulary from the stdin stream.  It uses {\tt cin} to extract
 strings and treats them as terms.  As such, it breaks terms on
@@ -268,7 +316,8 @@ int main()
     string term;
 
     <<Extract Vocabulary>>
-    <<Print Vocabulary>>
+
+    writeVocabulary(cout, v);
 }
 @
 
@@ -278,13 +327,6 @@ all the terms from the stream.
 <<Extract Vocabulary>>=
 while(cin >> term) {
     v.add(term);
-}
-@
-
-Printing it is, of course, a simple act of iteration
-<<Print Vocabulary>>=
-for(auto itr = v.begin(); itr != v.end(); itr++) {
-    cout << itr->first << '\t' << itr->second << endl;
 }
 @
 
