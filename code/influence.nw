@@ -333,7 +333,7 @@ while(cin >> term) {
 Printing it is, of course, a simple act of iteration
 <<Print Vocabulary>>=
 for(auto itr = v.begin(); itr != v.end(); itr++) {
-    cout << itr->first << '\t' << itr->second << endl;
+    cout << *(itr->first) << '\t' << itr->second << endl;
 }
 @
 \end{document}
