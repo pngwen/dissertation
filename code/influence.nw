@@ -55,37 +55,12 @@ The implementation file layout is simple, at least in the beginning.
 \subsection{Vocabulary Storage}
 Vocabularies are maps of words, represented here by strings, onto
 index numbers. Because we we want to establish a bidirectional
-mapping, in order to conserve space, we store a common pool of the
-distinct terms as a vector.
+mapping, we need to store two maps in order to have speedy lookups in
+both directions.
 
 <<Vocabulary Data>>=
-std::vector<std::string> terms;     //pool of terms
-@
-
-The map from numbers to terms is trivial.
-<<Vocabulary Data>>=
-std::map<int, std::string*> toTerm;
-@
-
-The map from terms to numbers is a little more involved.  Because we
-are mapping string pointers, we require a comparison in order to
-search by string content.  
-
-<<Vocabulary Data>>=
-struct vocabCmp {
-    <<Vocabulary Term Comparison>>
-};
-std::map<std::string*, int, vocabCmp> toNum;
-@
-
-The comparion functor itself is, of course, trivial.  Here it is
-presented as the function call operator for the vocabCmp struct.
-
-<<Vocabulary Term Comparison>>=
-bool operator()(std::string* const & a, std::string* const &b) 
-{
-    return *a < *b;
-}
+std::map<std::string, int> toNum;
+std::map<int, std::string> toTerm;
 @
 
 Finally, we need to store the next available number for automatically
@@ -136,44 +111,28 @@ we carry out the following:
 <<vocabulary.cpp>>=
 Vocabulary Vocabulary::operator=(const Vocabulary &rhs) 
 {
+    <<Clear the Maps>>
     <<Copy the Terms>>
-    <<Copy the toNum Map>>
-    <<Create the toTerm Map>>
 
     return *this;
 }
 @
 
-The simplest operation is copying the terms.  We simply replace our
-terms with the ones from the right hand side.
+The first thing to do in the assignment operator is to clear all the
+maps and reset the nextNum field.
+<<Clear the Maps>>=
+    toNum.clear();
+    toTerm.clear();
+    nextNum = 0;
+@
+
+Next we simply add all the terms from the rhs.
 <<Copy the Terms>>=
-//copy the other side's terms
-terms = rhs.terms;
-@
-
-Copying the toTerm map is a little more involved.  We cannot simply
-copy it because that would establish pointers into the rhs object's
-vector, which we don't want.  Instead, we basically have to recreate
-it by finding the terms in the vector we just copied.
-<<Copy the toNum Map>>=
-toNum.clear();
-for(auto itr = rhs.toNum.begin(); itr != rhs.toNum.end(); itr++) {
-    //find the term in our vector
-    auto t = std::find(terms.begin(), terms.end(), *(itr->first));
-
-    //add the term to our map
-    toNum[&(*t)] = itr->second;
+for(auto itr=rhs.toNum.begin(); itr != rhs.toNum.end(); itr++) {
+    add(itr->first, itr->second);
 }
 @
 
-Now we can construct the toTerm map the toNum map.
-<<Create the toTerm Map>>=
-toTerm.clear();
-for(auto itr = toNum.begin(); itr != toNum.end(); itr++) {
-    //set up the map
-    toTerm[itr->second] = (std::string*) itr->first;
-}
-@
 
 \subsection{Adding Terms}
 The primary operation of the vocabulary is to acception new terms.
@@ -201,7 +160,6 @@ Now for the task of adding the number by value.
 void Vocabulary::add(const std::string &term, int num)
 {
     <<Verify Uniqueness>>
-    <<Insert the Term>>
     <<Populate the Maps>>
     <<Advance nextNum>>
 }
@@ -211,24 +169,17 @@ Every term and number within the vocabulary must be unique, and so we
 must check for the existence of either.  If either are found to be
 already present, we return without inserting anything.  
 <<Verify Uniqueness>>=
-if(std::find(terms.begin(), terms.end(), term) != terms.end() or 
-   toTerm.find(num) != toTerm.end()) 
+if(toNum.find(term) != toNum.end() or toTerm.find(num) != toTerm.end()) 
 {
    return;
 }
 @
 
-Inserting the term is trivial.
-<<Insert the Term>>=
-terms.push_back(term);
-@
 
-Populating the maps is also fairly simple.  We will need a pointer to
-the term in question, however, to establish the links.
+Populating the maps is also fairly simple.  
 <<Populate the Maps>>=
-std::string *sptr = &(terms.back());  //a pointer to the term
-toNum[sptr] = num;
-toTerm[num] = sptr;
+toNum[term] = num;
+toTerm[num] = term;
 @
 
 Finally, we need to advance the number.  The logic is that we want
@@ -246,8 +197,8 @@ wrapper for {\tt std::map}, we can allow iteration using the {\tt
 std::map::iterator} objects.
 
 <<Vocabulary Methods>>=
-std::map<std::string*, int>::iterator begin();
-std::map<std::string*, int>::iterator end();
+std::map<std::string, int>::iterator begin();
+std::map<std::string, int>::iterator end();
 @
 
 Both of these will just use the toNum map.  The real aim of this
@@ -255,12 +206,12 @@ activity is to allow the user to step through all terms in the
 vocabulary.
 
 <<vocabulary.cpp>>=
-std::map<std::string*, int>::iterator Vocabulary::begin()
+std::map<std::string, int>::iterator Vocabulary::begin()
 {
     return toNum.begin();
 }
 
-std::map<std::string*, int>::iterator Vocabulary::end()
+std::map<std::string, int>::iterator Vocabulary::end()
 {
     return toNum.end();
 }
@@ -274,16 +225,16 @@ The final addition to the vocabulary class is the functor.  This is
 the set of operators which map terms to numbers and numbers to terms.
 
 <<Vocabulary Operators>>=
-int operator()(std::string &term);
+int operator()(const std::string &term);
 std::string operator()(int num);
 @
 
 These are, of course trivial given the maps.
 
 <<vocabulary.cpp>>=
-int Vocabulary::operator()(std::string &term) 
+int Vocabulary::operator()(const std::string &term) 
 {
-    return toNum[&term];
+    return toNum[term];
 }
 @
 
@@ -291,7 +242,7 @@ int Vocabulary::operator()(std::string &term)
 <<vocabulary.cpp>>=
 std::string Vocabulary::operator()(int num) 
 {
-    return *toTerm[num];
+    return toTerm[num];
 }
 @
 
@@ -333,7 +284,81 @@ while(cin >> term) {
 Printing it is, of course, a simple act of iteration
 <<Print Vocabulary>>=
 for(auto itr = v.begin(); itr != v.end(); itr++) {
-    cout << *(itr->first) << '\t' << itr->second << endl;
+    cout << itr->first << '\t' << itr->second << endl;
 }
 @
+
+\section{Corpus Processing}
+The corpus which we are modelling consists of a directory structure,
+where each document has its own directory. The corpus is built from
+a series of PDF documents which are converted into preprocessed text
+documents.  The preprocessed text documents are then converted into
+tesnors, which are in turn decomposed and modelled. In addition to the
+files, the corpus also has a vocabulary which is extracted from the
+text files.  The final directory structure of a corpus is as follows:
+\begin{itemize}
+    \item {\tt corpusName/}
+    \begin{itemize}
+        \item {\tt vocabulary} - The Corpus Vocabulary
+        \item {\tt docName/}  - Document Directories (one per docName)
+        \begin{itemize}
+            \item {\tt docName.pdf} - The source document
+            \item {\tt docName.txt} - The preprocessed text
+            \item {\tt docName.tns} - Document Tensor
+            \item mode\#.mat - Decomposed Modes of the Tensor
+            \item lambda.mat - The Lambdas for the Decomposition
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\subsection{build-corpus}
+In this section, we construct a script which will build the corpus
+directory structure.  This script performs the following operations:
+
+<<build-corpus>>=
+#!/bin/sh
+#Build a corpus in the current directory.  The PDF files are specified
+#as command line arguments
+
+#loop over all the pdf documents
+for file in "$@"
+do
+    <<Create Document Directory>>
+    <<Construct Preprocessed Text File>>
+done
+
+<<Create Corpus Vocabulary>>
+@
+
+It should be noted before each chunk is defined that this script
+assumes that all of the utilities outlined in this document are within
+the execution path of the script.
+
+The first step is to process all of the files into document
+directories.  This is done simply by looping over all the pdf files
+and extracting the filename, without extension, from them.
+<<Create Document Directory>>=
+#extract filename
+fname="$(basename $file | cut -d. -f1)"
+
+#create the directory
+mkdir "$fname"
+
+#copy the pdf file
+cp "$file" "$fname"/.
+@
+
+Preprocessing is accomplished via pdftotext and tr.
+<<Construct Preprocessed Text File>>=
+pdftotext "$fname/$fname.pdf" - | \
+   tr -cd '[:alpha:][:space:]' > "$fname/$fname.txt"
+@
+
+Finally we extract the vocabulary by concatenating all the text files
+through the vocab filter.
+
+<<Create Corpus Vocabulary>>=
+cat `find . -name '*.txt'` | vocab > vocabulary
+@
+
 \end{document}

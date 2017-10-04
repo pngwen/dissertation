@@ -1,6 +1,6 @@
 CXXFLAGS=-g --std=c++11
 CC=g++
-ALL=tensorTest tensor.pdf tensor.h tensor.tex influence.tex influence.pdf vocab
+ALL=tensorTest tensor.pdf tensor.h tensor.tex influence.tex influence.pdf vocab build-corpus
 
 all: $(ALL)
 tensorTest: tensorTest.o 
@@ -16,6 +16,10 @@ vocabulary.o: vocabulary.h vocabulary.cpp
 
 vocab.cpp: influence.nw
 	notangle -Rvocab.cpp -L'#line %L "%F"%N' influence.nw > vocab.cpp
+
+build-corpus: influence.nw
+	notangle -Rbuild-corpus influence.nw > build-corpus
+	chmod +x build-corpus
 
 vocab.o: vocabulary.h vocab.cpp
 vocab: vocab.o vocabulary.o
