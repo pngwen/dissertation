@@ -1,6 +1,6 @@
 CXXFLAGS=-g --std=c++11
 CC=g++
-ALL=tensorTest tensor.pdf tensor.h tensor.tex
+ALL=tensorTest tensor.pdf tensor.h tensor.tex influence.tex influence.pdf vocab
 
 all: $(ALL)
 tensorTest: tensorTest.o 
@@ -13,6 +13,12 @@ vocabulary.h: influence.nw
 vocabulary.cpp: influence.nw
 	notangle -Rvocabulary.cpp -L'#line %L "%F"%N' influence.nw > vocabulary.cpp
 vocabulary.o: vocabulary.h vocabulary.cpp
+
+vocab.cpp: influence.nw
+	notangle -Rvocab.cpp -L'#line %L "%F"%N' influence.nw > vocab.cpp
+
+vocab.o: vocabulary.h vocab.cpp
+vocab: vocab.o vocabulary.o
 
 tensor.tex: tensor.nw
 	noweave -delay tensor.nw > tensor.tex

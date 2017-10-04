@@ -295,4 +295,45 @@ std::string Vocabulary::operator()(int num)
 }
 @
 
+\section{vocab - Filter Vocabulary Extractor}
+In this section, we will create a filter program which extracts the
+vocabulary from the stdin stream.  It uses {\tt cin} to extract
+strings and treats them as terms.  As such, it breaks terms on
+whitespace characters.  Once the stream ends, it prints out the
+vocabulary.  The layout of the program is as follows.
+
+<<vocab.cpp>>=
+/* A filter tool for extracting a vocabulary from stdin.
+ */
+#include <iostream>
+#include <string>
+#include "vocabulary.h"
+
+using namespace std;
+
+int main()
+{
+    Vocabulary v;
+    string term;
+
+    <<Extract Vocabulary>>
+    <<Print Vocabulary>>
+}
+@
+
+Extracting the vocabulary is fairly straightforward.  We just use add
+all the terms from the stream.
+
+<<Extract Vocabulary>>=
+while(cin >> term) {
+    v.add(term);
+}
+@
+
+Printing it is, of course, a simple act of iteration
+<<Print Vocabulary>>=
+for(auto itr = v.begin(); itr != v.end(); itr++) {
+    cout << itr->first << '\t' << itr->second << endl;
+}
+@
 \end{document}
