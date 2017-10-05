@@ -100,7 +100,7 @@ Vocabulary(const Vocabulary &rhs);
 @
 
 <<Vocabulary Operators>>=
-Vocabulary operator=(const Vocabulary &rhs);
+Vocabulary& operator=(const Vocabulary &rhs);
 @
 
 <<vocabulary.cpp>>=
@@ -113,7 +113,7 @@ Vocabulary::Vocabulary(const Vocabulary &rhs) : Vocabulary()
 For the assignment operator, and therefore also the copy constructor,
 we carry out the following:
 <<vocabulary.cpp>>=
-Vocabulary Vocabulary::operator=(const Vocabulary &rhs) 
+Vocabulary& Vocabulary::operator=(const Vocabulary &rhs) 
 {
     <<Clear the Maps>>
     <<Copy the Terms>>
@@ -201,7 +201,7 @@ int size() const;
 @
 
 <<vocabulary.cpp>>=
-int Vocabulary::size()
+int Vocabulary::size() const
 {
     return toTerm.size();
 }
@@ -402,10 +402,14 @@ mkdir "$fname"
 cp "$file" "$fname"/.
 @
 
-Preprocessing is accomplished via pdftotext and tr.
+Preprocessing is accomplished via pdftotext and tr.  We remove all
+characters except alpha and space characters.  We then convert
+everything to lowercase.
+
 <<Construct Preprocessed Text File>>=
 pdftotext "$fname/$fname.pdf" - | \
-   tr -cd '[:alpha:][:space:]' > "$fname/$fname.txt"
+   tr -cd '[:alpha:][:space:]' | \
+   tr [:upper:] [:lower:] > "$fname/$fname.txt"
 @
 
 Finally we extract the vocabulary by concatenating all the text files
@@ -441,8 +445,10 @@ program is as follows.
    The command line arguments are: n vocabulary document.
    The output is printed to standard out. */
 #include <iostream>
-#include <ifstream>
+#include <fstream>
 #include <cstdlib>
+#include <vector>
+#include <string>
 #include "tensor.h"
 #include "vocabulary.h"
 
@@ -450,10 +456,7 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    int n;           //length of the n-grams
-    Vocabulary v;    //the vocabulary
-    Tensor<> t;      //the tensor
-    ifstream file;   //input file
+    <<doctns Variables>>
 
     <<Process doctns Arguments>>
     <<Count n-grams>>
@@ -463,6 +466,7 @@ int main(int argc, char** argv)
 \end{document}
 
 
+\subsubsection{Processing Arguments}
 The first step is to process the command line arguments.
 <<Process doctns Arguments>>=
 <<Check doctns Usage>>
@@ -476,7 +480,7 @@ them all!
 <<Check doctns Usage>>=
 //handle errors
 if(argc != 4) {
-    cerr << "Usage: " << argv[0] << " n vocabulary document";
+    cerr << "Usage: " << argv[0] << " n vocabulary document" << endl;
     exit(1);
 }
 @
@@ -484,11 +488,16 @@ if(argc != 4) {
 
 To load the vocabulary, we open the file and then read the vocabulary
 in.
+<<doctns Variables>>=
+Vocabulary v;     //the vocabulary
+ifstream file;    //file for input
+@
+
 <<Load doctns Vocabulary>>=
 //open vocabulary file and check for errors
 file.open(argv[2]);
 if(!file) {
-    cerr << "Could not open vocabulary file: " << argv[2] << enld;
+    cerr << "Could not open vocabulary file: " << argv[2] << endl;
     exit(3);
 }
 
@@ -500,12 +509,18 @@ file.close();
 
 To instantiate the tensor, we need to build a tensor index where we
 repeat the size of the vocabulary $n$ tims.
-<<Instantiate Tensor>>=
+
+<<doctns Variables>>=
+int n;                //the number of modes
+Tensor<>::Index dim;  //the tensor dimensions
+Tensor<> t{};           //the document tensor
+@
+
+<<Instantiate doctns Tensor>>=
 //get n-gram size
 n = atoi(argv[1]);
 
 //build the tensor dimensions
-Tensor<>::Index dim;
 for(int i=0; i<n; i++) {
     dim.append(v.size());
 }
@@ -522,5 +537,101 @@ file.open(argv[3]);
 if(!file) {
     cerr << "Could not open document file: " << argv[3] << endl;
     exit(2);
+}
+@
+
+
+\subsubsection{$n$-gram counting}
+Now we come to the crux of the matter, the counting of $n$-grams.  We
+will be using as sliding window for the adjacent terms, and as such it
+is convenient to load the file into a vector so we can then count the
+$n$-grams.  This process then becomes:
+
+<<Count n-grams>>=
+<<Load Document Vector>>
+<<n-gram sliding window>>
+@
+
+Loading the document vector is just simply consuming everything in the
+file.
+
+<<doctns Variables>>=
+string word;
+vector<string> doc;
+@
+
+<<Load Document Vector>>=
+while(file >> word) {
+    doc.push_back(word);
+}
+
+//we are done with the file!
+file.close();
+@
+
+The sliding window will start at position 0, and it will continue
+until it gets to {\tt doc.size()-n}.  Each step along the way, we will
+build an index into the tensor and use this to update the frequency of
+each $n$-gram.
+
+<<doctns Variables>>=
+Tensor<>::Index idx;
+@
+
+<<n-gram sliding window>>=
+idx = Tensor<>::Index(n);  //create an n-element index
+for(int i=0; i<doc.size()-n; i++) {
+    //build the n-gram index from vocabulary and document
+    for(int j=0; j<n; j++) { 
+        idx[j] = v(doc[i+j]);
+    }
+
+    //add 1 to the frequency
+    t[idx] += 1;
+}
+@
+
+\subsubsection{Output}
+Now we are ready for the output of doctns.  This is a simple operation
+using the sparse iterator provided in the tensor class.
+
+
+<<Print the Document Tensor>>=
+for(auto itr = t.sparseBegin(); itr != t.sparseEnd(); itr++) {
+    if(*itr < 2.0) continue;
+    //print the index
+    idx=itr.index();
+    <<Print Tensor Index>>
+
+    //print the element
+    cout << *itr << endl;
+}
+@
+
+
+<<Print Tensor Index>>=
+for(int i=0; i<idx.size(); i++) {
+    cout << idx[i] << '\t';
+}
+@
+
+
+There is one last little peculiarity to deal with.  In order to
+preserve the correct dimensions for the tensor, if the corners are not
+present in the sparse data, we must insert them.
+
+<<Print the Document Tensor>>=
+//handle the leading corner
+idx = t.begin().index();
+if(t[idx] <= 1.0) {
+    <<Print Tensor Index>>
+    cout << 0.0 << endl;
+}
+
+//handle the trailing corner
+idx = (t.end()-1).index();
+if(t[idx] <= 1.0) {
+    <<Print Tensor Index>>
+    cout << 0.0 << endl;
 }
 @
