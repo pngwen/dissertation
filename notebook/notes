@@ -1,0 +1,58 @@
++============+
+| 11/03/2017 |
++============+
+
+Basic Assumptions
+=================
+The basic assumption of my approach is that all authors are influenced
+by what they read.  This influence can be felt in a variety of ways:
+  1.) Actual transfer of topics.
+  2.) Word choices
+  3.) Phrase structure and choice
+  5.) Style Elements
+
+These influence factors can be readily seen by a human, in that we can
+intuitively identify things that "sound like" a specific author or
+book.  However, in terms of the actual text they are latent variables
+which must be pulled out.
+
+The basic assumption of my model is that these latent factors make
+themselves known by exercising influence over the choices of words
+used within phrases.  This provides the model with a tuneable
+parameter of n for the length of phrases to be explored.
+
+My hypothesis is that simple n-gram analysis is insufficient to
+capture these interactions.  That is, influence is best modeled
+through covariant properties of the n-gram phrases.  Related keyword
+phrases may vary at the same rates of other phrases (such as
+supporting phrases or conclusive statements.)  Tensor decomposition
+will capture these relationships by exploring tensors in polyadic
+form. 
+
+
+Polyadic Properties of the Influence Model
+==========================================
+PARAFAC, or Canonical Polyadic Decomposition, models the latent
+factors of the influence model. It does this by separating the tensor
+it to factors which are well correlated internally, but not correlated
+with each other.  Thus, each polyadic factor represents a covariant
+structure within the object counts of the documents.
+
+Moreover, because the covariant vectors which result from the polyadic
+decomposition form Tensors of the same order and shape as the original
+document tensor, these factors can be interpreted as clusters of
+covariant n-grams.  
+
+*Note: Make a proof of the idea that this tensor is necessarily
+covariant.  Should not be too difficult.*
+
+The relationships between the n-grams is in no way influenced by their
+proximity.  These are counts that are related to one another, and so
+are also contain latent information about the document structure.
+
+Explained Variance
+==================
+The variance to be explained by the model is the frequency of n-grams.
+Influencing factors are latent explanatory factors which explain the
+variance of the n-grams, and therefore the variance of adjacent words
+in n-gram sequences.
