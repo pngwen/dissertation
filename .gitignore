@@ -27,3 +27,11 @@
 .viminfo
 .repo
 .gitconfig
+
+# some others toignore
+*.swp
+*.toc
+*.idx
+*.ilg
+*.ind 
+*.o
