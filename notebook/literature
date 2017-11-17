@@ -48,8 +48,7 @@ Author: Jing Pan et al
 
 ==========================================
 File: 30204713-Mission Survival Corpus.pdf
-Title: A multimodal annotate corpus of consensus decision making
-    meetings.
+Title: A multimodal annotate corpus of consensus decision making meetings.
 Author: Fabio Pianesi et al.
 
 - A nifty little influence model made by observing coded movements in
@@ -191,35 +190,134 @@ Authors: David Blei, et al
 
 ==========================================
 File: Local-influence-in-maximum-likelihood-fa_1997_Computational-Statistics---Dat.pdf
-Title:
-Author:
+Title: Local influence in maximum likelihood factor analysis
+Author: Kang-Mo Jung
 
 
-Low-n-rank-tensor-recovery-based-on-multi-linear-augmented-Lagrange-multiplier-method_2013_Neurocomputing.pdf
-Multiple-factor-analysis-and-clustering-of-a-mixtu_2008_Computational-Statis.pdf
-p1045-kawamae-ngram-context.pdf
-p113-blei-dynamic-topic.pdf
-p1221-stamatatos-ngram-plagiarism.pdf
-p15-jiang-Dynamic Topic-Citation Influence.pdf
-p171-liu-Influence Maximization Linear Approach.pdf
-p207-agarwal.pdf
-p271-dong-Influence Model Functional Roles.pdf
-p33_kasthurirathna-Influence Modelling Boundary.pdf
-p46-herzig-Author-Reader Influence.pdf
-p50-buneman.pdf
-p559-li-Influence Heterogeneous.pdf
-p672-shen-ngram-multigram.pdf
-p775-sun-Models Influence Analysis.pdf
-papers.odb
-Parafac.pdf
-parcube-sparse tensor.pdf
-readingLog.txt
-SAND2006-2081-Multilinear Operators.pdf
-Scale-free-characteristics-of-random-networks-the-topology-of-the-world-wide-web_2000_Physica-A-Statistical-Mechanics-and-its-Applications.pdf
-Sciencedirect_articles_12Feb2016_21-26-35.165.zip
-Sciencedirect_articles_12Feb2016_21-33-00.397.zip
-splatt.pdf
-surveyTesnors-ldl-09-34.pdf
-tensordecompositions.pdf
-Tensors_TM2002211716.pdf
-wikisent.pdf
+==========================================
+File: Low-n-rank-tensor-recovery-based-on-multi-linear-augmented-Lagrange-multiplier-method_2013_Neurocomputing.pdf
+Title: Low-n-rank tensor recovery based on multi-linear augmented Lagrange multiplier method
+Authors; Huachun Tan et. al
+
+==========================================
+File: Multiple-factor-analysis-and-clustering-of-a-mixtu_2008_Computational-Statis.pdf
+Title: Multiple factor analysis and clustering of a mixture of quantitative, categorical and frequency data
+Authors: Monica Becue-Bertaut, Jerome Pages
+
+
+==========================================
+File: p1045-kawamae-ngram-context.pdf
+Title: N-gram over Context
+Author: Noriaki Kawamae
+- N-Gram Topic Model
+
+==========================================
+File: p113-blei-dynamic-topic.pdf
+Title: Dynamic Topic Models
+Author: David Blei and John Lafferty
+
+==========================================
+File: p1221-stamatatos-ngram-plagiarism.pdf
+Title: Plagiarism Detection Based on Structural Information
+Author: Efstathios Stamatatos
+- Uses n-grams of stop words
+- Captures style components
+
+==========================================
+File: p15-jiang-Dynamic Topic-Citation Influence.pdf
+Title: Dynamic Topic/Citation Influence Modeling for Chronological Citation Recommendation
+Authors: Zhuoren Jiang et al
+- Keyword topic model 
+- Keyword based influence model through citation network
+
+==========================================
+File: p171-liu-Influence Maximization Linear Approach.pdf
+Title: Influence Maximization over Large-Scale Social Networks: A Bounded Linear Approach
+Author: Qi Liu et al
+
+
+==========================================
+File: p207-agarwal.pdf
+Title: Identifying the Influential Bloggers in a Community
+Authors: Nitin Agarwal, Huan Liu, Lei Tang,  Philip S. Yu
+
+
+==========================================
+File: p271-dong-Influence Model Functional Roles.pdf
+Title: Using the Influence Model to Recognize Functional Roles in Meetings
+Authors: Wen Dong et al
+
+-Influence models through coded video.  
+-Followon/copaper to a previous one
+
+==========================================
+File: p33_kasthurirathna-Influence Modelling Boundary.pdf
+Title: Influence modelling using bounded rationality in social networks
+Authors: Dharshana Kasthurirathna
+
+==========================================
+File: p46-herzig-Author-Reader Influence.pdf
+Title: An Author-Reader Influence Model for Detecting Topic-based Influencers in Social Media
+Authors: Jonathan Herzig, Yosi Mass, haggai Roitman
+
+==========================================
+File: p50-buneman.pdf
+Title: Why Data Citation is a Computational Problem
+Authors: Peter Buneman, Susan Davidson, and James Frew
+
+==========================================
+File: p559-li-Influence Heterogeneous.pdf
+Title: Influence Propagation and Maximization for Heterogeneous Social Networks
+Authors: Cheng-Te Li
+
+==========================================
+File: p672-shen-ngram-multigram.pdf
+Title: Text Classification Improved through Multigram Models
+Authors: Dou Shen, Jian-Tao Sun, Qiang Ynag, Zheng Chen
+
+==========================================
+File: p775-sun-Models Influence Analysis.pdf
+Title: Models and Algorithms for Social Influence Analysis
+Authors: Jimeng Sun, Jie Tang
+
+==========================================
+File: parcube-sparse tensor.pdf
+Title: ParCube: Sparse Parallelizable Tensor Decompositions
+Authors: Evangelos E. Paplexakis et al
+
+==========================================
+File: SAND2006-2081-Multilinear Operators.pdf
+Title: Multilinear operators for higher-order decompositions
+Author: Tamara G. Kolda
+
+==========================================
+File: Scale-free-characteristics-of-random-networks-the-topology-of-the-world-wide-web_2000_Physica-A-Statistical-Mechanics-and-its-Applications.pdf
+Title: Scale-free characteristics of random networks: the topology of the world-wide web
+
+==========================================
+File: splatt.pdf
+Title:  SPLATT: Efficient and Parallel Sparse Tensor-Matrix Multiplication
+Author: Shaden Smith et al
+
+==========================================
+File: surveyTesnors-ldl-09-34.pdf
+Title: A Survey of Tensor Methods
+Author: Lieven De Lathauwer
+
+
+==========================================
+File: tensordecompositions.pdf
+Title: Tensor Decompositions and Applications
+Authors: Tamara G. Kolda, Brett W. Bader
+
+
+==========================================
+File: Tensors_TM2002211716.pdf
+Title: An Introduction to Tensors for Students of Physics and Engineering
+Authors: Joseph C. Kolecki
+
+==========================================
+File: 0907.0792.pdf
+Title: A generalized inner and outer product of arbitrary multi-dimensional arrays using A Mathematics of Arrays (MoA)
+Autors: James E. Raynolds
+
