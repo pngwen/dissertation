@@ -1,0 +1,149 @@
+==========================================
+File: 1-s2.0-0167947394901325-parafac-harshman-94.pdf
+Title: PARAFAC: Parallel Factor Analysis
+Authors: Richard A. Harshman and Margaret Lundy
+
+- Review of PARAFAC
+- Clarifies the properties of the factors a bit.
+- Interpretations of uniqueness and fit.
+- Implicit Axis instead of hyperplanes
+
+
+==========================================
+File: 1-s2.0-S0169743997000324-parafac.pdf
+Title: PARAFAC: Tutorial and Applications
+Author: Rasmus Bro
+
+- Tutorial on PARAFAC
+- Introdcution of chemometrics and use of PARAFAC in spectral
+  analysis.
+
+
+==========================================
+File: 1-s2.0-S0925231212009083-main-tensor.pdf
+Title: Robust Probablalistic Tensor Analysis for Time-Variant
+       collaborative filtering
+Author: Jing Pan et al 
+
+
+==========================================
+File: Baskaranpaper.pdf
+Title: Effecient and Scalable Computations with Sparse Tensors
+Author: Muthu Baskaran
+
+- Mathematical operations on sparse tensors. 
+- Storage of sparse tensors.
+- Addition and Multiplication
+
+
+==========================================
+File: candecomp.pdf
+Title: Analysis of Individual Differences in Multidimensional Scaling
+    Via An N-Way Generalization of "Eckart-Young" decomposition
+Author: Caroll and Chang
+
+- This is the "CANDECOMP" paper
+- Usually paired with Harshmann
+- Good descriptions of the properties of the decompositions.
+
+
+==========================================
+File: ComoLA09-jchemo.pdf
+Title: Tensor Decompositions, Alternating Least Squares and Other
+    Tales
+Author: Pierre Comon et al
+
+- Narrative about ALS and PARAFAC
+- Nice analogies and tutorial explanation of PARAFAC
+- Tribute to Harshman
+
+==========================================
+File: corcondia.pdf
+Title: A new efficient method for determining the number of components
+    in PARAFAC model
+Author: Rasmus Bro and Henk A. L. Kiers
+
+- A diagnostic for testing the number of factors in PARAFAC models.
+- Could be a nice way to optimize my decompositions!
+
+==========================================
+File: efficient_corcondia_icassp2015.pdf
+Title: Fast Efficient and Scalable Core Consistency Diagnostic for
+    PARAFAC Decomposition for Big Sparse Tensors
+Author: Evangelos E. Papalexakis and Chrstos Faloutsos
+
+- CORCONDIA applied to sparse tensors
+- Talks about issues with sparse tensors
+
+==========================================
+File: harshmann-wpppfac0.pdf
+Title: Foundations of the PARAFAC Procedure: Models and Conditions for
+    an "Explanator" multmodal factor analysis
+Author: R. A. Harshman
+
+- This is the seminal paper on PARAFAC
+- Rediscovery / popularization of Hitchcock
+- Proportional Profiles
+- ALS Algorithm Described
+
+
+==========================================
+File: hitchcock1927.pdf
+Title: The Expression of a Tensor or a Polyadic as a Sum of Products
+Author: Frank L. Hitchcock
+
+- Original paper about Tensor decomposition.
+- Description of Polyadic form
+- Description of properties of the factors
+
+
+==========================================
+File: jbkrank.pdf
+Title: Rank, Decomposition, and Unqiueness for 3-2ay and n-way arrays
+Author: J.B. Kruskal
+
+- The Kruskal Operator
+
+
+==========================================
+File: Low-n-rank-tensor-recovery-based-on-multi-linear-augmented-Lagrange-multiplier-method_2013_Neurocomputing.pdf
+Title: Low-n-rank tensor recovery based on multi-linear augmented Lagrange multiplier method
+Authors; Huachun Tan et. al
+
+==========================================
+File: parcube-sparse tensor.pdf
+Title: ParCube: Sparse Parallelizable Tensor Decompositions
+Authors: Evangelos E. Paplexakis et al
+
+==========================================
+File: SAND2006-2081-Multilinear Operators.pdf
+Title: Multilinear operators for higher-order decompositions
+Author: Tamara G. Kolda
+
+==========================================
+File: splatt.pdf
+Title:  SPLATT: Efficient and Parallel Sparse Tensor-Matrix Multiplication
+Author: Shaden Smith et al
+
+==========================================
+File: surveyTesnors-ldl-09-34.pdf
+Title: A Survey of Tensor Methods
+Author: Lieven De Lathauwer
+
+
+==========================================
+File: tensordecompositions.pdf
+Title: Tensor Decompositions and Applications
+Authors: Tamara G. Kolda, Brett W. Bader
+
+
+==========================================
+File: Tensors_TM2002211716.pdf
+Title: An Introduction to Tensors for Students of Physics and Engineering
+Authors: Joseph C. Kolecki
+
+==========================================
+File: 0907.0792.pdf
+Title: A generalized inner and outer product of arbitrary multi-dimensional arrays using A Mathematics of Arrays (MoA)
+Autors: James E. Raynolds
+
