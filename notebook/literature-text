@@ -2,6 +2,7 @@
 File: 0910.3529-Citation Statistics.pdf
 Title: Citation Statistics
 Authors: Robert Adler, John Ewing, and Peter Taylor
+Cite: addler2009
 
 - Use and abuse of citation statistics in the evaluation of scientific
   literature.
@@ -11,6 +12,7 @@ Authors: Robert Adler, John Ewing, and Peter Taylor
 File: 1-s2.0-S0378437102007367-main.pdf
 Title: Evolution of the Social Network of Scientific Collaborations
 Author: A.L. Barabasi, Jeong, et al
+Cite: barbasi2002
 
 - Studies the growth of coauthorship networks.
 - Builds a model which attempts to simulate growth of scientific
@@ -22,6 +24,7 @@ Author: A.L. Barabasi, Jeong, et al
 File: 30204713-Mission Survival Corpus.pdf
 Title: A multimodal annotate corpus of consensus decision making meetings.
 Author: Fabio Pianesi et al.
+Cite: pianesi2007
 
 - A nifty little influence model made by observing coded movements in
   a video.  
@@ -31,6 +34,7 @@ Author: Fabio Pianesi et al.
 File: a7-aziz.pdf
 Title: Identifying Influential Bloggers using Blog Semantics
 Author: Mehwish Aziz and Muhammad Rafi
+Cite: aziz2010
 
 - Identifies influential blogs by analyzing semantic markers within
   the blogs themselves.
