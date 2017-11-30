@@ -2,9 +2,52 @@
 \begin{document}
 
 \chapter{Approach}
+This chapter presents the tensor document model used to discover
+influencing factors.  In the first section, enough background
+information is given to familiarize the reader with tensors and tensor
+decompositions. Following this section, the specific formulation of
+the document tensors are presented.  The final two sections of this
+chapter cover the complete influence model as well as a justification
+for the model and its interpretations.
 
 \section{Tensors and Decompositions}
+The term ``tensor'' can carry several interpretations.
+Mathematically, a tensor is a geometric object which represents
+a multilinear system.  Tensors are an abstraction of other linear
+maps, extending them into arbitrary numbers of modes.  The number of
+modes in a tensor correspond to the number of indices needed to
+reference the components within the tensor.  As such, the familiar
+bottom-up hierarchy of {\em scalar, vector, matrix}, is really 
+a hierarchy of tensors.  A {\em scalar} has zero modes, a {\em vector}
+has one mode, and a {\em matrix} has two modes.  Tensors can be
+represented as the outer product of vector spaces, the outer product
+of other tensors, or as multidimensional arrays. Table
+\ref{tab:tensor} shows various types of tensors, and also demonstrates
+the conventions which will be used in the remainder of this
+dissertation.  Note that in Table \ref{tab:tensor}, the tensors are
+assumed to have an applied reference basis, which is what allows them
+to be written as arrays.  
 
+
+\begin{table}
+    \centering
+    \begin{tabular}{c|c|c|c}
+        {\bf Modes} & {\bf Name} & {\bf As Tensor Product} & {\bf Array}\\
+        \hline
+        0 & Scalar & n/a & n/a\\
+        1 & Vector & $\vec{v}$ & $\vec{v}_i$\\
+        2 & Matrix & $M=\vec{v} \otimes \vec{w}$ & $M_{ij}$\\
+        3 & Tensor & $T=\vec{v} \otimes \vec{w} \otimes \vec{y}$ & $T_{ijk}$ \\
+        $n$ & Tensor & $T=\vec{v_1} \otimes \vec{v_2} \otimes \ldots \otimes \vec{v_n}$ & $T_{i_1i_2 \ldots i_n}$\\
+    \end{tabular}
+
+    \caption{Tensors of Various Orders}
+    \label{tab:tensor}
+\end{table}
+
+For the purposes of stasticial analysis, tensors are generally thought
+of as multi-dimensional arrays. Of particular interest is the polyadic
+form of tensors, first described in~\cite{hitchcock1927}. 
 \section{Tensor Construction}
 \subsection{Corpus Vocabulary}
 \subsection{Frequency Counting}
