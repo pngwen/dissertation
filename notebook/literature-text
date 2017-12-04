@@ -50,6 +50,7 @@ Author: S. Boccaletti et al
 File: Fully Sparse Topic Models.pdf
 Title: Fully Sparse Topic Models
 Author: Khoat Than and Tu Bao Ho
+cite: than2012
 
 ==========================================
 File: Growth-and-structure-of-Slovenia-s-scientific-collaboration-network_2010_Journal-of-Informetrics.pdf
@@ -61,6 +62,7 @@ Author: Matjaz Perc
 File: icml2007_DietzBS07_LDA-Citation_Influence.pdf
 Title: Unsupervised Prediction of Citation Influences
 Authors: Laura Dietz et al
+cite: dietz2007
 
 
 ==========================================
@@ -75,16 +77,20 @@ File: p1045-kawamae-ngram-context.pdf
 Title: N-gram over Context
 Author: Noriaki Kawamae
 - N-Gram Topic Model
+cite: kawamae2016
 
 ==========================================
 File: p113-blei-dynamic-topic.pdf
 Title: Dynamic Topic Models
 Author: David Blei and John Lafferty
+This will be more for some follow up work on time series evolution of
+corpora.
 
 ==========================================
 File: p1221-stamatatos-ngram-plagiarism.pdf
 Title: Plagiarism Detection Based on Structural Information
 Author: Efstathios Stamatatos
+cite: stomatatos2011
 - Uses n-grams of stop words
 - Captures style components
 
@@ -92,6 +98,7 @@ Author: Efstathios Stamatatos
 File: p15-jiang-Dynamic Topic-Citation Influence.pdf
 Title: Dynamic Topic/Citation Influence Modeling for Chronological Citation Recommendation
 Authors: Zhuoren Jiang et al
+Cite: jiang2014
 - Keyword topic model 
 - Keyword based influence model through citation network
 
@@ -105,6 +112,8 @@ Author: Qi Liu et al
 File: p207-agarwal.pdf
 Title: Identifying the Influential Bloggers in a Community
 Authors: Nitin Agarwal, Huan Liu, Lei Tang,  Philip S. Yu
+Definitely something for a follow on study of influence propogation
+through a text network.
 
 
 ==========================================
@@ -150,3 +159,10 @@ File: 10.1.1.872.4886
 Title: All the Way Through: Testing for Authorship  in Different Frequency Strata
 Authors: John Burrows
 Cite: burrows2006
+
+
+==========================================
+File: fqt028.pdf
+Title: Language chunking, data sparseness, and the value of a long marker list: explorations  with word n-grams  and authorial attribution
+Authors: Alexis Antonia, Hugh Craig and Jack Elliott
+cite: antonia2014
