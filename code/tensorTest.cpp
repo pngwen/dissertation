@@ -155,6 +155,17 @@ int main()
     a[19000][19000][1985] = 90.0;
     sparsePrint(a);
 
+    //benchmark
+    cout << endl << "Benchmark reading the tensor" << endl;
+    a=Tensor<>{40000, 40000, 40000};
+    long long count=0;
+    int tmp;
+    for(auto itr = a.begin(); itr!= a.end(); itr++) {
+       tmp = *itr;
+       count++;
+    }
+    cout << count << " elements read" << endl;
+
     return 0;
 }
 
