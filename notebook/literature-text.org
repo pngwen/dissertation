@@ -1,0 +1,168 @@
+==========================================
+File: 0910.3529-Citation Statistics.pdf
+Title: Citation Statistics
+Authors: Robert Adler, John Ewing, and Peter Taylor
+Cite: addler2009
+
+- Use and abuse of citation statistics in the evaluation of scientific
+  literature.
+
+
+==========================================
+File: 1-s2.0-S0378437102007367-main.pdf
+Title: Evolution of the Social Network of Scientific Collaborations
+Author: A.L. Barabasi, Jeong, et al
+Cite: barbasi2002
+
+- Studies the growth of coauthorship networks.
+- Builds a model which attempts to simulate growth of scientific
+  networks.
+- Could be interesting for influence modelling purposes.
+
+
+==========================================
+File: 30204713-Mission Survival Corpus.pdf
+Title: A multimodal annotate corpus of consensus decision making meetings.
+Author: Fabio Pianesi et al.
+Cite: pianesi2007
+
+- A nifty little influence model made by observing coded movements in
+  a video.  
+- Not really relevant to me, but it is at least cool.
+
+==========================================
+File: a7-aziz.pdf
+Title: Identifying Influential Bloggers using Blog Semantics
+Author: Mehwish Aziz and Muhammad Rafi
+Cite: aziz2010
+
+- Identifies influential blogs by analyzing semantic markers within
+  the blogs themselves.
+- Symantic text mining
+
+
+==========================================
+File: Complex-networks-Structure-and-dynamics_2006_Physics-Reports.pdf
+Title: Complex networks: Structure and dynamics
+Author: S. Boccaletti et al
+
+==========================================
+File: Fully Sparse Topic Models.pdf
+Title: Fully Sparse Topic Models
+Author: Khoat Than and Tu Bao Ho
+cite: than2012
+
+==========================================
+File: Growth-and-structure-of-Slovenia-s-scientific-collaboration-network_2010_Journal-of-Informetrics.pdf
+Title: Growth and Structure of Slovenia's Scientific Collaboration
+    Network
+Author: Matjaz Perc
+
+==========================================
+File: icml2007_DietzBS07_LDA-Citation_Influence.pdf
+Title: Unsupervised Prediction of Citation Influences
+Authors: Laura Dietz et al
+cite: dietz2007
+
+
+==========================================
+File: Integrating-content-based-filtering-with-collaborative-filtering-using-co-clustering-with-augmented-matrices_2014_Expert-Systems-with-Applications.pdf
+Title: Integrating content-based filtering with collaborative
+filtering using co-clustering with augmented matrices
+Author: Meng-Lun Wu et al
+
+
+==========================================
+File: p1045-kawamae-ngram-context.pdf
+Title: N-gram over Context
+Author: Noriaki Kawamae
+- N-Gram Topic Model
+cite: kawamae2016
+
+==========================================
+File: p113-blei-dynamic-topic.pdf
+Title: Dynamic Topic Models
+Author: David Blei and John Lafferty
+This will be more for some follow up work on time series evolution of
+corpora.
+
+==========================================
+File: p1221-stamatatos-ngram-plagiarism.pdf
+Title: Plagiarism Detection Based on Structural Information
+Author: Efstathios Stamatatos
+cite: stomatatos2011
+- Uses n-grams of stop words
+- Captures style components
+
+==========================================
+File: p15-jiang-Dynamic Topic-Citation Influence.pdf
+Title: Dynamic Topic/Citation Influence Modeling for Chronological Citation Recommendation
+Authors: Zhuoren Jiang et al
+Cite: jiang2014
+- Keyword topic model 
+- Keyword based influence model through citation network
+
+==========================================
+File: p171-liu-Influence Maximization Linear Approach.pdf
+Title: Influence Maximization over Large-Scale Social Networks: A Bounded Linear Approach
+Author: Qi Liu et al
+
+
+==========================================
+File: p207-agarwal.pdf
+Title: Identifying the Influential Bloggers in a Community
+Authors: Nitin Agarwal, Huan Liu, Lei Tang,  Philip S. Yu
+Definitely something for a follow on study of influence propogation
+through a text network.
+
+
+==========================================
+File: p271-dong-Influence Model Functional Roles.pdf
+Title: Using the Influence Model to Recognize Functional Roles in Meetings
+Authors: Wen Dong et al
+
+-Influence models through coded video.  
+-Followon/copaper to a previous one
+
+==========================================
+File: p33_kasthurirathna-Influence Modelling Boundary.pdf
+Title: Influence modelling using bounded rationality in social networks
+Authors: Dharshana Kasthurirathna
+
+==========================================
+File: p46-herzig-Author-Reader Influence.pdf
+Title: An Author-Reader Influence Model for Detecting Topic-based Influencers in Social Media
+Authors: Jonathan Herzig, Yosi Mass, haggai Roitman
+
+==========================================
+File: p50-buneman.pdf
+Title: Why Data Citation is a Computational Problem
+Authors: Peter Buneman, Susan Davidson, and James Frew
+
+==========================================
+File: p559-li-Influence Heterogeneous.pdf
+Title: Influence Propagation and Maximization for Heterogeneous Social Networks
+Authors: Cheng-Te Li
+
+==========================================
+File: p672-shen-ngram-multigram.pdf
+Title: Text Classification Improved through Multigram Models
+Authors: Dou Shen, Jian-Tao Sun, Qiang Ynag, Zheng Chen
+
+==========================================
+File: p775-sun-Models Influence Analysis.pdf
+Title: Models and Algorithms for Social Influence Analysis
+Authors: Jimeng Sun, Jie Tang
+
+==========================================
+File: 10.1.1.872.4886
+Title: All the Way Through: Testing for Authorship  in Different Frequency Strata
+Authors: John Burrows
+Cite: burrows2006
+
+
+==========================================
+File: fqt028.pdf
+Title: Language chunking, data sparseness, and the value of a long marker list: explorations  with word n-grams  and authorial attribution
+Authors: Alexis Antonia, Hugh Craig and Jack Elliott
+cite: antonia2014
