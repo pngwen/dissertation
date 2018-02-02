@@ -177,6 +177,36 @@ through a text network.
 | Authors | John Burrows    |
 | Cite    | burrows2006     |
 |---------+-----------------|
+=Computational Stylistics=: Pattern from relative frequency of many
+  words across a chosen range of texts.
+- Frequency profiles are often imperceptible to the reader.
+- Works with 2,000+ word segments
+  - Accuracy falls with shorter texts
+- Word choice reflects author's eduation, class, gender, etc.
+- 8 Poems of English restoration period.
+  - Edmond Waller
+    - "On the danger his Majesty (being Prince) Escaped"
+    - "Instructions to a Painter"
+  - Andrew Marvell
+    - "The First Anniversary of the Government under O.C."
+  - 5 political satire rejoinders to "Instruction"
+    - Anonymous
+    - Treasonous!
+    - Marvell favored as author of 2nd and 3rd "advice to a painter"
+
+- Delta Score
+  - Z-scores of most common words?
+  - =REF= described in Burrows2003, 2002 and Hoover 2004
+    - Burrows, J.  Delta: a measure of stylistic diff... 2002
+    - Hoover, d.  Testing Burrow's "Delta" 2004
+  - delta-score: mean of the absolute differences between the z-scores 
+    for a set of word-variables in a given text-group and z-scores
+    for the same in the target text.
+- Zeta and Iota Tests
+  - contrast base-set (known author's work) and counter-set (text to
+    be tested)
+  - evidence of least frequent words
+- All three tests depend on equal length sample segments.
 
 ** Language chunking, data sparseness, and the value of a long marker list: explorations  with word n-grams  and authorial attribution
 |---------+---------------------------------------------|
