@@ -1,30 +1,34 @@
-==========================================
-File: Inducible-regularization-for-low-rank-matrix-factorizations-for-collaborative-filtering_2012_Neurocomputing.pdf
-Title: Inducible regularization for low-rank matrix factorizations for
-    collaborative filtering
-Author: Zhenyue Zhang et al
+* Inducible regularization for low-rank matrix factorizations for collaborative filtering
+|--------+-----------------------------------------------------------------------------------------------------------------|
+| File   | Inducible-regularization-for-low-rank-matrix-factorizations-for-collaborative-filtering_2012_Neurocomputing.pdf |
+| Author | Zhenyue Zhang et al                                                                                             |
+|--------+-----------------------------------------------------------------------------------------------------------------|
 
-==========================================
-File: LDA.pdf
-Title: Latent Dirichlet Allocation
-Authors: David Blei, et al
+* Latent Dirichlet Allocation
+|----------------------------|
+| File: LDA.pdf              |
+| Authors: David Blei, et al |
+|----------------------------|
 
 - Corpus topic modelling through term x document matrices
 
 
-==========================================
-File: Local-influence-in-maximum-likelihood-fa_1997_Computational-Statistics---Dat.pdf
-Title: Local influence in maximum likelihood factor analysis
-Author: Kang-Mo Jung
+* Local influence in maximum likelihood factor analysis
+|--------+----------------------------------------------------------------------------------|
+| File   | Local-influence-in-maximum-likelihood-fa_1997_Computational-Statistics---Dat.pdf |
+| Author | Kang-Mo Jung                                                                     |
+|--------+----------------------------------------------------------------------------------|
 
 
-==========================================
-File: Multiple-factor-analysis-and-clustering-of-a-mixtu_2008_Computational-Statis.pdf
-Title: Multiple factor analysis and clustering of a mixture of quantitative, categorical and frequency data
-Authors: Monica Becue-Bertaut, Jerome Pages
+* Multiple factor analysis and clustering of a mixture of quantitative, categorical and frequency data
+|---------+----------------------------------------------------------------------------------|
+| File    | Multiple-factor-analysis-and-clustering-of-a-mixtu_2008_Computational-Statis.pdf |
+| Authors | Monica Becue-Bertaut, Jerome Pages                                               |
+|---------+----------------------------------------------------------------------------------|
 
 
-==========================================
-File: Scale-free-characteristics-of-random-networks-the-topology-of-the-world-wide-web_2000_Physica-A-Statistical-Mechanics-and-its-Applications.pdf
-Title: Scale-free characteristics of random networks: the topology of the world-wide web
+* Scale-free characteristics of random networks: the topology of the world-wide web
+|------+------------------------------------------------------------------------------------------------------------------------------------------------|
+| File | Scale-free-characteristics-of-random-networks-the-topology-of-the-world-wide-web_2000_Physica-A-Statistical-Mechanics-and-its-Applications.pdf |
+|------+------------------------------------------------------------------------------------------------------------------------------------------------|
 
