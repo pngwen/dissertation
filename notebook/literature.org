@@ -68,7 +68,6 @@
 | cite    | dietz2007                                     |
 |---------+-----------------------------------------------|
 
-
 ** Integrating content-based filtering with collaborative filtering using co-clustering with augmented matrices
 |--------+--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | File   | Integrating-content-based-filtering-with-collaborative-filtering-using-co-clustering-with-augmented-matrices_2014_Expert-Systems-with-Applications.pdf |
@@ -179,7 +178,6 @@ through a text network.
 | Cite    | burrows2006     |
 |---------+-----------------|
 
-
 ** Language chunking, data sparseness, and the value of a long marker list: explorations  with word n-grams  and authorial attribution
 |---------+---------------------------------------------|
 | File    | fqt028.pdf                                  |
@@ -188,6 +186,79 @@ through a text network.
 |---------+---------------------------------------------|
 
 
+** Shakespeare, Computers, and the Mystery of Authorship
+|---------+-----------------------------------|
+| Authors | Craig, Hugh and Kinney, Arthur F. |
+| Cite    | craig2009                         |
+| File    | n/a (Physical Book)               |
+|---------+-----------------------------------|
+
+- Chapter 1 Introduction
+  - idea of writing as a process with lexicon and grammar
+  - Stylistic Influence
+  - Word counts most steadfast feature to study
+  - =REF= Love p.18-19, Attributing authorishp: Lorenzo valla showed 
+    "The donation of Constantine" was a forgery.   (HODGES: PN171.F6 L68 2002)
+  - Computational Statistics.
+  - Style changes over time.
+  - Style can be immitated.
+  - Common words account for the bulk of the text.
+
+- Chapter 2 Methods (Craig & Kinney)
+  - Characteristic words: common to one author but not to others.
+    - "gentle" in shakespeare for instance
+    - Not always readily apparent to the reader
+  - Count characteristic word frequencies
+    - Within segments of 2000 words or 0/1 if section contains
+    - Words are scored using contemporary segments from shakespear and non-sp:
+      \begin{equation}
+        x_0 = \displaystyle\frac{\textrm{containing shakespearean segments}}
+          {\textrm{number of shakespearean segments}}
+      \end{equation}
+
+      \begin{equation}
+        x_1 = \displaystyle\frac{textrm{non-containing non-shakespearean segments}}
+          {\textrm{number of non-sakespearean segments}}
+      \end{equation}
+      
+      \begin{equation}
+        \mathrm{score} = x_0 + x_1
+      \end{equation}
+
+      |---+---------|
+      | 2 | Highest |
+      | 1 | Neutral |
+      | 0 | Lowest  |
+      |---+---------|
+
+      - No words at extremes, they use the top 500 scoring words
+      - Reverse process for non-shakespeare markers (words common to contemporaries,
+	but not to shakespeare.
+      - This establishes a set of shakespearean and non-shakespearean markers
+    - Attribution Through Clustering
+      - Count how many of each marker words appear in each segment from both lists
+      - Each marker gets a score:
+	\begin{equation}
+	\textrm{marker score} = \displaystyle\frac{Number of Markers}{Number of words in segment}
+	\end{equation}
+      - each segment yields scores for each marker
+      - Graph (shakespearean marker scores, non-shakespearean marker scores) for each segment
+      - Clusters distinguish the authors
+
+p.24 "The results of computational stylistics are always matters of 
+      probability, not of certainty.  Writers are free agents, and 
+      language is an endlessly flexible instrument."
+
+- Writers imitate each other
+- They may try new styles
+
+!!PCA!! patters of word use to extract composite factors.
+PCA gives each word frequency variable a weight
+
+1. Use t-test to identify words used more by 1 author or the other
+2. Combine these word variables, PCA output to form 2 PCA scores
+
+The weights carry no semantic meaning, however
 
 * Tensors
 ** PARAFAC: Parallel Factor Analysis
