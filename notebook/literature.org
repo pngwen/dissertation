@@ -1,0 +1,394 @@
+* Text Mining
+** Citation Statistics
+|---------+--------------------------------------------|
+| File    | 0910.3529-Citation Statistics.pdf          |
+| Authors | Robert Adler, John Ewing, and Peter Taylor |
+| Cite    | addler2009                                 |
+|---------+--------------------------------------------|
+
+- Use and abuse of citation statistics in the evaluation of scientific
+  literature.
+
+** Evolution of the Social Network of Scientific Collaborations
+|--------+-----------------------------------|
+| File   | 1-s2.0-S0378437102007367-main.pdf |
+| Author | A.L. Barabasi, Jeong, et al       |
+| Cite   | barbasi2002                       |
+|--------+-----------------------------------|
+
+- Studies the growth of coauthorship networks.
+- Builds a model which attempts to simulate growth of scientific
+  networks.
+- Could be interesting for influence modelling purposes.
+
+** A multimodal annotate corpus of consensus decision making meetings.
+|--------+----------------------|
+| Author | Fabio Pianesi et al. |
+| Cite   | pianesi2007          |
+|--------+----------------------|
+
+- A nifty little influence model made by observing coded movements in
+  a video.  
+- Not really relevant to me, but it is at least cool.
+
+** Identifying Influential Bloggers using Blog Semantics
+|--------+--------------------------------|
+| File   | a7-aziz.pdf                    |
+| Author | Mehwish Aziz and Muhammad Rafi |
+| Cite   | aziz2010                       |
+|--------+--------------------------------|
+
+- Identifies influential blogs by analyzing semantic markers within
+  the blogs themselves.
+- Symantic text mining
+
+** Complex networks: Structure and dynamics
+|--------+------------------------------------------------------------------|
+| File   | Complex-networks-Structure-and-dynamics_2006_Physics-Reports.pdf |
+| Author | S. Boccaletti et al                                              |
+|--------+------------------------------------------------------------------|
+
+** Fully Sparse Topic Models
+|--------+-------------------------------|
+| File   | Fully Sparse Topic Models.pdf |
+| Author | Khoat Than and Tu Bao Ho      |
+| cite   | than2012                      |
+|--------+-------------------------------|
+
+** Growth and Structure of Slovenia's Scientific Collaboration Network
+|--------+------------------------------------------------------------------------------------------------------|
+| File   | Growth-and-structure-of-Slovenia-s-scientific-collaboration-network_2010_Journal-of-Informetrics.pdf |
+| Author | Matjaz Perc                                                                                          |
+|--------+------------------------------------------------------------------------------------------------------|
+
+** Unsupervised Prediction of Citation Influences
+|---------+-----------------------------------------------|
+| File    | icml2007_DietzBS07_LDA-Citation_Influence.pdf |
+| Authors | Laura Dietz et al                             |
+| cite    | dietz2007                                     |
+|---------+-----------------------------------------------|
+
+
+** Integrating content-based filtering with collaborative filtering using co-clustering with augmented matrices
+|--------+--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| File   | Integrating-content-based-filtering-with-collaborative-filtering-using-co-clustering-with-augmented-matrices_2014_Expert-Systems-with-Applications.pdf |
+| Author | Meng-Lun Wu et al                                                                                                                                      |
+|--------+--------------------------------------------------------------------------------------------------------------------------------------------------------|
+
+** N-gram over Context
+|--------+---------------------------------|
+| File   | p1045-kawamae-ngram-context.pdf |
+| Author | Noriaki Kawamae                 |
+| cite   | kawamae2016                     |
+|--------+---------------------------------|
+
+- N-Gram Topic Model
+
+** Dynamic Topic Models
+|--------+------------------------------|
+| File   | p113-blei-dynamic-topic.pdf  |
+| Author | David Blei and John Lafferty |
+|--------+------------------------------|
+
+This will be more for some follow up work on time series evolution of corpora.
+
+** Plagiarism Detection Based on Structural Information
+|--------+---------------------------------------|
+| File   | p1221-stamatatos-ngram-plagiarism.pdf |
+| Author | Efstathios Stamatatos                 |
+| Cite   | stomatatos2011                        |
+|--------+---------------------------------------|
+
+- Uses n-grams of stop words
+- Captures style components
+
+** Dynamic Topic/Citation Influence Modeling for Chronological Citation Recommendation
+|---------+------------------------------------------------|
+| File    | p15-jiang-Dynamic Topic-Citation Influence.pdf |
+| Authors | Zhuoren Jiang et al                            |
+| Cite    | jiang2014                                      |
+|---------+------------------------------------------------|
+
+- Keyword topic model 
+- Keyword based influence model through citation network
+
+** Influence Maximization over Large-Scale Social Networks: A Bounded Linear Approach
+|--------+-----------------------------------------------------|
+| File   | p171-liu-Influence Maximization Linear Approach.pdf |
+| Author | Qi Liu et al                                        |
+|--------+-----------------------------------------------------|
+
+** Identifying the Influential Bloggers in a Community
+|---------+--------------------------------------------------|
+| File    | p207-agarwal.pdf                                 |
+| Authors | Nitin Agarwal, Huan Liu, Lei Tang,  Philip S. Yu |
+|---------+--------------------------------------------------|
+
+Definitely something for a follow on study of influence propogation
+through a text network.
+
+** Using the Influence Model to Recognize Functional Roles in Meetings
+|---------+------------------------------------------------|
+| File    | p271-dong-Influence Model Functional Roles.pdf |
+| Authors | Wen Dong et al                                 |
+|---------+------------------------------------------------|
+
+-Influence models through coded video.  
+-Followon/copaper to a previous one
+
+** Influence modelling using bounded rationality in social networks
+|---------+-----------------------------------------------------|
+| File    | p33_kasthurirathna-Influence Modelling Boundary.pdf |
+| Authors | Dharshana Kasthurirathna                            |
+|---------+-----------------------------------------------------|
+
+** An Author-Reader Influence Model for Detecting Topic-based Influencers in Social Media
+|---------+--------------------------------------------|
+| File    | p46-herzig-Author-Reader Influence.pdf     |
+| Authors | Jonathan Herzig, Yosi Mass, haggai Roitman |
+|---------+--------------------------------------------|
+
+** Why Data Citation is a Computational Problem
+|---------+-----------------------------------------------|
+| File    | p50-buneman.pdf                               |
+| Authors | Peter Buneman, Susan Davidson, and James Frew |
+|---------+-----------------------------------------------|
+
+** Influence Propagation and Maximization for Heterogeneous Social Networks
+|---------+-------------------------------------|
+| File    | p559-li-Influence Heterogeneous.pdf |
+| Authors | Cheng-Te Li                         |
+|---------+-------------------------------------|
+
+** Text Classification Improved through Multigram Models
+|---------+------------------------------------------------|
+| File    | p672-shen-ngram-multigram.pdf                  |
+| Authors | Dou Shen, Jian-Tao Sun, Qiang Ynag, Zheng Chen |
+|---------+------------------------------------------------|
+
+** Models and Algorithms for Social Influence Analysis
+|---------+----------------------------------------|
+| File    | p775-sun-Models Influence Analysis.pdf |
+| Authors | Jimeng Sun, Jie Tang                   |
+|---------+----------------------------------------|
+
+** All the Way Through: Testing for Authorship  in Different Frequency Strata
+|---------+-----------------|
+| File    | 10.1.1.872.4886 |
+| Authors | John Burrows    |
+| Cite    | burrows2006     |
+|---------+-----------------|
+
+
+** Language chunking, data sparseness, and the value of a long marker list: explorations  with word n-grams  and authorial attribution
+|---------+---------------------------------------------|
+| File    | fqt028.pdf                                  |
+| Authors | Alexis Antonia, Hugh Craig and Jack Elliott |
+| cite    | antonia2014                                 |
+|---------+---------------------------------------------|
+
+
+
+* Tensors
+** PARAFAC: Parallel Factor Analysis
+|---------+-------------------------------------------------|
+| File    | 1-s2.0-0167947394901325-parafac-harshman-94.pdf |
+| Authors | Richard A. Harshman and Margaret Lundy          |
+| Cite    | harshman1994                                    |
+|---------+-------------------------------------------------|
+
+- Review of PARAFAC
+- Clarifies the properties of the factors a bit.
+- Interpretations of uniqueness and fit.
+- Implicit Axis instead of hyperplanes
+
+** PARAFAC: Tutorial and Applications
+|--------+--------------------------------------|
+| File   | 1-s2.0-S0169743997000324-parafac.pdf |
+| Author | Rasmus Bro                           |
+| Cite   | bro1997                              |
+|--------+--------------------------------------|
+
+- Tutorial on PARAFAC
+- Introdcution of chemometrics and use of PARAFAC in spectral
+  analysis.
+
+** Robust Probablalistic Tensor Analysis for Time-Variant collaborative filtering
+|--------+------------------------------------------|
+| File   | 1-s2.0-S0925231212009083-main-tensor.pdf |
+| Author | Jing Pan et al                           |
+|--------+------------------------------------------|
+
+** Effecient and Scalable Computations with Sparse Tensors
+|--------+-------------------|
+| File   | Baskaranpaper.pdf |
+| Author | Muthu Baskaran    |
+| Cite   | baskaran2012      |
+|--------+-------------------|
+
+- Mathematical operations on sparse tensors. 
+- Storage of sparse tensors.
+- Addition and Multiplication
+
+** Analysis of Individual Differences in Multidimensional Scaling Via An N-Way Generalization of "Eckart-Young" decomposition
+|--------+------------------|
+| File   | candecomp.pdf    |
+| Author | Caroll and Chang |
+| Cite   | caroll1970       |
+|--------+------------------|
+
+- This is the "CANDECOMP" paper
+- Usually paired with Harshmann
+- Good descriptions of the properties of the decompositions.
+
+** Title: Tensor Decompositions, Alternating Least Squares and Other Tales
+|--------+---------------------|
+| File   | ComoLA09-jchemo.pdf |
+| Author | Pierre Comon et al  |
+| Cite   | comon2009           |
+|--------+---------------------|
+
+- Nice analogies and tutorial explanation of PARAFAC
+- Tribute to Harshman
+
+** Title: A new efficient method for determining the number of components in PARAFAC model
+|--------+---------------------------------|
+| File   | corcondia.pdf                   |
+| Author | Rasmus Bro and Henk A. L. Kiers |
+| Cite   | bro2003                         |
+|--------+---------------------------------|
+
+- A diagnostic for testing the number of factors in PARAFAC models.
+- Could be a nice way to optimize my decompositions!
+
+** Fast Efficient and Scalable Core Consistency Diagnostic for PARAFAC Decomposition for Big Sparse Tensors
+|--------+------------------------------------------------|
+| File   | efficient_corcondia_icassp2015.pdf             |
+| Author | Evangelos E. Papalexakis and Chrstos Faloutsos |
+| Cite   | papalexakis2015                                |
+|--------+------------------------------------------------|
+
+- CORCONDIA applied to sparse tensors
+- Talks about issues with sparse tensors
+
+** Foundations of the PARAFAC Procedure: Models and Conditions for an "Explanator" multmodal factor analysis
+|--------+--------------------------------------+---------------------------------------------------------------------|
+| File   | harshmann-wpppfac0.pdf               |                                                                     |
+| Title  | Foundations of the PARAFAC Procedure | Models and Conditions for an "Explanator" multmodal factor analysis |
+| Author | R. A. Harshman                       |                                                                     |
+| Cite   | harshman1970                         |                                                                     |
+|--------+--------------------------------------+---------------------------------------------------------------------|
+
+- This is the seminal paper on PARAFAC
+- Rediscovery / popularization of Hitchcock
+- Proportional Profiles
+- ALS Algorithm Described
+
+** The Expression of a Tensor or a Polyadic as a Sum of Products
+|--------+--------------------|
+| File   | hitchcock1927.pdf  |
+| Author | Frank L. Hitchcock |
+| Cite   | hitchcock1927      |
+|--------+--------------------|
+
+- Original paper about Tensor decomposition.
+- Description of Polyadic form
+- Description of properties of the factors
+
+** Rank, Decomposition, and Unqiueness for 3-2ay and n-way arrays
+|--------+--------------|
+| File   | jbkrank.pdf  |
+| Author | J.B. Kruskal |
+| Cite   | kruskal1989  |
+|--------+--------------|
+
+- The Kruskal Operator
+
+** Low-n-rank tensor recovery based on multi-linear augmented Lagrange multiplier method
+|---------+---------------------------------------------------------------------------------------------------------------|
+| File    | Low-n-rank-tensor-recovery-based-on-multi-linear-augmented-Lagrange-multiplier-method_2013_Neurocomputing.pdf |
+| Authors | Huachun Tan et. al                                                                                            |
+|---------+---------------------------------------------------------------------------------------------------------------|
+
+** ParCube: Sparse Parallelizable Tensor Decompositions
+|---------+-------------------------------|
+| File    | parcube-sparse tensor.pdf     |
+| Authors | Evangelos E. Paplexakis et al |
+| Cite    | papalexakis2012               |
+|---------+-------------------------------|
+
+** Multilinear operators for higher-order decompositions
+|--------+-----------------------------------------|
+| File   | SAND2006-2081-Multilinear Operators.pdf |
+| Author | Tamara G. Kolda                         |
+| Cite   | kolda2006                               |
+|--------+-----------------------------------------|
+
+** SPLATT: Efficient and Parallel Sparse Tensor-Matrix Multiplication
+|--------+--------------------|
+| File   | splatt.pdf         |
+| Author | Shaden Smith et al |
+| Cite   | smith2017          |
+|--------+--------------------|
+
+** A Survey of Tensor Methods
+|--------+-----------------------------|
+| File   | surveyTesnors-ldl-09-34.pdf |
+| Author | Lieven De Lathauwer         |
+| Cite   | lathauwer2009               |
+|--------+-----------------------------|
+
+** Tensor Decompositions and Applications
+|---------+---------------------------------|
+| File    | tensordecompositions.pdf        |
+| Authors | Tamara G. Kolda, Brett W. Bader |
+| Cite    | kolda2009                       |
+|---------+---------------------------------|
+
+** An Introduction to Tensors for Students of Physics and Engineering
+|---------+--------------------------|
+| File    | Tensors_TM2002211716.pdf |
+| Authors | Joseph C. Kolecki        |
+| Cite    | kolecki2002              |
+|---------+--------------------------|
+
+** A generalized inner and outer product of arbitrary multi-dimensional arrays using A Mathematics of Arrays (MoA)
+|--------+-------------------|
+| File   | 0907.0792.pdf     |
+| Autors | James E. Raynolds |
+| Cite   | raynolds2009      |
+|--------+-------------------|
+
+
+* Other
+** Inducible regularization for low-rank matrix factorizations for collaborative filtering
+|--------+-----------------------------------------------------------------------------------------------------------------|
+| File   | Inducible-regularization-for-low-rank-matrix-factorizations-for-collaborative-filtering_2012_Neurocomputing.pdf |
+| Author | Zhenyue Zhang et al                                                                                             |
+|--------+-----------------------------------------------------------------------------------------------------------------|
+
+** Latent Dirichlet Allocation
+|----------------------------|
+| File: LDA.pdf              |
+| Authors: David Blei, et al |
+|----------------------------|
+
+- Corpus topic modelling through term x document matrices
+
+** Local influence in maximum likelihood factor analysis
+|--------+----------------------------------------------------------------------------------|
+| File   | Local-influence-in-maximum-likelihood-fa_1997_Computational-Statistics---Dat.pdf |
+| Author | Kang-Mo Jung                                                                     |
+|--------+----------------------------------------------------------------------------------|
+
+** Multiple factor analysis and clustering of a mixture of quantitative, categorical and frequency data
+|---------+----------------------------------------------------------------------------------|
+| File    | Multiple-factor-analysis-and-clustering-of-a-mixtu_2008_Computational-Statis.pdf |
+| Authors | Monica Becue-Bertaut, Jerome Pages                                               |
+|---------+----------------------------------------------------------------------------------|
+
+** Scale-free characteristics of random networks: the topology of the world-wide web
+|------+------------------------------------------------------------------------------------------------------------------------------------------------|
+| File | Scale-free-characteristics-of-random-networks-the-topology-of-the-world-wide-web_2000_Physica-A-Statistical-Mechanics-and-its-Applications.pdf |
+|------+------------------------------------------------------------------------------------------------------------------------------------------------|
+
