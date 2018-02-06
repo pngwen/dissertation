@@ -1,0 +1,24 @@
+* Introduction
+** Problem Statement
+** Approach Overview
+** Related Work
+* Approach
+** Background Information for Tensors
+** Model Formulation
+** Justification of the Model
+** Filtering Techniques
+** Implementation Challenges
+* Case Study 1 - Scientific Papers
+** Corpus Description
+** Estimating Ground Truth from Citations
+** Applying the Model
+** Results
+* Case Study 2 - Shakesperean Authorship
+** Corpus Description
+** Other Studies on Collaborators
+** Applying Tensor Decomposition to the Shakespeare Problem
+** Results
+* Conclusions and Future Work
+** Model Performance Summary
+** Possible Areas for Improvement
+** Further Applications
