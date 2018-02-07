@@ -72,3 +72,69 @@
 ** Model Performance Summary
 ** Possible Areas for Improvement
 ** Further Applications
+
+
+* Stream of Consciousness Long-Form Notes
+** Justification of the Model
+The polyadic form of a tensor is the sum of products of covariate
+vectors. (Hitchcock 1927) Moreover, because the factors are unique
+under rotation, the factors themselves are not covariate.  Thus the
+tensors that form each polyadic factor are correlated intenaly, not
+with each other.
+
+- Each factor is correlated int its own modes
+- Each factor is a multilinear transformation which is not correlated
+  with the other factors.
+- the n-grams present in each factor are correlated with each other,
+  and this models related n-grams regardless of order and spacing in
+  the document.
+
+- Conventional n-gram analysis works well for topic searches
+
+- Don't reveal document structure
+  - there are papers that used stop-word n-grams to analyze structure
+    by stop words
+** Document Processing
+1. Preprocess documents
+   - remove all non-alpha characters
+   - convert to lower case
+   - remove double spaces and newlines
+2. Establish corpus vocabulaary
+3. Build tensor representation via sliding window method
+4. Decomposition
+
+A vocabulary is a function m: string->int
+  - 1 to 1 onto N
+
+Lookups are trivial
+  - make this an object would complication things
+  - PYTHON dicts are wonderful
+  - or a functor of some kind
+
+=Corpus= A vocabulary object and a list of tensors
+- do I want to store it all in mem?
+- Probably really represent on fs
+  directory:
+     vocabulary
+     <docname>.tns
+
+Sparse tensor formatted files
+
+SNTF formatted for python package
+
+** Approach overview
+- Each document contributes to the corpus vocabulary
+- Documents are analyzed for n-gram producing TERM x TERM x TERM
+  tensors with common basis as established by the corpus vocabulary
+    D_{ijk} isthe frequency of the 3-gram word[i] word[j] word[k]
+- Decompose each tensor using PARAFACT with non-negativity
+  constraints.  The decomposed tensor will contain explanitory factors
+  for D's composition
+
+- Justification
+  - As Hitchcock states, the polyadic form of a tensor is an outer
+    prodcut of covariant matrices (vectors) summed over each factor
+  - Each factor represents a proportional profile of variables
+    internally correlated by not correlated with other factors.
+  - Covariant n-grams regardless of placement within
+    document. caputres topic and sturcture surrounding n-gram usage.

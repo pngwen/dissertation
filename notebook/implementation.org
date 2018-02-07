@@ -37,3 +37,91 @@ C += B
 
 C = A   
 C -= B
+
+
+* outer product test cases
+A = { 1, 2 }   B = {3, 4}
+
+C = A o B
+   [ 3 4 ]
+   [ 6 8 ]
+
+C = C o A
+
+   [ 3 4 ]
+   [ 6 8 ]
+
+   [  6  8 ]
+   [ 12 16 ]
+
+* Row major iteration
+   [row][col][layer]
+
+  - increment col, then row
+     
+    col ---> row ---> layer 
+
+    repeated as a cycle with each overflow
+
+  - Struct index
+    Move
+    Cleanup
+    Update
+
+  Seq to update by overflow: 1, 0, 2, 3, .... n
+
+  but if only 1 dim: 1
+  
+  =Update Index=
+  if(i==1) 
+     i=0
+  else if(i==0)
+     i = 2
+  else
+     i++
+  
+Should I sort indexs in a row-major way?  nah!
+
+** Row Major Traversal of Tensors
+If we imagine tensors as a multi-dimensional array, then it follows
+that we could adopt an indexing convention i_1, i_2, ... i_k where i_1
+is the row and i_2 is the column.  i_3 is a layer and i_4, ..., i_k
+are high dimensional layers (which are difficult, at best, to
+imagine).  The standard expectation of traversal of matrix structure
+isa row-major order, extendin gthis to tensors we get the following
+ordering:
+
+1) increment i_2 until overflow
+2) increment i_1 until overflow 
+3) increment i_3 until overflow
+....
+4.) increment i_n until overflow 
+
+fthus each layer is explored in a row major way and allhigher
+dimensions are increment in turn.
+
+
+* Inner Product?
+  C_{ijklm = \sum_p A_{ijkp} * B_{plm}
+
+
+ i p       p m
+ 2x2       2x1     2x1
+[ 1 3 ] * [ 1 ] = [ 22 ] C_{11}
+[ 2 4 ]   [ 7 ]   [ 30 ] C_{21}
+
+
+ 2 x 2 x 2      2 x 1 
+[ [ 1 3 ] ]     [ 4 ]       2 x 2 x 1
+[ [ 2 7 ] ]     [ 7 ]  = [ 111     121 ]
+[         ]  *           [ 211     221 ]
+[ [ 3 1 ] ]
+[ [ 2 2 ] ]
+
+
+C_{ijk} = \sum_p A_{ijp} * B {pk}
+
+C_{111} = A_{111} * B_{11} + A_{112} B_{21}
+
+
+Really matrix multiplication is the contraction of the tensor product.
