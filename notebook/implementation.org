@@ -1,0 +1,39 @@
+* outer(a,b)
+dims = a.dim U b.dim
+fill = a.fill * b.fill
+foreach non-fill index(ia) in a
+  foreach non-fill index(ib) in b
+    set(ia U ib, a[ia]*a[ib])
+  end foreach
+end foreach
+return * this
+
+* hadamard(a,b)
+  fill = a.fill * b.fill
+  multList = a.nonfill() U b.nonfill()
+  foreach idx in multList
+    set(idx, a[idx]*b[idx])
+  end foreach
+  return * this
+
+* tensor test cases
+A: 2x2x2      B:2x2x2
+
+A = [ 1 0 ]  [ 0 0 ]
+    [ 0 0 ]  [ 0 1 ]
+
+B = [ 0 2 ]  [ 0 0 ]
+    [ 0 0 ]  [ 0 2 ]
+
+C = A + B = [ 1 2 ]  [ 0 0 ]
+            [ 0 0 ]  [ 0 3 ]
+
+C = A - B = [ 0 -2 ] [ 0  0 ]
+            [ 0  0 ] [ 0 -1 ]
+
+As above:
+C = A   
+C += B  
+
+C = A   
+C -= B
