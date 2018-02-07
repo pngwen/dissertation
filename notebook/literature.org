@@ -1,3 +1,8 @@
+* To Read List
+** TODO p1221-stamatatos-ngram-context stamatatos2011
+** TODO p15_jang_Dynamic_Topic_Citation_Infl jiang2014
+** TODO Survey of Text Mining bader2007
+** TODO Chapter 11: The Joker in the Pack burrows2017
 * Text Mining
 ** Citation Statistics
 |---------+--------------------------------------------|
@@ -8,6 +13,12 @@
 
 - Use and abuse of citation statistics in the evaluation of scientific
   literature.
+- argues statistics such as impact factor capture very little information
+- decrise timescales of some metrics and how that undermines slower fields,
+  such as mathematics 
+- impact factor and h-index
+- citation culture issues 
+  -math impact takes too long to develop
 
 ** Evolution of the Social Network of Scientific Collaborations
 |--------+-----------------------------------|
@@ -54,6 +65,7 @@
 | Author | Khoat Than and Tu Bao Ho      |
 | cite   | than2012                      |
 |--------+-------------------------------|
+- Not really relevant, still cool though
 
 ** Growth and Structure of Slovenia's Scientific Collaboration Network
 |--------+------------------------------------------------------------------------------------------------------|
@@ -67,6 +79,37 @@
 | Authors | Laura Dietz et al                             |
 | cite    | dietz2007                                     |
 |---------+-----------------------------------------------|
+- Measure influence as flow of topics between papers
+- Probabalistic weights
+- LDA
+- Citation problems
+  - background reading
+   - politeness
+  - fear of reviewers
+  - arguing against related work 
+    - =REF= See Trigg 1983
+- Problem
+  - citation graph
+    - vertices are publications
+    - edge (c,d) indicates taht d cites c
+  - goal is to find edge weights $\gamma$ 
+    - $\gamma_d(c)$ should match ground truth
+  - ground truth is not directly observable
+    - refer to assessments of research scienties =can I repeate?=
+- LDA-JS
+  - LDA with heuristic to assign strengths to influence
+- Copy cat
+  - Weighted sumof sitation
+  - associates each word with a cited document
+- Topics treated as latent variables
+  - measures and improves fit to assign words to
+- Copycat worked best
+
+I don't think these results are directly coparable to mine as they
+seem to measure something different.
+
+There is a figure indicating most influential papers, I can probably
+uset this!  POSSIBLE REPLICATION!
 
 ** Integrating content-based filtering with collaborative filtering using co-clustering with augmented matrices
 |--------+--------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -81,7 +124,13 @@
 | cite   | kawamae2016                     |
 |--------+---------------------------------|
 
-- N-Gram Topic Model
+- Tree of N-Grams as a Topic Model 
+- tree shows a semantic hierarchy
+- structure of document provides information
+- LDA w/ simulation to learn the topic model
+- Groupings of n-grams describe documents
+- Clusterings of n-grams show related documents and shows tehmatic
+  links
 
 ** Dynamic Topic Models
 |--------+------------------------------|
@@ -125,6 +174,13 @@ This will be more for some follow up work on time series evolution of corpora.
 
 Definitely something for a follow on study of influence propogation
 through a text network.
+
+- Quantitative analysis of content  semantics to build influence model
+- Sentence Based similarity measure
+- Semantic similarity via bag of words
+- sentence-wise length
+- Flow in-links and out links
+  - use these factors to find blogs which are linked andimitated by other bloggers
 
 ** Using the Influence Model to Recognize Functional Roles in Meetings
 |---------+------------------------------------------------|
@@ -214,7 +270,16 @@ through a text network.
 | Authors | Alexis Antonia, Hugh Craig and Jack Elliott |
 | cite    | antonia2014                                 |
 |---------+---------------------------------------------|
-
+- n-grams as authorship markers
+- reg. occuring or all voab
+- 1-gram 
+- rave markers 3-gram
+- function words 2-gram
+- 1-gram performs well
+- 5-gram does not improve performance
+- Author's signature as frequency of repeated phrases in a text
+- n-grams pick up idioms
+- increasing length is a more fine-grained analytic tool
 
 ** Shakespeare, Computers, and the Mystery of Authorship
 |---------+-----------------------------------|
@@ -459,7 +524,6 @@ The weights carry no semantic meaning, however
 | Autors | James E. Raynolds |
 | Cite   | raynolds2009      |
 |--------+-------------------|
-
 
 * Other
 ** Inducible regularization for low-rank matrix factorizations for collaborative filtering
