@@ -8,7 +8,7 @@
 |---------+--------------------------------------------|
 | File    | 0910.3529-Citation Statistics.pdf          |
 | Authors | Robert Adler, John Ewing, and Peter Taylor |
-| Cite    | addler2009                                 |
+| Cite    | adler2009                                  |
 |---------+--------------------------------------------|
 
 - Use and abuse of citation statistics in the evaluation of scientific
