@@ -333,7 +333,7 @@ through a text network.
     - Attribution Through Clustering
       - Count how many of each marker words appear in each segment from both lists
       - Each marker gets a score:
-	\begin{equation}
+ 	\begin{equation}
 	\textrm{marker score} = \displaystyle\frac{Number of Markers}{Number of words in segment}
 	\end{equation}
       - each segment yields scores for each marker

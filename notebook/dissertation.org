@@ -3,18 +3,18 @@
 - All textual works are related.
 - Influencing Factors 
   - Works Read by the Author
-  - Author's Background (cite a source for that one)
+  - Author's Background (cite a source for that one)  (burrows2006)
   - Author's Original Contribution
 - Applications in Academia
-  - Measuring Impact
+  - Measuring Impact  (adler2009)
   - Determining New Contributions in a Work
   - Identifying Missing Citations
 - Applications in Authorship Determination
-  - Identify potential Co-Authors
+  - Identify potential Co-Authors  (cite craig2009, burrows2017)
   - Identify Elements of Style
   - Find and Isolate Each Author's Contributions
 ** Approach Overview
-- Word Frequency Counting
+- Word Frequency Counting (craig2009, burrows2006)
 - Phrase Based N-Grams
 - Tensor Decomposition
 - Factor Comparsion
