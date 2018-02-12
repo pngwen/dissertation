@@ -19,36 +19,74 @@ epistemologcal assumption to a much less trivial end.
 Instead of proving divine influence, the present work shall attempt to
 measure the influence present in the written works of less divine beings.
 
-The need for such a measurement should be readily apparent to anyone
-working in any academic field.  In modern research, the perofrmance of 
-participants is rooted in an attempt to measure that person's
-influence over their chosen field.  Traditional approaches to this
-problem involve counting citations over a specific window of time
-~\cite{adler2009}
-while more modern approaches tend to involve some document
-semantics~\cite{dietz2007},~\cite{jiang2014}, and~\cite{**buneman**}.
+The basic assumption made about text documents is the same assumption
+that Anselm made about the origin of thoughts.  Every word, phrase,
+sentence, paragraph, and theme in a document must come from one of two
+sources.  Either the author created the thought from within their own
+mind, and as such this counts as a literary contribution, or the
+author could have transferred ideas from some outside source.  These
+sources can take on many forms.  In the case of academic writing, the
+author is likely to have been influenced primarily by the various
+books and papers that they have read over the course of their
+research.  Of course, another form of influence is a coauthor (though
+in the case of academic literature, coauthors are almost always
+explicitly stated.)  Of course, the influence over the text in a paper
+is not constrained merely to the literature that the author has cited,
+but is ultimately a reflection of an author's entire life experience
+and background.  In the case of literary writing, such as a novel or
+play, a reasonable assumption is that an author is influenced by other
+works within their genre as well as by the society in which they live.
 
-Measuring influence in a written document can also be applied in
-situations where authorship is in question.  Given a corpus of works
-of confirmed provenance, and a disputed document, influence modelling
-can identify the possible influence of each author.  Thus textual
-influence modelling can be used to answer the question of authorship
-where it is disputed, or could potentially be used to identify
-plagearised passages.  
+Given that every written document is influenced by at least a small
+set of outside documents, the present work attempts to model and
+quantify this influence by separating documents into a set of factors
+and then searching for common factors among the documents.  The
+desired result has two parts.  First, a weight is assigned to each
+factor indicating its importance in the target work.  Second, the
+factors themselves should carry enough semantic meaning to identify
+the ideas and elements of style which have been transferred from a
+source document to a target document.  Thus, the goal of the present
+work is to identify influencing factors and to quantify the influence
+they exert on a target document.
+
+The usefulness of such a measurement should be readily apparent to
+anyone working in any academic field.  In modern research, the
+perofrmance of participants is rooted in an attempt to measure that
+person's influence over their chosen field.  Traditional approaches to
+this problem involve counting citations over a specific window of time
+~\cite{adler2009} while more modern approaches tend to involve some
+document semantics~\cite{dietz2007, jiang2014, **buneman**} Measuring
+influence in a written document can also be applied in situations
+where authorship is in question.  Given a corpus of works of confirmed
+provenance, and a disputed document, influence modelling can identify
+the possible influence of each author.  Thus textual influence
+modelling can be used to answer the question of authorship where it is
+disputed, or could potentially be used to identify plagearised
+passages.
 
 
 \section{Modelling Influence}
-The influence model presented in this dissertation makes the
-assumption that the text of a written document is the result of
-a process which takes two primary inputs.  The first is the documents
-which an author has read, and the second is the contributions of the
-author's own thought processes.  The influence exerted on a document
-which results from this process is assumed to be present in the form
-of topics, word choice, and phrase structure.  Stated another way, the
-influencing factors are to be interpreted as the degree to which one
-document ``sounds like'' another.  Intuitively, a human reader is able 
-to produce a qualitative model from reading source material and
-a target document.  
+At a high level, the goal is to model the extent to which one document
+``sounds like'' another and to identify elements which would lead a
+reader to that conclusion.  Human readers seem to be able to perform
+this operation on an intuitive level, though they are typically not
+aware of the elements which lead them to their
+conclusions~\cite{craig2009}.  Moreover, a human reader cannot
+typically quantify the relationships they perceive among several
+authors as their input is more qualitative.  Take for instance the
+following quotes:
+
+% Marlowe Quote
+% Shakespeare Quote
+% Trump Quote ``I have the best words''
+% http://www.kansascity.com/news/local/news-columns-blogs/the-buzz/article55604115.html
+
+Clearly, the first two have similar elements of style and word use.
+Both quotes indicate a high mastery of language as well as a certainly
+outmoded style of speech.  The final quote, however, exhibits none of
+these qualities.  It is decidedly modern and is also lacking in style or
+wit.  
+
 
 ** TODO: Get some info from the shakespeare authorship companion for
 shakespeare and Marlowe **
@@ -68,4 +106,7 @@ The basic steps for constructing this model are as follows:
 
 \section{Related Work}
 
+\section{Bibliography (temporarily in each chapter)}
+\bibliographystyle{unsrt}
+\bibliography{../sources}
 \end{document}
