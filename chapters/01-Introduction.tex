@@ -102,9 +102,32 @@ The basic steps for constructing this model are as follows:
     \item Assign weights to all explantory factors.
 \end{enumerate}
 
+To perform factor analysis, each document must be represented as a
+series of numeric variables.  In models which attempt to capture
+elements of style and influence, a common variable to study is word
+frequency as this can serve as an effective marker for an author's
+background and style~\cite{craig2009, burrows2017}.  The technique
+proposed in this dissertation extends this idea to using phrases of
+length $n$, referred to as $n$-grams.  The documents in the corpus,
+including both source and target documents, are quantified as a
+multidimensional array of $n$-gram frequencies.  These are then
+decomposed into explanatory factors.
 
+Once the corpus is decomposed into factors, factors from the source
+documents are compared with the factors of the target document.  For
+each target factor, probabilities are assigned to each of the source
+factors according to their similarities to the target factor.  If a
+factor is found which has a significant probability of being a source
+of a target factor, then it is identified as an influencing factor and
+a weight is assigned to it based on the strength of the relationship
+as well as the strength of the factors explanitory power over the
+target document.  Any factors not explained by this method are
+attributed to the author of the target document, as is any residual
+varience in the model.
 
 \section{Related Work}
+
+\section{Outline of this Dissertation}
 
 \section{Bibliography (temporarily in each chapter)}
 \bibliographystyle{unsrt}
