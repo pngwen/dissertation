@@ -20,6 +20,8 @@
 - Factor Comparsion
 ** Related Work
 - Keyword Influence Models
+  - Dynamic Topic/Citation Influence Modeling for Chronological
+    Citation Recommendation by Zhuroen Jiang et al (jiang2014)
 - N-Gram Analysis
 - Frequency Markers and PCA Based Approaches
 - Tensor Decomposition and Algorithms
