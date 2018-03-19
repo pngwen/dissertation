@@ -65,65 +65,144 @@ disputed, or could potentially be used to identify plagearised
 passages.
 
 
-\section{Modelling Influence}
-At a high level, the goal is to model the extent to which one document
-``sounds like'' another and to identify elements which would lead a
-reader to that conclusion.  Human readers seem to be able to perform
-this operation on an intuitive level, though they are typically not
-aware of the elements which lead them to their
-conclusions~\cite{craig2009}.  Moreover, a human reader cannot
-typically quantify the relationships they perceive among several
-authors as their input is more qualitative.  Take for instance the
-following quotes:
+\section{Modeling Influence}
+At a high level, an influence model identifies elements that appear to
+have been incorporated into a target document from a source document.
+These elements can take on many forms.  For example, they could
+include elements of style, topics, phrases, or ideas.  A human reader
+seems to be able to identify these elements on an intuitive level, as
+can be seen readily whenever a reader says one author ``sounds like''
+another.  This operation is also in effect when tracing ideas through
+written academic literature.  In either case, the text of a traget
+document along with its corpus of cited documents seems to provide
+sufficient evidence to identify potential sources of influence in the
+target document.
 
-% Marlowe Quote
-% Shakespeare Quote
-% Trump Quote ``I have the best words''
-% http://www.kansascity.com/news/local/news-columns-blogs/the-buzz/article55604115.html
+The cief problem with an intuitive model such as the one outline in
+the last paragaraphy is that it is highly subjective.  Every
+conclusion reaching by human scholars in such a system must appeal to
+intuition and logic, and so determining the strength of any perceived
+relationships present in the corpus presents a difficult challenge.
+In recent years, the emerging field of computational stylistics has
+offered several techniques for quntifying these elements of style
+which can serve as markers of influence~\cite{TODO: computation
+  stylistics papers}.  In so much as it can, computational stylistics
+has the principal goal of using textual evidence to answer the
+question of authorship.  The current state of the art techniques for
+addressing these questions rely upon statistical analysis of word
+frequencies within documents~\cite {TODO: word-frequencies gold}.  The
+typical approach is to use a set of ``marker words'' to determine the
+likeliehood of an author's contribution to a target document.  Those
+words that are more likely to occur in the works of one author are
+ascribed to them if there is sufficient statistical significance of
+the word's classifying power.  This current approach offers only a
+coarse level of determination.  Computational stylistic analysts can
+identify words that are more likely to come from one author's work,
+and they in turn identify whether that author appears to have
+contributed to a target document.  Thus the current techniques only
+inform the probability of an author's contribution as a dichotomy.
+Each potential author was either a contributor, or they were not.
+The objective of the model outlined in this dissertation is to extend
+this model to include more detail.  As opposed to determining whether
+an author has contributed to a target work directly, this model
+assumes that influence is present in multiple forms.  Instead, the
+present model seeks to identify the strength of influence, as well as
+to identify what those specific influences were.
 
-Clearly, the first two have similar elements of style and word use.
-Both quotes indicate a high mastery of language as well as a certainly
-outmoded style of speech.  The final quote, however, exhibits none of
-these qualities.  It is decidedly modern and is also lacking in style or
-wit.  
+\subsection{Modeling Documents as Tensors}
+In order to analyze a document, it must be first quantified in some
+way that allows for analysis.  The current model will represent
+documents using tensors.  The term tensor has been broadly applied
+across multiple fields to describe several different types of related
+objects.  For the purposes of factor analysis, a tensor is simply an
+extension of matrices into a higher number of modes. In tensor
+terminology a ``mode'' is a dimension along the tensor which can be
+indexed.  A scalar is a mode 0 tensor, a vector is a mode 1 tensor,
+and a matrix is a mode 2 tensor.  When the number of modes exceeds 2,
+it is customary to refer to the array simply as a tensor.  A detailed
+account of the tensor operations performed by this model is given in
+the next chapter.  For a complete treatment of tensors as they pertain
+to factor analysis, see Tamera Kolda's tutorial~\cite{kolda}.
 
+The text documents to be analyzed are represented as a tensor by
+dividing them into phrases of length $n$.  These phrases, commonly
+referred to as $n$-grams, are counted and their frequencies are
+entered into a tensor.  Each word in the corpus vocabulary is assigned
+an index, and the tensors $n$ modes refer to these indexes.  For
+example, suppose $n=3$.  The document tensor $\mathcal{D}$ would have
+3 modes.  The entry $\mathcal{D}_{ijk}$ refers to the frequency of the
+$n$-gram consisting of words $i$, $j$, and $k$ from the corpus
+vocabulary.  Modeling documents in this way allows for phrases of any
+length to be studied.
 
-** TODO: Get some info from the shakespeare authorship companion for
-shakespeare and Marlowe **
+TODO: Come back to this
 
-The basic steps for constructing this model are as follows:
-\begin{enumerate}
-    \item Find explanatory factors for all documents (sources and
-        target).
-    \item Find common explantory factors between source and target
-        documents.  
-    \item Any factor of the target document not matched to factors
-        form source documents are attributed to the author.
-    \item Assign weights to all explantory factors.
-\end{enumerate}
+\subsection{Modeling Influence}
+The basic model applied to the document begins with the decomposition
+of a document into its individual factor tensors.
 
-To perform factor analysis, each document must be represented as a
-series of numeric variables.  In models which attempt to capture
-elements of style and influence, a common variable to study is word
-frequency as this can serve as an effective marker for an author's
-background and style~\cite{craig2009, burrows2017}.  The technique
-proposed in this dissertation extends this idea to using phrases of
-length $n$, referred to as $n$-grams.  The documents in the corpus,
-including both source and target documents, are quantified as a
-multidimensional array of $n$-gram frequencies.  These are then
-decomposed into explanatory factors.
+\begin{equation} \label{eq:document_decomposition}
+  \mathcal{D} = \sum f_i 
+\end{equation}
 
-Once the corpus is decomposed into factors, factors from the source
-documents are compared with the factors of the target document.  For
-each target factor, probabilities are assigned to each of the source
-factors according to their similarities to the target factor.  If a
-factor is found which has a significant probability of being a source
-of a target factor, then it is identified as an influencing factor and
-a weight is assigned to it based on the strength of the relationship
-as well as the strength of the factors explanitory power over the
-target document.  Any factors not explained by this method are
-attributed to the author of the target document, as is any residual
-varience in the model.
+Where $f_i\in F$ is a factor of the tensor $\mathcal{D}$.  As is usually
+the case with tensor factors, the model becomes more expressive by
+separating out a normalizing value $\lambda_i$ from each $f_i$.  Thus
+the decomposed document becomes:
+
+\begin{equation} \label{eq:document_decomposition_normal}
+  \mathcal{D} = \sum \lambda_i f'_i
+\end{equation}
+
+Where $f'_i=\frac{1}{|f_i|} f_i$ and $\lambda_i = |f_i|$.  This is
+desirable for two reasons.  First, $\lambda_i$ identifes the magnitude
+of the factor, and therefore indicates the factors importance in the
+target document.  Second, this leaves $f'_i$ as a ``proportional
+profile'' as described by Richard Harshman~\cite{TODO: Cite  Harshman
+  Parafac}. As will soon become apparent, this proportional
+representation of the factors is ciritical for the proper functioning
+of this tensor based model of influence.
+
+Let $C$ be a corpus of documents, encoded as tensors $\mathcal{D}_j
+\in C$.  Let $\mathcal{D}_t$ be the target document to be studied, and
+all other documents in $S=C - \mathcal{D}_t$ are treated as source
+documents for $\mathcal{D}_t$.  The goal of the influence model is to
+ascribe the factors of $\mathcal{D}_t$ to a factor from the source
+documents $\mathcal{D}_s$ and assign weights to each of the documents
+influences. Each document in $C$ is decomposed as per
+equation~\ref{eq:document_decomposition_lambda}.  $\mathcal{D}_t$ is
+also decomposed into its components.  This produces $F'_s$ and
+$\Lambda_s$ for the source docuements as well as $F'_t$ and $Lambda_t$
+for the target document.  By measuring the similarity of each factor
+$f'_t$ and source factors $f'_s$, each factor can be ascribed to a
+source document $\mathcal{D}_s$ or as being original to
+$\mathcal{D}_t$.
+
+Hence, the decomposition of the target document can be rewritten:
+
+\begin{equation} \label{eq:influence_factors}
+  \mathcal{D}_t = \sum f_{ts} + f_{tt}
+\end{equation}
+
+Normalizing as in the previous equations, the target
+document's decomposition becomes:
+
+\begin{equation} \label{eq:influence_factors_normalized}
+  \mathcal{D}_t = \sum \lambda_{ts} f'_{ts} + \lambda_{tt} f_{tt}
+\end{equation}
+
+Given these new factors, the influence of each document is extracted:
+
+\begin{equation} \label{eq:document_lambda}
+  \Lambda_t = (\lambda_1, \lambda_2, \ldots \lambda_n, \lambda_t)
+\end{equation}
+
+Weights for each document are then extracted as their proportion of
+importance to the target document.
+
+\begin{equation} \label{eq:document_weights}
+  W = \displaystyle\frac{1}{|\Lambda_t|} \Lambda_t
+\end{equation}
 
 \section{Related Work}
 
