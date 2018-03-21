@@ -1,4 +1,5 @@
 \documentclass[../dissertation.tex]{subfiles}
+
 \begin{document}
 
 \chapter{Introduction}
@@ -55,7 +56,7 @@ perofrmance of participants is rooted in an attempt to measure that
 person's influence over their chosen field.  Traditional approaches to
 this problem involve counting citations over a specific window of time
 ~\cite{adler2009} while more modern approaches tend to involve some
-document semantics~\cite{dietz2007, jiang2014, **buneman**} Measuring
+document semantics~\cite{dietz2007, jiang2014} Measuring
 influence in a written document can also be applied in situations
 where authorship is in question.  Given a corpus of works of confirmed
 provenance, and a disputed document, influence modelling can identify
@@ -85,13 +86,13 @@ intuition and logic, and so determining the strength of any perceived
 relationships present in the corpus presents a difficult challenge.
 In recent years, the emerging field of computational stylistics has
 offered several techniques for quntifying these elements of style
-which can serve as markers of influence~\cite{TODO: computation
-  stylistics papers}.  In so much as it can, computational stylistics
-has the principal goal of using textual evidence to answer the
-question of authorship.  The current state of the art techniques for
-addressing these questions rely upon statistical analysis of word
-frequencies within documents~\cite {TODO: word-frequencies gold}.  The
-typical approach is to use a set of ``marker words'' to determine the
+which can serve as markers of influence~\cite{bader2007, craig2009,
+  burrows2017}.  In so much as it can, computational stylistics has
+the principal goal of using textual evidence to answer the question of
+authorship.  The current state of the art techniques for addressing
+these questions rely upon statistical analysis of word frequencies
+within documents~\cite{craig2009}.  The typical
+approach is to use a set of ``marker words'' to determine the
 likeliehood of an author's contribution to a target document.  Those
 words that are more likely to occur in the works of one author are
 ascribed to them if there is sufficient statistical significance of
@@ -101,28 +102,29 @@ identify words that are more likely to come from one author's work,
 and they in turn identify whether that author appears to have
 contributed to a target document.  Thus the current techniques only
 inform the probability of an author's contribution as a dichotomy.
-Each potential author was either a contributor, or they were not.
-The objective of the model outlined in this dissertation is to extend
-this model to include more detail.  As opposed to determining whether
-an author has contributed to a target work directly, this model
-assumes that influence is present in multiple forms.  Instead, the
-present model seeks to identify the strength of influence, as well as
-to identify what those specific influences were.
+Each potential author was either a contributor, or they were not.  The
+objective of the model outlined in this dissertation is to extend this
+model to include more detail.  As opposed to determining whether an
+author has contributed to a target work directly, this model assumes
+that influence is present in multiple forms.  Instead, the present
+model seeks to identify the strength of influence, as well as to
+identify what those specific influences were.
 
 \subsection{Modeling Documents as Tensors}
 In order to analyze a document, it must be first quantified in some
-way that allows for analysis.  The current model will represent
-documents using tensors.  The term tensor has been broadly applied
-across multiple fields to describe several different types of related
-objects.  For the purposes of factor analysis, a tensor is simply an
-extension of matrices into a higher number of modes. In tensor
-terminology a ``mode'' is a dimension along the tensor which can be
-indexed.  A scalar is a mode 0 tensor, a vector is a mode 1 tensor,
-and a matrix is a mode 2 tensor.  When the number of modes exceeds 2,
-it is customary to refer to the array simply as a tensor.  A detailed
-account of the tensor operations performed by this model is given in
-the next chapter.  For a complete treatment of tensors as they pertain
-to factor analysis, see Tamera Kolda's tutorial~\cite{kolda}.
+way that allows for analysis.  The model discussed in this
+dissertation represents documents using tensors.  The term tensor has
+been broadly applied across multiple fields to describe several
+different types of related objects.  For the purposes of factor
+analysis, a tensor is simply an extension of matrices into a higher
+number of modes. In tensor terminology a ``mode'' is a dimension along
+the tensor which can be indexed.  A scalar is a mode zero tensor, a
+vector is a mode one tensor, and a matrix is a mode two tensor.  When
+the number of modes exceeds two, it is customary to refer to the array
+simply as a tensor.  A detailed account of the tensor operations
+performed by this model is given in the next chapter.  For a complete
+treatment of tensors as they pertain to factor analysis, see Tamara
+Kolda's tutorial~\cite{kolda2006}.
 
 The text documents to be analyzed are represented as a tensor by
 dividing them into phrases of length $n$.  These phrases, commonly
@@ -135,7 +137,40 @@ $n$-gram consisting of words $i$, $j$, and $k$ from the corpus
 vocabulary.  Modeling documents in this way allows for phrases of any
 length to be studied.
 
-TODO: Come back to this
+The underlying principle of tensor analysis is polyadic decomposition,
+which was first descrbied by Frank Hitchcock in
+1927~\cite{hitchcock1927}.  When a tensor is expressed in polyadic
+form, it is expressed as the sum of the outer product of mode 1
+tensors.  (This is also referred to as the tensor product of vectors,
+which is in line with the geometric interpretation of tensors as the
+outer product of vector spaces.)  Each polyadic factor in a tensor of
+$m$ modes is the tensor product of $m$ vectors.  For example, given a
+3 mode tensor $\mathcal{T} \in \mathbb{R}^{i\times j \times k}$, its
+polyadic decomposition into $r$ factors is a set of factors which
+satisfies Equation~\ref{eq:polyadic_decomposition}.
+
+\begin{equation} \label{eq:polyadic_decompositon}
+  \mathcal{T} = \displaystyle\sum_{i=1}^{r} a_i \otimes b_i \otimes c_i
+\end{equation}
+
+Hitchcock's paper mainly presents the polyadic decomposition from a
+purely mathematical perspective, with applications to studying tensor
+invariants and tensor rank.  In fact, as later papers show, the
+problem of determining the rank of a tensor is
+NP-Complete~\cite{haastad1990}.  Polyadic decomposition began to see
+other uses when it was rediscovered in 1970 by Richard
+Harshman~\cite{harshman1970}, Douglas Carroll, and Jih-Jie
+Chang~\cite{carroll1970}.   Harshman coins the term ``PARAFAC'', a
+portmanteau of ``Parallell Factors'' while Caroll and Chang refer to
+the model as ``CANDECOMP'' in placed of ``Canonical Decomposition''.
+Both papers present the model as a means of studying psychological
+data by treating the tensor factors as explanatory variables for the
+variance in the tensor data.  In recent years, tensor analysis has
+began to take root in other fields such as chemometrics~\cite{bro1997}
+and text mining~\cite{bader2007}.  
+
+
+
 
 \subsection{Modeling Influence}
 The basic model applied to the document begins with the decomposition
@@ -158,10 +193,10 @@ Where $f'_i=\frac{1}{|f_i|} f_i$ and $\lambda_i = |f_i|$.  This is
 desirable for two reasons.  First, $\lambda_i$ identifes the magnitude
 of the factor, and therefore indicates the factors importance in the
 target document.  Second, this leaves $f'_i$ as a ``proportional
-profile'' as described by Richard Harshman~\cite{TODO: Cite  Harshman
-  Parafac}. As will soon become apparent, this proportional
-representation of the factors is ciritical for the proper functioning
-of this tensor based model of influence.
+profile'' as described by Richard Harshman~\cite{harshman1970} . As
+will soon become apparent, this proportional representation of the
+factors is ciritical for the proper functioning of this tensor based
+model of influence.
 
 Let $C$ be a corpus of documents, encoded as tensors $\mathcal{D}_j
 \in C$.  Let $\mathcal{D}_t$ be the target document to be studied, and
