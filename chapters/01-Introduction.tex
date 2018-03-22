@@ -15,8 +15,8 @@ God~\cite{anselm}.  Anselm's argument was based on the assumption that
 all ideas, or more specifically, all thoughts originate either from
 perceptions of the outside world or from images formed within the
 imagination.  From this he provides an argument for the existence of
-a divine being.  The research presnted here follows this same
-epistemologcal assumption to a much less trivial end.
+a divine being.  The research presented here follows this same
+epistemological assumption to a much less trivial end.
 Instead of proving divine influence, the present work shall attempt to
 measure the influence present in the written works of less divine beings.
 
@@ -52,40 +52,41 @@ they exert on a target document.
 
 The usefulness of such a measurement should be readily apparent to
 anyone working in any academic field.  In modern research, the
-perofrmance of participants is rooted in an attempt to measure that
+performance of participants is rooted in an attempt to measure that
 person's influence over their chosen field.  Traditional approaches to
 this problem involve counting citations over a specific window of time
 ~\cite{adler2009} while more modern approaches tend to involve some
-document semantics~\cite{dietz2007, jiang2014} Measuring
+document semantics~\cite{dietz2007, jiang2014}. Measuring
 influence in a written document can also be applied in situations
 where authorship is in question.  Given a corpus of works of confirmed
-provenance, and a disputed document, influence modelling can identify
+provenance, and a disputed document, influence modeling can identify
 the possible influence of each author.  Thus textual influence
-modelling can be used to answer the question of authorship where it is
-disputed, or could potentially be used to identify plagearised
+modeling can be used to answer the question of authorship where it is
+disputed, or could potentially be used to identify plagiarized
 passages.
 
 
 \section{Modeling Influence}
 At a high level, an influence model identifies elements that appear to
 have been incorporated into a target document from a source document.
-These elements can take on many forms.  For example, they could
-include elements of style, topics, phrases, or ideas.  A human reader
-seems to be able to identify these elements on an intuitive level, as
-can be seen readily whenever a reader says one author ``sounds like''
-another.  This operation is also in effect when tracing ideas through
-written academic literature.  In either case, the text of a traget
-document along with its corpus of cited documents seems to provide
-sufficient evidence to identify potential sources of influence in the
-target document.
+These elements are numerous, and are generally perceived on an
+intuitive level.  For example, they could include elements of style,
+topics, phrases, or ideas.  A human reader seems to be able to
+identify these elements on an intuitive level, as can be seen readily
+whenever a reader says one author ``sounds like'' another.  This
+operation is also in effect when tracing ideas through written
+academic literature.  In either case, the text of a target document
+along with its corpus of cited documents seems to provide sufficient
+evidence to identify potential sources of influence in the target
+document.
 
-The cief problem with an intuitive model such as the one outline in
-the last paragaraphy is that it is highly subjective.  Every
-conclusion reaching by human scholars in such a system must appeal to
+The chief problem with an intuitive model such as the one outline in
+the last paragraph is that it is highly subjective.  Every
+conclusion reached by human scholars in such a system must appeal to
 intuition and logic, and so determining the strength of any perceived
 relationships present in the corpus presents a difficult challenge.
 In recent years, the emerging field of computational stylistics has
-offered several techniques for quntifying these elements of style
+offered several techniques for quantifying these elements of style
 which can serve as markers of influence~\cite{bader2007, craig2009,
   burrows2017}.  In so much as it can, computational stylistics has
 the principal goal of using textual evidence to answer the question of
@@ -93,7 +94,7 @@ authorship.  The current state of the art techniques for addressing
 these questions rely upon statistical analysis of word frequencies
 within documents~\cite{craig2009}.  The typical
 approach is to use a set of ``marker words'' to determine the
-likeliehood of an author's contribution to a target document.  Those
+likelihood of an author's contribution to a target document.  Those
 words that are more likely to occur in the works of one author are
 ascribed to them if there is sufficient statistical significance of
 the word's classifying power.  This current approach offers only a
@@ -110,46 +111,40 @@ that influence is present in multiple forms.  Instead, the present
 model seeks to identify the strength of influence, as well as to
 identify what those specific influences were.
 
-\subsection{Modeling Documents as Tensors}
-In order to analyze a document, it must be first quantified in some
+\subsection{Tensors and Decompositions}
+In order to analyze a document, it must first be quantified in some
 way that allows for analysis.  The model discussed in this
 dissertation represents documents using tensors.  The term tensor has
 been broadly applied across multiple fields to describe several
 different types of related objects.  For the purposes of factor
 analysis, a tensor is simply an extension of matrices into a higher
 number of modes. In tensor terminology a ``mode'' is a dimension along
-the tensor which can be indexed.  A scalar is a mode zero tensor, a
+which the tensor can be indexed.  A scalar is a mode zero tensor, a
 vector is a mode one tensor, and a matrix is a mode two tensor.  When
 the number of modes exceeds two, it is customary to refer to the array
 simply as a tensor.  A detailed account of the tensor operations
 performed by this model is given in the next chapter.  For a complete
 treatment of tensors as they pertain to factor analysis, see Tamara
-Kolda's tutorial~\cite{kolda2006}.
+Kolda's tutorial~\cite{kolda2009}.
 
-The text documents to be analyzed are represented as a tensor by
-dividing them into phrases of length $n$.  These phrases, commonly
-referred to as $n$-grams, are counted and their frequencies are
-entered into a tensor.  Each word in the corpus vocabulary is assigned
-an index, and the tensors $n$ modes refer to these indexes.  For
-example, suppose $n=3$.  The document tensor $\tens{D}$ would have
-3 modes.  The entry $\tens{D}_{ijk}$ refers to the frequency of the
-$n$-gram consisting of words $i$, $j$, and $k$ from the corpus
-vocabulary.  Modeling documents in this way allows for phrases of any
-length to be studied.
 
 The underlying principle of tensor analysis is polyadic decomposition,
-which was first descrbied by Frank Hitchcock in
+which was first described by Frank Hitchcock in
 1927~\cite{hitchcock1927}.  When a tensor is expressed in polyadic
-form, it is expressed as the sum of the outer product of mode 1
+form, it is expressed as the sum of rank 1 tensors, which is usually
+written as the outer product of vectors
 tensors.  (This is also referred to as the tensor product of vectors,
 which is in line with the geometric interpretation of tensors as the
 outer product of vector spaces.)  Each polyadic factor in a tensor of
 $m$ modes is the tensor product of $m$ vectors.  For example, given a
 3 mode tensor $\tens{T} \in \R^{I\times J \times K}$, its
 polyadic decomposition into $r$ factors is a set of factors which
-satisfies Equation~\ref{eq:polyadic_decomposition}.
+satisfies Equation~\ref{eq:polyadic_decomposition}.  For the sake of
+conveneince, the remaininder of this discussion will assume a three
+mode tensor, however everything discussed here can readily be extended to
+any number of modes.
 
-\begin{equation} \label{eq:polyadic_decompositon}
+\begin{equation} \label{eq:polyadic_decomposition}
   \tens{T} \approx \dsum_{i=1}^{r} a_i \otimes b_i
   \otimes c_i
 \end{equation}
@@ -162,7 +157,7 @@ NP-Complete~\cite{haastad1990}.  Polyadic decomposition began to see
 other uses when it was rediscovered in 1970 by Richard
 Harshman~\cite{harshman1970}, Douglas Carroll, and Jih-Jie
 Chang~\cite{carroll1970}.  Harshman coins the term ``PARAFAC'', a
-portmanteau of ``Parallell Factors'' while Caroll and Chang refer to
+portmanteau of ``Parallel Factors'' while Carroll and Chang refer to
 the model as ``CANDECOMP'' in placed of ``Canonical Decomposition''.
 Both papers present the model as a means of studying psychological
 data by treating the tensor factors as explanatory variables for the
@@ -199,17 +194,96 @@ decomposition yields the factor matrices $\mat{
   A}\in\R^{I\times P}$, $\mat{ B} \in
 \R^{J\times Q}$, and $\mat{ C}\in
 \R^{K\times R}$.  The model also contains a so-called core
-tensors $\tens{G} \in \R^{P\times Q \times R}$.  These
+tensor $\tens{G} \in \R^{P\times Q \times R}$.  These
 factors are fit to satisfy Equation~\ref{eq:tucker_decomposition},
 where $\tens{G} \times_n \mat{ M}$ is the $n$-mode product of
-tensor $\tens{G}$.
+tensor $\tens{G}$.  
 
 \begin{equation}\label{eq:tucker_decomposition}
   \tens{T} \approx \tens{G} \times_1 \mat{A} \times_2 \mat{B} \times_2
   \mat{C}
 \end{equation}
 
+An element-wise version of the tucker decomposition is shown in
+Equation~\ref{eq:tucker_decomposition_elements}.  For a complete
+treatment of the $n$-mode tensor matrix product, see the Kolda
+tutorial~\cite{kolda2009}.
 
+\begin{equation}\label{eq:tucker_decomposition_elements}
+  t_{ijk} \approx \dsum_{p=1}^P \dsum_{q=1}^Q \dsum_{r=1}^R
+  g_{pqr}a_{ip}b_{jq}c_{kr}
+\end{equation}
+
+As was shown by Henk Kiers, the relationship between PCA, Tucker
+decomposition, and CPD is hierarchical~\cite{kiers1991}.  While
+Kiers's paper focuses on 3-way analysis, his results extend to any
+number of modes.  Because a tensor can be unfolded along any dimension
+to form a two dimensional matrix, it is always possible to use PCA to
+find explanatory factors for tensor data.  In fact, Tucker-3 is a
+constrained version of PCA.  The exact nature of these constraints is
+beyond the scope of the present discussion, however they are a direct
+result of the presence of the core tensor.  A simplified summary is
+that the core tensor's dimensionality predetermines the number of
+factors to be discovered.  CPD, in turn, is a constrained variant of
+the Tucker decomposition.  While the CPD is usually written without a
+core tensor, it can be thought of as having an identity tensor as its
+core.  The identity tensor simply being a tensor with ones along its
+super-diagonal and zeros everywhere else.  (Or stated more formally,
+an identity tensor is a tensor containing ones where $i_1 = i_2 =
+\ldots =i_n$ for all $n$ modes and zeros in all other positions.)
+Also, in CPD, $P=Q=R$ (and so on if there are more than three modes).
+Tucker decomposition allows for each mode to have a different number
+of factors, while CPD does not.  As can be expected, the more
+constraints placed upon the explanatory model of the tensor comes at
+the expense of quality of fit.  Hence, PCA will always provide the
+best fit, Tucker will either be as good or worse than PCA, and CPD
+will always be as good or worse than a Tucker model~\cite{kiers1991,
+  bro1997}.
+
+So then if the tensor decomposition models provide a worse fit, the
+question becomes why are they important?  The answer lies in several
+properties of the tensor decompositions.  First, tensor decompositions
+retain the structure of the original data~\cite{harshman1970,
+  kolda2009}.  Unfolding a tensor loses semantic information about the
+variables being analyzed, and extracting intuitive semantics from the
+resultant PCA model is difficult and usually
+impossible~\cite{bro1997}.  Also, in the case of CPD, the factors are
+unique under rotation so long as the number of factors extracted is
+greater than or equal to the rank of the tensor~\cite{harshman1994}.
+Another desirable property of the CPD is that it does not partition
+space by hyper-surfaces.  Instead, it creates a sort of implicit set
+of axes for factor separation by providing a proportional profile
+along the tensor's basis~\cite{harshman1994}.  Thus if several tensors
+of like dimensions are decomposed, their factors can be logically
+thought of as existing within the same space.  This allows for
+comparison among the factors to be carried out, unlike under PCA where
+the factor space of each matrix is a projection into a new space, make
+comparison of factors from disparate matrices difficult to perform in
+a meaningful way.
+
+In some instances of tensor analysis, it can be convenient to apply
+additional constraints to the model.  The most common constraint
+applied to CPD is a non-negativity constraint~\cite{liu2012sparse,
+  bro1997, kolda2009}.  This is done for a variety of reasons, most
+notably as a form of dimension reduction and when analyzing data which
+are naturally predisposed to be non-negative.  In the model presented
+in this dissertation, both outcomes are necessary.  First, the tensors
+used in this model are extremely sparse, and so introducing negative
+factors makes the search space for factors far too large.  Second, the
+tensors used in this model represent frequency data, which means that
+negative values in factors would have no valid semantic meaning.
+
+\subsection{Representing Documents as Tensors}
+The text documents to be analyzed are represented as a tensor by
+dividing them into phrases of length $n$.  These phrases, commonly
+referred to as $n$-grams, are counted and their frequencies are
+entered into a tensor.  Each word in the corpus vocabulary is assigned
+an index, and the tensors $n$ modes refer to these indexes.  For
+example, suppose $n=3$.  The document tensor $\tens{D}$ would have
+3 modes.  The entry $\tens{D}_{ijk}$ refers to the frequency of the
+$n$-gram consisting of words $i$, $j$, and $k$ from the corpus
+vocabulary.  Modeling documents in this way allows for phrases of any
+length to be studied.
 
 \subsection{Modeling Influence}
 The basic model applied to the document begins with the decomposition
@@ -229,12 +303,12 @@ $f_i$.  Thus the decomposed document becomes:
 \end{equation}
 
 Where $f'_i=\frac{1}{|f_i|} f_i$ and $\lambda_i = |f_i|$.  This is
-desirable for two reasons.  First, $\lambda_i$ identifes the magnitude
+desirable for two reasons.  First, $\lambda_i$ identifies the magnitude
 of the factor, and therefore indicates the factors importance in the
 target document.  Second, this leaves $f'_i$ as a ``proportional
 profile'' as described by Richard Harshman~\cite{harshman1970} . As
 will soon become apparent, this proportional representation of the
-factors is ciritical for the proper functioning of this tensor based
+factors is critical for the proper functioning of this tensor based
 model of influence.
 
 Let $C$ be a corpus of documents, encoded as tensors $\tens{D}_j
@@ -246,7 +320,7 @@ documents $\tens{D}_s$ and assign weights to each of the documents
 influences. Each document in $C$ is decomposed as per
 equation~\ref{eq:document_decomposition_lambda}.  $\tens{D}_t$ is
 also decomposed into its components.  This produces $F'_s$ and
-$\Lambda_s$ for the source docuements as well as $F'_t$ and $Lambda_t$
+$\Lambda_s$ for the source documents as well as $F'_t$ and $Lambda_t$
 for the target document.  By measuring the similarity of each factor
 $f'_t$ and source factors $f'_s$, each factor can be ascribed to a
 source document $\tens{D}_s$ or as being original to
