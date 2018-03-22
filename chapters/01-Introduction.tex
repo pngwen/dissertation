@@ -1,7 +1,7 @@
 \documentclass[../dissertation.tex]{subfiles}
 
 \begin{document}
-
+\input{../commands}
 \chapter{Introduction}
 \begin{quote}
 \textit{Nam cum pictor praecogitat quae facturus est, habet quidem in
@@ -131,8 +131,8 @@ dividing them into phrases of length $n$.  These phrases, commonly
 referred to as $n$-grams, are counted and their frequencies are
 entered into a tensor.  Each word in the corpus vocabulary is assigned
 an index, and the tensors $n$ modes refer to these indexes.  For
-example, suppose $n=3$.  The document tensor $\mathcal{D}$ would have
-3 modes.  The entry $\mathcal{D}_{ijk}$ refers to the frequency of the
+example, suppose $n=3$.  The document tensor $\tens{D}$ would have
+3 modes.  The entry $\tens{D}_{ijk}$ refers to the frequency of the
 $n$-gram consisting of words $i$, $j$, and $k$ from the corpus
 vocabulary.  Modeling documents in this way allows for phrases of any
 length to be studied.
@@ -145,12 +145,13 @@ tensors.  (This is also referred to as the tensor product of vectors,
 which is in line with the geometric interpretation of tensors as the
 outer product of vector spaces.)  Each polyadic factor in a tensor of
 $m$ modes is the tensor product of $m$ vectors.  For example, given a
-3 mode tensor $\mathcal{T} \in \mathbb{R}^{i\times j \times k}$, its
+3 mode tensor $\tens{T} \in \R^{I\times J \times K}$, its
 polyadic decomposition into $r$ factors is a set of factors which
 satisfies Equation~\ref{eq:polyadic_decomposition}.
 
 \begin{equation} \label{eq:polyadic_decompositon}
-  \mathcal{T} = \displaystyle\sum_{i=1}^{r} a_i \otimes b_i \otimes c_i
+  \tens{T} \approx \dsum_{i=1}^{r} a_i \otimes b_i
+  \otimes c_i
 \end{equation}
 
 Hitchcock's paper mainly presents the polyadic decomposition from a
@@ -160,15 +161,53 @@ problem of determining the rank of a tensor is
 NP-Complete~\cite{haastad1990}.  Polyadic decomposition began to see
 other uses when it was rediscovered in 1970 by Richard
 Harshman~\cite{harshman1970}, Douglas Carroll, and Jih-Jie
-Chang~\cite{carroll1970}.   Harshman coins the term ``PARAFAC'', a
+Chang~\cite{carroll1970}.  Harshman coins the term ``PARAFAC'', a
 portmanteau of ``Parallell Factors'' while Caroll and Chang refer to
 the model as ``CANDECOMP'' in placed of ``Canonical Decomposition''.
 Both papers present the model as a means of studying psychological
 data by treating the tensor factors as explanatory variables for the
 variance in the tensor data.  In recent years, tensor analysis has
 began to take root in other fields such as chemometrics~\cite{bro1997}
-and text mining~\cite{bader2007}.  
+and text mining~\cite{bader2007}.  In several modern treatments, the
+polyadic decomposition is referred to as ``CPD'' or ``Canonical
+Polyadic Decomposition''.  For the purposes of factor analysis,
+factors are often normalized, without loss of
+generality~\cite{bro1997, bader2007}, yielding the decomposition shown
+in Equation~\ref{eq:polyadic_decomposition_normalized}.
+\begin{equation} \label{eq:polyadic_decomposition_normalized}
+  \tens{T} \approx \dsum_{i=1}^{r} \lambda_i a'_i
+  \otimes b'_i \otimes c'_i
+\end{equation}
+Here $\lambda_i$ is a scalar where $\lambda_i = \mathrm{norm}(a_i
+\otimes b_i \otimes c_i)$.  This is desirable because the factors in
+this form are proportional profiles~\cite{harshman1970} with all of
+the magnitude of the factor contained in $\lambda_i$.  As can be
+clearly seen from Equation~\ref{eq:polyadic_decomposition_normalized},
+$\lambda_i$ is also an expression of the influence that factor $i$
+exerts over the tensor $\tens{T}$.  For this reason, factors are
+typically expressed in order from largest $\lambda_i$ to the smallest
+$\lambda_i$.  Thus these factor norms serve the same purpose as
+eigenvalues in principal component analysis, or as singular values in
+singular value decomposition.
 
+In fact, the similarities between PCA, SVD, and CPD do not end with
+the inclusion of weights!  Nor is it true that CPD is the only tensor
+decomposition.  The closest competing decomposition is the Tucker
+decomposition, first proposed in 1963 and fully formed in
+1966~\cite{kolda2009}.  Given tensor $\tens{T}$, the Tucker
+decomposition yields the factor matrices $\mat{
+  A}\in\R^{I\times P}$, $\mat{ B} \in
+\R^{J\times Q}$, and $\mat{ C}\in
+\R^{K\times R}$.  The model also contains a so-called core
+tensors $\tens{G} \in \R^{P\times Q \times R}$.  These
+factors are fit to satisfy Equation~\ref{eq:tucker_decomposition},
+where $\tens{G} \times_n \mat{ M}$ is the $n$-mode product of
+tensor $\tens{G}$.
+
+\begin{equation}\label{eq:tucker_decomposition}
+  \tens{T} \approx \tens{G} \times_1 \mat{A} \times_2 \mat{B} \times_2
+  \mat{C}
+\end{equation}
 
 
 
@@ -177,16 +216,16 @@ The basic model applied to the document begins with the decomposition
 of a document into its individual factor tensors.
 
 \begin{equation} \label{eq:document_decomposition}
-  \mathcal{D} = \sum f_i 
+  \tens{D} = \sum f_i 
 \end{equation}
 
-Where $f_i\in F$ is a factor of the tensor $\mathcal{D}$.  As is usually
-the case with tensor factors, the model becomes more expressive by
-separating out a normalizing value $\lambda_i$ from each $f_i$.  Thus
-the decomposed document becomes:
+Where $f_i\in \set{F}$ is a factor of the tensor $\tens{D}$.  As is
+usually the case with tensor factors, the model becomes more
+expressive by separating out a normalizing value $\lambda_i$ from each
+$f_i$.  Thus the decomposed document becomes:
 
 \begin{equation} \label{eq:document_decomposition_normal}
-  \mathcal{D} = \sum \lambda_i f'_i
+  \tens{D} = \sum \lambda_i f'_i
 \end{equation}
 
 Where $f'_i=\frac{1}{|f_i|} f_i$ and $\lambda_i = |f_i|$.  This is
@@ -198,32 +237,32 @@ will soon become apparent, this proportional representation of the
 factors is ciritical for the proper functioning of this tensor based
 model of influence.
 
-Let $C$ be a corpus of documents, encoded as tensors $\mathcal{D}_j
-\in C$.  Let $\mathcal{D}_t$ be the target document to be studied, and
-all other documents in $S=C - \mathcal{D}_t$ are treated as source
-documents for $\mathcal{D}_t$.  The goal of the influence model is to
-ascribe the factors of $\mathcal{D}_t$ to a factor from the source
-documents $\mathcal{D}_s$ and assign weights to each of the documents
+Let $C$ be a corpus of documents, encoded as tensors $\tens{D}_j
+\in C$.  Let $\tens{D}_t$ be the target document to be studied, and
+all other documents in $S=C - \tens{D}_t$ are treated as source
+documents for $\tens{D}_t$.  The goal of the influence model is to
+ascribe the factors of $\tens{D}_t$ to a factor from the source
+documents $\tens{D}_s$ and assign weights to each of the documents
 influences. Each document in $C$ is decomposed as per
-equation~\ref{eq:document_decomposition_lambda}.  $\mathcal{D}_t$ is
+equation~\ref{eq:document_decomposition_lambda}.  $\tens{D}_t$ is
 also decomposed into its components.  This produces $F'_s$ and
 $\Lambda_s$ for the source docuements as well as $F'_t$ and $Lambda_t$
 for the target document.  By measuring the similarity of each factor
 $f'_t$ and source factors $f'_s$, each factor can be ascribed to a
-source document $\mathcal{D}_s$ or as being original to
-$\mathcal{D}_t$.
+source document $\tens{D}_s$ or as being original to
+$\tens{D}_t$.
 
 Hence, the decomposition of the target document can be rewritten:
 
 \begin{equation} \label{eq:influence_factors}
-  \mathcal{D}_t = \sum f_{ts} + f_{tt}
+  \tens{D}_t = \sum f_{ts} + f_{tt}
 \end{equation}
 
 Normalizing as in the previous equations, the target
 document's decomposition becomes:
 
 \begin{equation} \label{eq:influence_factors_normalized}
-  \mathcal{D}_t = \sum \lambda_{ts} f'_{ts} + \lambda_{tt} f_{tt}
+  \tens{D}_t = \sum \lambda_{ts} f'_{ts} + \lambda_{tt} f_{tt}
 \end{equation}
 
 Given these new factors, the influence of each document is extracted:
@@ -236,7 +275,7 @@ Weights for each document are then extracted as their proportion of
 importance to the target document.
 
 \begin{equation} \label{eq:document_weights}
-  W = \displaystyle\frac{1}{|\Lambda_t|} \Lambda_t
+  W = \dfrac{1}{|\Lambda_t|} \Lambda_t
 \end{equation}
 
 \section{Related Work}
