@@ -80,8 +80,8 @@ along with its corpus of cited documents seems to provide sufficient
 evidence to identify potential sources of influence in the target
 document.
 
-The chief problem with an intuitive model such as the one outline in
-the last paragraph is that it is highly subjective.  Every
+The chief problem with an intuitive model such as the one outlined in
+the previous paragraph is that it is highly subjective.  Every
 conclusion reached by human scholars in such a system must appeal to
 intuition and logic, and so determining the strength of any perceived
 relationships present in the corpus presents a difficult challenge.
@@ -92,24 +92,23 @@ which can serve as markers of influence~\cite{bader2007, craig2009,
 the principal goal of using textual evidence to answer the question of
 authorship.  The current state of the art techniques for addressing
 these questions rely upon statistical analysis of word frequencies
-within documents~\cite{craig2009}.  The typical
-approach is to use a set of ``marker words'' to determine the
-likelihood of an author's contribution to a target document.  Those
-words that are more likely to occur in the works of one author are
-ascribed to them if there is sufficient statistical significance of
-the word's classifying power.  This current approach offers only a
-coarse level of determination.  Computational stylistic analysts can
-identify words that are more likely to come from one author's work,
-and they in turn identify whether that author appears to have
-contributed to a target document.  Thus the current techniques only
-inform the probability of an author's contribution as a dichotomy.
-Each potential author was either a contributor, or they were not.  The
-objective of the model outlined in this dissertation is to extend this
-model to include more detail.  As opposed to determining whether an
-author has contributed to a target work directly, this model assumes
-that influence is present in multiple forms.  Instead, the present
-model seeks to identify the strength of influence, as well as to
-identify what those specific influences were.
+within documents~\cite{craig2009}.  The typical approach is to use a
+set of ``marker words'' to determine the likelihood of an author's
+contribution to a target document.  Those words that are more likely
+to occur in the works of one author are ascribed to them if there is
+sufficient statistical significance of the word's classifying power.
+This current approach offers only a coarse level of determination.
+Computational stylistic analysts can identify words that are more
+likely to come from one author's work, and they in turn identify
+whether that author appears to have contributed to a target document.
+Thus the current techniques only inform the probability of an author's
+contribution as a dichotomy.  Each potential author was either a
+contributor, or they were not.  The objective of the model outlined in
+this dissertation is to extend this model to include more detail.  As
+opposed to determining whether an author has contributed to a target
+work directly, this model assumes that influence is present in
+multiple forms; the present model seeks to identify the strength of
+influence, as well as to identify what those specific influences were.
 
 \subsection{Tensors and Decompositions}
 In order to analyze a document, it must first be quantified in some
@@ -132,17 +131,17 @@ The underlying principle of tensor analysis is polyadic decomposition,
 which was first described by Frank Hitchcock in
 1927~\cite{hitchcock1927}.  When a tensor is expressed in polyadic
 form, it is expressed as the sum of rank 1 tensors, which is usually
-written as the outer product of vectors
-tensors.  (This is also referred to as the tensor product of vectors,
-which is in line with the geometric interpretation of tensors as the
-outer product of vector spaces.)  Each polyadic factor in a tensor of
-$m$ modes is the tensor product of $m$ vectors.  For example, given a
-3 mode tensor $\tens{T} \in \R^{I\times J \times K}$, its
-polyadic decomposition into $r$ factors is a set of factors which
-satisfies Equation~\ref{eq:polyadic_decomposition}.  For the sake of
+written as the outer product of vectors.  (This is also referred to as
+the tensor product of vectors, which is in line with the geometric
+interpretation of tensors as the outer product of vector spaces.)
+Each polyadic factor in a tensor of $m$ modes is the tensor product of
+$m$ vectors.  For example, given a 3 mode tensor $\tens{T} \in
+\R^{I\times J \times K}$, its polyadic decomposition into $r$ factors
+is a set of factors which satisfies
+Equation~\ref{eq:polyadic_decomposition}.  For the sake of
 conveneince, the remaininder of this discussion will assume a three
-mode tensor, however everything discussed here can readily be extended to
-any number of modes.
+mode tensor, however everything discussed here can readily be extended
+to any number of modes.
 
 \begin{equation} \label{eq:polyadic_decomposition}
   \tens{T} \approx \dsum_{i=1}^{r} a_i \otimes b_i
@@ -196,8 +195,8 @@ decomposition yields the factor matrices $\mat{
 \R^{K\times R}$.  The model also contains a so-called core
 tensor $\tens{G} \in \R^{P\times Q \times R}$.  These
 factors are fit to satisfy Equation~\ref{eq:tucker_decomposition},
-where $\tens{G} \times_n \mat{ M}$ is the $n$-mode product of
-tensor $\tens{G}$.  
+where $\tens{G} \times_n \mat{M}$ is the $n$-mode product of
+tensor $\tens{G}$ and matrix $\mat{M}$.  
 
 \begin{equation}\label{eq:tucker_decomposition}
   \tens{T} \approx \tens{G} \times_1 \mat{A} \times_2 \mat{B} \times_2
@@ -227,7 +226,7 @@ that the core tensor's dimensionality predetermines the number of
 factors to be discovered.  CPD, in turn, is a constrained variant of
 the Tucker decomposition.  While the CPD is usually written without a
 core tensor, it can be thought of as having an identity tensor as its
-core.  The identity tensor simply being a tensor with ones along its
+core.  The identity tensor is simply a tensor with ones along its
 super-diagonal and zeros everywhere else.  (Or stated more formally,
 an identity tensor is a tensor containing ones where $i_1 = i_2 =
 \ldots =i_n$ for all $n$ modes and zeros in all other positions.)
@@ -282,8 +281,18 @@ an index, and the tensors $n$ modes refer to these indexes.  For
 example, suppose $n=3$.  The document tensor $\tens{D}$ would have
 3 modes.  The entry $\tens{D}_{ijk}$ refers to the frequency of the
 $n$-gram consisting of words $i$, $j$, and $k$ from the corpus
-vocabulary.  Modeling documents in this way allows for phrases of any
-length to be studied.
+vocabulary.  
+
+The tensors produced by this encoding will be cubic.  Given a
+vocabulary consisting of $v$ words, the resultant tensor will have $v$
+indexes in each mode.  The tensor can represent the frequency of all
+possible $n$-grams, and as such will be extremely sparse as very few
+of these $n$-grams are likely to appear in a document.  When
+decomposed into polyadic form, these tensors will yield sets of
+related words as well as related $n$-grams that appear in the same
+factors.  
+
+
 
 \subsection{Modeling Influence}
 The basic model applied to the document begins with the decomposition
@@ -293,50 +302,56 @@ of a document into its individual factor tensors.
   \tens{D} = \sum f_i 
 \end{equation}
 
-Where $f_i\in \set{F}$ is a factor of the tensor $\tens{D}$.  As is
-usually the case with tensor factors, the model becomes more
-expressive by separating out a normalizing value $\lambda_i$ from each
-$f_i$.  Thus the decomposed document becomes:
+Where $f_i\in \set{F}$ is a factor of the tensor $\tens{D}$, ($f_i=a_i
+\otimes b_i \otimes c_i$).  As has been previously noted, the model
+becomes more expressive by separating out a normalizing value
+$\lambda_i$ from each $f_i$.  Thus the decomposed document becomes:
 
 \begin{equation} \label{eq:document_decomposition_normal}
   \tens{D} = \sum \lambda_i f'_i
 \end{equation}
 
 Where $f'_i=\frac{1}{|f_i|} f_i$ and $\lambda_i = |f_i|$.  This is
-desirable for two reasons.  First, $\lambda_i$ identifies the magnitude
-of the factor, and therefore indicates the factors importance in the
-target document.  Second, this leaves $f'_i$ as a ``proportional
-profile'' as described by Richard Harshman~\cite{harshman1970} . As
-will soon become apparent, this proportional representation of the
-factors is critical for the proper functioning of this tensor based
-model of influence.
+desirable for two reasons.  Given that all tensors within the corpus
+have the same dimensions, and that all are decomposed using
+Non-Negative CPD, the factors occupy the same type of space as the
+factors of other documents.  By normalizing them into a proportional
+model of the document, the factors become directly comparable
+irrespective of the magnitude of influence they exert in their source
+docment.
 
-Let $C$ be a corpus of documents, encoded as tensors $\tens{D}_j
-\in C$.  Let $\tens{D}_t$ be the target document to be studied, and
-all other documents in $S=C - \tens{D}_t$ are treated as source
-documents for $\tens{D}_t$.  The goal of the influence model is to
-ascribe the factors of $\tens{D}_t$ to a factor from the source
+Let $\set{C}$ be a corpus of documents, encoded as tensors $\tens{D}_j
+\in \set{C}$.  Let $\tens{D}_t$ be the target document to be studied,
+and all other documents in $\set{S}=\set{C} - \tens{D}_t$ are treated
+as source documents for $\tens{D}_t$.  The goal of the influence model
+is to ascribe the factors of $\tens{D}_t$ to a factor from the source
 documents $\tens{D}_s$ and assign weights to each of the documents
-influences. Each document in $C$ is decomposed as per
-equation~\ref{eq:document_decomposition_lambda}.  $\tens{D}_t$ is
-also decomposed into its components.  This produces $F'_s$ and
-$\Lambda_s$ for the source documents as well as $F'_t$ and $Lambda_t$
-for the target document.  By measuring the similarity of each factor
-$f'_t$ and source factors $f'_s$, each factor can be ascribed to a
-source document $\tens{D}_s$ or as being original to
-$\tens{D}_t$.
+influences. Each document in $\set{C}$ is decomposed as per
+equation~\ref{eq:document_decomposition_lambda}.  $\tens{D}_t$ is also
+decomposed into its components.  This produces sets of factors
+$\set{F'}_s$ and $\Lambda_s$ for the source documents as well as
+$\set{F'}_t$ and $Lambda_t$ for the target document.  By measuring the
+similarity of each factor $f'_t$ and source factors $f'_s$, each
+factor can be ascribed to a source document $\tens{D}_s$ or as being
+original to $\tens{D}_t$.
 
 Hence, the decomposition of the target document can be rewritten:
 
 \begin{equation} \label{eq:influence_factors}
-  \tens{D}_t = \sum f_{ts} + f_{tt}
+  \tens{D}_t = \sum_{s=1}^{|\set{S}|} \set{F}_{ts} + \set{F}_{tt}
 \end{equation}
+
+Where $\set{F}_{ts}$  is the set of all factors from $\set{F}_t$ which
+has been ascribed to document $s$ and $\set{F}_{tt}$ is the set of all
+factors from $\set{F}_t$ which have been determined to be an original
+contribution of the author.
 
 Normalizing as in the previous equations, the target
 document's decomposition becomes:
 
 \begin{equation} \label{eq:influence_factors_normalized}
-  \tens{D}_t = \sum \lambda_{ts} f'_{ts} + \lambda_{tt} f_{tt}
+  \tens{D}_t = \sum_{s=1}^{|\set{S}|} \lambda_{ts} \set{F'}_{ts} +
+  \lambda_{tt} \set{F'}_{tt}
 \end{equation}
 
 Given these new factors, the influence of each document is extracted:
@@ -349,14 +364,44 @@ Weights for each document are then extracted as their proportion of
 importance to the target document.
 
 \begin{equation} \label{eq:document_weights}
-  W = \dfrac{1}{|\Lambda_t|} \Lambda_t
+  W = \dfrac{1}{\sum \Lambda_t} \Lambda_t
 \end{equation}
+
+Note that the weights from the source documents are not used.
+Essentailly, the only purpose the factors of the source documents
+serve is to classify the factors of the target document.
+
+\subsection{Summary of Influence Modeling Procedure}
+The above model can be subdivided into the following steps:
+
+\begin{enumerate}
+\item Encode each document in the corpus as a tensor.
+\item Decompose each document using non-negative CPD.
+\item Classify each factor of the target document $\tens{D}_t$ as
+  either belonging to a source document or as an original contribution
+  of the author.
+\item Extract weights from each subset of factors to determine the
+  influence of each class of factors.
+\end{enumerate}
+
+The details of how each of these steps is accomplished appears in the
+next chapter of this dissertation.
 
 \section{Related Work}
 
 \section{Outline of this Dissertation}
+The rest of this dissertation is organized as follows.  First, there
+is a chapter detailing the approach of building, fitting, and
+evaluating the influence model.  Folllowing the approach explanation
+are two separate applications of this technique.  The first evaluates
+the strength of influence of cited documents in a scientific paper,
+and the second presents an analysis of William Shakespeare's {\em
+  Henry VI part 2}, which is often cited as a play that likely had
+coauthors in addition to Shakespeare~\cite{burrows2017}.  The final
+chapter of the dissertation discusses the findings in the two case
+studies as well as some notes for further application of this analysis
+technique.
 
-\section{Bibliography (temporarily in each chapter)}
 \bibliographystyle{unsrt}
 \bibliography{../sources}
 \end{document}
