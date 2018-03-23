@@ -387,6 +387,52 @@ The above model can be subdivided into the following steps:
 The details of how each of these steps is accomplished appears in the
 next chapter of this dissertation.
 
+\section{Related Work}
+Much of the inspiration for frequency based analysis for authorship
+detection comes from the work of John Burrows and Hugh
+Craig~\cite{burrows2006, burrows2017, craig2009}.  In their papers,
+Burrows and Craig utilize a variety of numerical techniques to explore
+marker words, and they use frequencies of marker works coupled with
+T-distribution sampling to provide an argument for attributing
+authorship of disputed works.  They explore a variety of literary
+works, ranging from poetry to Shakespeare's plays.  (Most of their
+focus is on Elizabethan and Victorian era works.)  In all of these
+works, the frequencies explored are based on single marker words, and
+the words are extracted based on how unique they are to the authors in
+question.
+
+For $n$-gram classification, Noriaki's Kawamae's paper has shown that
+$n$-grams are capable of building a generative topic model of a corpus
+of documents~\cite{kawamae2016}.  Kawamae's work shows that a
+combination of $n$-gram and word frequencies reveals information about
+a corpus's structure, especially hierarchical information pertaining
+to topics within the corpus.  Kawamae's model builds a tree with
+probabilistic relationships which are then used to infer information
+about the structure of a corpus.
+
+Another related $n$-gram study was performed by Antonia, Craig, and
+Elliott~\cite{antonia2014}.  In this paper, Antonia et. al. attempt to
+reproduce marker word studies using $n$-gram frequencies in place of
+word frequencies.  They were able to show that $n$-gram frequencies
+are able to identify stylistic signatures of contributors to a text
+document.  When $n=1$, their model is equivalent to marker words, and
+as they increase $n$, they retest to determine how expressive the
+model is.  They noted that there is no one length that seems to work
+best in all cases when analyzing english language documents.  Their
+results show that 1-gram, 2-gram, and 3-gram analysis tends to work
+well, but when exploring longer phrases the power of the model drops
+off.  Even in instances where 1-grams or 2-grams are best, 3-grams are
+still a reasonable choice.  From this, 3-grams will be used in the
+tests in this dissertation.  The analysis performed in Antonia
+et. al.'s work was conducted using delta and zeta tests as was
+established in the standard marker word approach.  As such, only the
+most frequent $n$-grams of each author were explored, and they were
+only used as an evidenciary marker of an author's participation.  One
+advantage that the analysis proposed in this dissertation has is that
+it will account for all $n$-grams, and will explore how $n$-grams
+relate to each other within the target document's structure.  
+
+
 \section{Outline of this Dissertation}
 The rest of this dissertation is organized as follows.  First, there
 is a chapter detailing the approach of building, fitting, and
