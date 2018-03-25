@@ -161,7 +161,7 @@ the model as ``CANDECOMP'' in placed of ``Canonical Decomposition''.
 Both papers present the model as a means of studying psychological
 data by treating the tensor factors as explanatory variables for the
 variance in the tensor data.  In recent years, tensor analysis has
-began to take root in other fields such as chemometrics~\cite{bro1997}
+begun to take root in other fields such as chemometrics~\cite{bro1997}
 and text mining~\cite{bader2007}.  In several modern treatments, the
 polyadic decomposition is referred to as ``CPD'' or ``Canonical
 Polyadic Decomposition''.  For the purposes of factor analysis,
@@ -222,7 +222,7 @@ find explanatory factors for tensor data.  In fact, Tucker-3 is a
 constrained version of PCA.  The exact nature of these constraints is
 beyond the scope of the present discussion, however they are a direct
 result of the presence of the core tensor.  A simplified summary is
-that the core tensor's dimensionality predetermines the number of
+that the core tensor's dimensions predetermines the number of
 factors to be discovered.  CPD, in turn, is a constrained variant of
 the Tucker decomposition.  While the CPD is usually written without a
 core tensor, it can be thought of as having an identity tensor as its
@@ -256,9 +256,9 @@ along the tensor's basis~\cite{harshman1994}.  Thus if several tensors
 of like dimensions are decomposed, their factors can be logically
 thought of as existing within the same space.  This allows for
 comparison among the factors to be carried out, unlike under PCA where
-the factor space of each matrix is a projection into a new space, make
-comparison of factors from disparate matrices difficult to perform in
-a meaningful way.
+the factor space of each matrix is a projection into a new space,
+making comparison of factors from disparate matrices difficult to
+perform in a meaningful way.
 
 In some instances of tensor analysis, it can be convenient to apply
 additional constraints to the model.  The most common constraint
@@ -268,9 +268,10 @@ notably as a form of dimension reduction and when analyzing data which
 are naturally predisposed to be non-negative.  In the model presented
 in this dissertation, both outcomes are necessary.  First, the tensors
 used in this model are extremely sparse, and so introducing negative
-factors makes the search space for factors far too large.  Second, the
-tensors used in this model represent frequency data, which means that
-negative values in factors would have no valid semantic meaning.
+factors makes the search space for factors so large that fitting the
+model becomes intractable.  Second, the tensors used in this model
+represent frequency data, which means that negative values in factors
+would have no valid semantic meaning.
 
 \subsection{Representing Documents as Tensors}
 The text documents to be analyzed are represented as a tensor by
@@ -279,7 +280,7 @@ referred to as $n$-grams, are counted and their frequencies are
 entered into a tensor.  Each word in the corpus vocabulary is assigned
 an index, and the tensors $n$ modes refer to these indexes.  For
 example, suppose $n=3$.  The document tensor $\tens{D}$ would have
-3 modes.  The entry $\tens{D}_{ijk}$ refers to the frequency of the
+3 modes.  The entry $d_{ijk}$ refers to the frequency of the
 $n$-gram consisting of words $i$, $j$, and $k$ from the corpus
 vocabulary.  
 
@@ -299,80 +300,95 @@ The basic model applied to the document begins with the decomposition
 of a document into its individual factor tensors.
 
 \begin{equation} \label{eq:document_decomposition}
-  \tens{D} = \sum f_i 
+  \tens{D} = \sum \tens{F}_i 
 \end{equation}
 
-Where $f_i\in \set{F}$ is a factor of the tensor $\tens{D}$, ($f_i=a_i
-\otimes b_i \otimes c_i$).  As has been previously noted, the model
-becomes more expressive by separating out a normalizing value
-$\lambda_i$ from each $f_i$.  Thus the decomposed document becomes:
+Where $\tens{F}_i\in \set{F}$ is a factor of the tensor $\tens{D}$,
+($\tens{F}_i=a_i \otimes b_i \otimes c_i$).  As has been previously
+noted, the model becomes more expressive by separating out a
+normalizing value $\lambda_i$ from each $f_i$.  Thus the decomposed
+document becomes:
 
 \begin{equation} \label{eq:document_decomposition_normal}
-  \tens{D} = \sum \lambda_i f'_i
+  \tens{D} = \sum \lambda_i \tens{F}'_i
 \end{equation}
 
-Where $f'_i=\frac{1}{|f_i|} f_i$ and $\lambda_i = |f_i|$.  This is
-desirable for two reasons.  Given that all tensors within the corpus
-have the same dimensions, and that all are decomposed using
-Non-Negative CPD, the factors occupy the same type of space as the
-factors of other documents.  By normalizing them into a proportional
-model of the document, the factors become directly comparable
-irrespective of the magnitude of influence they exert in their source
-document.
+Where $\tens{F}'_i=\frac{1}{|\tens{F}_i|} \tens{F}_i$ and
+$\lambda_i = |\tens{F}_i|$.  This is desirable for two reasons.  Given
+that all tensors within the corpus have the same dimensions, and that
+all are decomposed using Non-Negative CPD, the factors occupy the same
+type of space as the factors of other documents.  By normalizing them
+into a proportional model of the document, the factors become directly
+comparable irrespective of the magnitude of influence they exert in
+their source document.
 
-Let $\set{C}$ be a corpus of documents, encoded as tensors $\tens{D}_j
-\in \set{C}$.  Let $\tens{D}_t$ be the target document to be studied,
-and all other documents in $\set{S}=\set{C} - \tens{D}_t$ are treated
-as source documents for $\tens{D}_t$.  The goal of the influence model
-is to ascribe the factors of $\tens{D}_t$ to a factor from the source
-documents $\tens{D}_s$ and assign weights to each of the documents
-influences. Each document in $\set{C}$ is decomposed as per
-equation~\ref{eq:document_decomposition_normal}.  $\tens{D}_t$ is also
-decomposed into its components.  This produces sets of factors
-$\set{F'}_s$ and $\Lambda_s$ for the source documents as well as
-$\set{F'}_t$ and $Lambda_t$ for the target document.  By measuring the
-similarity of each factor $f'_t$ and source factors $f'_s$, each
+Let $\set{C}$ be a corpus of documents, encoded as tensors
+$\tens{D}_j \in \set{C}$.  Let $\tens{D}_t$ be the target document to
+be studied, and all other documents in $\set{S}=\set{C} - \tens{D}_t$
+are treated as source documents for $\tens{D}_t$.  The goal of the
+influence model is to ascribe the factors of $\tens{D}_t$ to a factor
+from each source document $\tens{D}_s\in \set{S}$ and assign weights
+to each of the source document influences. Each document in $\set{C}$
+is decomposed as per Equation~\ref{eq:document_decomposition_normal}.
+$\tens{D}_t$ is also decomposed into its components.  This produces
+sets of factors $\set{F'}_s$ and $\Lambda_s$ for each source document
+as well as $\set{F'}_t$ and $\Lambda_t$ for the target document.  By
+measuring the similarity of each factor $f'_{t}\in\set{F'}_{t}$ and
+source factors $f'_{s}\in \set{F'}_s$ in every $\set{F'}_s$, each
 factor can be ascribed to a source document $\tens{D}_s$ or as being
-original to $\tens{D}_t$.
+original to $\tens{D}_t$.  Using the similarity measurements between
+the $f'_t$ and $f'_s$ factors, each corresponding $f_t$ factor of
+$\tens{D}_t$ is categorized as either belonging to one of several
+sets: $F_{ts}$ for all factors of $\tens{D}_t$ ascribed to some factor
+of $\tens{D}_s$ and $F_{tt}$ for all factors with no matching source.
 
-Hence, the decomposition of the target document can be rewritten:
+For each of these factor sets, tensors can be formed by summing over
+the set.  For every $\set{F}_{ts}$, the tensor $\tens{F}_{ts}$ is the
+sum of all components of document $t$ ascribed to document $s$.  
+
+Hence, the model of the target document can be rewritten:
 
 \begin{equation} \label{eq:influence_factors}
-  \tens{D}_t = \sum_{s=1}^{|\set{S}|} \set{F}_{ts} + \set{F}_{tt}
+  \tens{D}_t \approx \sum_{s=1}^{|\set{S}|} \tens{F}_{ts} + \tens{F}_{tt}
 \end{equation}
-
-Where $\set{F}_{ts}$  is the set of all factors from $\set{F}_t$ which
-has been ascribed to document $s$ and $\set{F}_{tt}$ is the set of all
-factors from $\set{F}_t$ which have been determined to be an original
-contribution of the author.
 
 Normalizing as in the previous equations, the target
-document's decomposition becomes:
+document's model becomes:
 
 \begin{equation} \label{eq:influence_factors_normalized}
-  \tens{D}_t = \sum_{s=1}^{|\set{S}|} \lambda_{ts} \set{F'}_{ts} +
-  \lambda_{tt} \set{F'}_{tt}
+  \tens{D}_t = \sum_{s=1}^{|\set{S}|} \lambda_{ts} \tens{F'}_{ts} +
+  \lambda_{tt} \tens{F'}_{tt}
 \end{equation}
+
+These new factor tensors, which are no longer necessarily rank 1
+tensors, contain the proportions of related $n$-grams, separated into
+components according to their attributed source.  This comprises the
+sought after semantic model of the document.  
 
 Given these new factors, the influence of each document is extracted:
 
 \begin{equation} \label{eq:document_lambda}
-  \Lambda_t = (\lambda_1, \lambda_2, \ldots \lambda_n, \lambda_t)
+  \Lambda_t = (\lambda_1, \lambda_2, \ldots \lambda_{|S|}, \lambda_t)
 \end{equation}
 
 Weights for each document are then extracted as their proportion of
 importance to the target document.
 
 \begin{equation} \label{eq:document_weights}
-  W = \dfrac{1}{\sum \Lambda_t} \Lambda_t
+  \set{W} = \dfrac{1}{\sum \Lambda_t} \Lambda_t
 \end{equation}
 
 Note that the weights from the source documents are not used.
 Essentially, the only purpose the factors of the source documents
-serve is to classify the factors of the target document.
+serve is to classify the factors of the target document.  Having
+accomplished the classification step and constructed the model in
+Equation~\ref{eq:influence_factors_normalized}, and extracted the
+weights in Equation~\ref{eq:document_weights}, the target document has
+been decomposed into a set of tensors which identify both the semantic
+shape of each contribution and its corresponding weight.
 
 \subsection{Summary of Influence Modeling Procedure}
-The above model can be subdivided into the following steps:
+Generating the above model can be subdivided into the following steps:
 
 \begin{enumerate}
 \item Encode each document in the corpus as a tensor.
@@ -408,7 +424,8 @@ combination of $n$-gram and word frequencies reveals information about
 a corpus's structure, especially hierarchical information pertaining
 to topics within the corpus.  Kawamae's model builds a tree with
 probabilistic relationships which are then used to infer information
-about the structure of a corpus.
+about the structure of a corpus, and shows that $n$-grams provide
+a sufficient basis for modeling the transfer of ideas through a corpus.
 
 Another related $n$-gram study was performed by Antonia, Craig, and
 Elliott~\cite{antonia2014}.  In this paper, Antonia et. al. attempt to
@@ -418,19 +435,19 @@ are able to identify stylistic signatures of contributors to a text
 document.  When $n=1$, their model is equivalent to marker words, and
 as they increase $n$, they retest to determine how expressive the
 model is.  They noted that there is no one length that seems to work
-best in all cases when analyzing english language documents.  Their
+best in all cases when analyzing English language documents.  Their
 results show that 1-gram, 2-gram, and 3-gram analysis tends to work
 well, but when exploring longer phrases the power of the model drops
 off.  Even in instances where 1-grams or 2-grams are best, 3-grams are
-still a reasonable choice.  From this, 3-grams will be used in the
-tests in this dissertation.  The analysis performed in Antonia
+still a reasonable choice.  Based on this result, 3-grams will be used
+in the tests in this dissertation.  The analysis performed in Antonia
 et. al.'s work was conducted using delta and zeta tests as was
 established in the standard marker word approach.  As such, only the
 most frequent $n$-grams of each author were explored, and they were
-only used as an evidenciary marker of an author's participation.  One
+only used as an evidentiary marker of an author's participation.  One
 advantage that the analysis proposed in this dissertation has is that
 it will account for all $n$-grams, and will explore how $n$-grams
-relate to each other within the target document's structure.  
+relate to each other within the target document's structure.
 
 
 \section{Outline of this Dissertation}
