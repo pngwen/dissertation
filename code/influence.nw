@@ -583,7 +583,7 @@ idx = Tensor<>::Index(n);  //create an n-element index
 for(int i=0; i<doc.size()-n; i++) {
     //build the n-gram index from vocabulary and document
     for(int j=0; j<n; j++) { 
-        idx[j] = v(doc[i+j]);
+        idx[j] = v(doc[i+j])-1;
     }
 
     //add 1 to the frequency
@@ -611,7 +611,7 @@ for(auto itr = t.sparseBegin(); itr != t.sparseEnd(); itr++) {
 
 <<Print Tensor Index>>=
 for(int i=0; i<idx.size(); i++) {
-    cout << idx[i] << '\t';
+    cout << (idx[i]+1) << '\t';
 }
 @
 
