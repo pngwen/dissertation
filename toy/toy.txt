@@ -13,3 +13,26 @@ The dog walked
 The dog saw
 The dog chased
 to the house
+the food bowl
+the squirrel
+
+
+The Cat's Tale
+==============
+The cat sat on the mat.  The cat was happy to be on the mat.  The cat
+saw the mouse running but was too lazy to chase it.
+
+
+The Dog's Tale
+==============
+The dog walked to the house.  The dog saw the food bowl, and the dog
+saw a squirrel.  The dog chased the squirrel from the food bowl.
+
+
+The Sequel
+==========
+The dog saw the cat on the mat.  The dog walked to the house, and the
+dog chased the cat.  The squirrel was happy to see the dog chase the
+cat.  The dog saw the squirrel, and decided to chase the squirrel
+instead.
+
