@@ -1,0 +1,15 @@
+Src A
+=====
+The cat sat
+The cat was
+The cat saw
+on the mat
+was happy
+the mouse run
+
+Src B
+=====
+The dog walked
+The dog saw
+The dog chased
+to the house

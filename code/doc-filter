@@ -1,0 +1,4 @@
+#!/bin/sh
+
+tr -cd '[:alpha:][:space:]' | \
+tr [:upper:] [:lower:] 
