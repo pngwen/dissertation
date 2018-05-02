@@ -20,7 +20,6 @@ doc = []
 for line in file:
   doc = doc + line.split()
 file.close()
-print(doc)
 
 #count the ngrams
 tns = {}
