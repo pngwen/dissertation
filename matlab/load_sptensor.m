@@ -1,5 +1,7 @@
-function [tns] = load_sptensor(file, dim)
+function [tns] = load_sptensor(file)
     data = dlmread(file, '\t');
-    modes = size(dim, 2);
-    tns = sptensor(data(:,1:modes), data(:,modes+1), dim);
+    modes = data(1,1);
+    dim = data(1,2:modes+1);
+    nrows = size(data,1);	
+    tns = sptensor(data(2:nrows,1:modes), data(2:nrows,modes+1), dim);
 end
