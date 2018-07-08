@@ -1,68 +1,218 @@
 \documentclass[../ut-dissertation.tex]{subfiles}
 \begin{document}
+\input{commands}
 
 \chapter{Approach}
-This chapter presents the tensor document model used to discover
-influencing factors.  In the first section, enough background
-information is given to familiarize the reader with tensors and tensor
-decompositions. Following this section, the specific formulation of
-the document tensors are presented.  The final two sections of this
-chapter cover the complete influence model as well as a justification
-for the model and its interpretations.
+This chapter details the approach used to build the influence model
+for a target document and its corpus of supporting documents.  This
+chapter also covers details of implementing this model and the
+challenges inherent in realizing this model.
 
-\section{Tensors and Decompositions}
-The term ``tensor'' can carry several interpretations.
-Mathematically, a tensor is a geometric object which represents
-a multilinear system.  Tensors are an abstraction of other linear
-maps, extending them into arbitrary numbers of modes.  The number of
-modes in a tensor correspond to the number of indices needed to
-reference the components within the tensor.  As such, the familiar
-bottom-up hierarchy of {\em scalar, vector, matrix}, is really 
-a hierarchy of tensors.  A {\em scalar} has zero modes, a {\em vector}
-has one mode, and a {\em matrix} has two modes.  Tensors can be
-represented as the outer product of vector spaces, the outer product
-of other tensors, or as multidimensional arrays. Table
-\ref{tab:tensor} shows various types of tensors, and also demonstrates
-the conventions which will be used in the remainder of this
-dissertation.  Note that in Table \ref{tab:tensor}, the tensors are
-assumed to have an applied reference basis, which is what allows them
-to be written as arrays.  
+\section{Influence Modeling}
+\subsection{Approach Overview}
+
+\begin{algorithm}
+  \caption{Influence Model Construction}
+  \label{alg:model}
+
+  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+  \SetKwFunction{Prepare}{prepare}
+  \SetKwFunction{BuildVocabulary}{build\_vocabulary}
+  \SetKwFunction{BuildTensor}{build\_tensor}
+  \SetKwFunction{ExtractFactors}{extract\_factors}
+  \SetKwFunction{DistanceMatrix}{build\_distance\_matrix}
+  \SetKwFunction{ExtractInfluence}{extract\_influence}
+  \SetKwData{W}{$\set{W}$} 
+  \SetKwData{A}{$\set{A}$} \SetKwData{D}{$\tens{D}$}
+  \SetKwData{V}{$\set{V}$} \SetKwData{LN}{$\set{\Lambda}$}
+  \SetKwData{F}{$\set{F}$} \SetKwData{DM}{$M$}
+  \SetKwData{C}{$\set{C}$}
+  
+  \Input{$docs$ A list of documents}
+  \Output{\W, \S, \A}
+  \BlankLine
+  \Prepare{$docs$}\;
+  \V $\leftarrow$ \BuildVocabulary{$docs$}\;
+  \C $\leftarrow\emptyset$\;
+  \ForEach{$d$ in $docs$}{
+    \D$ \leftarrow$ \BuildTensor($d$, $\set{V}$)\;
+    $\C \leftarrow \C \cup \{\D\}$\;
+  }
+  \LN,\F $\leftarrow$ \ExtractFactors{\C, $nfactors$}\;
+  \DM $\leftarrow$ \DistanceMatrix{\F}\;
+  \W, \S $\leftarrow$ \ExtractInfluence{$|docs|$, \DM,\F,\LN}\;
+  \Return{\W, \S}\;
+\end{algorithm}
+
+\subsection{Document Filtering and Vocabulary Extraction}
+\begin{algorithm}
+  \label{alg:Prepare}
+  \caption{Prepare}
+  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+  \Input{$docs$}
+  \Output{None}
+  \BlankLine
+  \ForEach{$d$ in $docs$}{
+    Remove Punctation from $d$\;
+    Remove Numbers from $d$\;
+    Convert $d$ to lower case\;
+  }
+\end{algorithm}
 
 
-\begin{table}
-    \centering
-    \begin{tabular}{c|c|c|c}
-        {\bf Modes} & {\bf Name} & {\bf As Tensor Product} & {\bf Array}\\
-        \hline
-        0 & Scalar & n/a & n/a\\
-        1 & Vector & $\vec{v}$ & $\vec{v}_i$\\
-        2 & Matrix & $M=\vec{v} \otimes \vec{w}$ & $M_{ij}$\\
-        3 & Tensor & $T=\vec{v} \otimes \vec{w} \otimes \vec{y}$ & $T_{ijk}$ \\
-        $n$ & Tensor & $T=\vec{v_1} \otimes \vec{v_2} \otimes \ldots \otimes \vec{v_n}$ & $T_{i_1i_2 \ldots i_n}$\\
-    \end{tabular}
+\begin{algorithm}
+  \label{alg:vocabulary}
+  \caption{Build Vocabulary}
+  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+  \SetKwData{V}{$\set{V}$}
+  \Input{$docs$}
+  \Output{\V}
+  \BlankLine
+  $\V\leftarrow\emptyset$\;
+  \ForEach{$d$ in $docs$}{
+    \ForEach{$word$ in $d$}{
+      $\V \leftarrow \V \cup \{word\}$\;
+    }
+  }
+  \Return{\V};
+\end{algorithm}
 
-    \caption{Tensors of Various Orders}
-    \label{tab:tensor}
-\end{table}
+\subsection{Tensor Construction}
+\begin{algorithm}
+  \label{alg:BuildTensor}
+  \caption{Build Tensor}
+  \SetKwData{D}{$\tens{D}$} \SetKwData{V}{$\set{V}$} \SetKwData{N}{$n$}
+  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+  
+  \Input{$d$, \V, \N}
+  \Output{\D}
+  \BlankLine
+  $\D \leftarrow $ Tensor with dimension $|\V| \times |\V| \ldots
+  \times_n |\V|$\;
+  Fill \D with 0\;
+  $len \leftarrow$ number of words in $d$\;
+  \For{$i \leftarrow 1 $ to $len - n$} {
+    \tcc{Compute Tensor Element Index}
+    $index \leftarrow$ list of $n$ integers\;
+    \For{$j\leftarrow i $ to $i+n$} {
+      $index[j] \leftarrow$ index of word $d[j]$ in \V\;
+    }
+    \BlankLine
+    \tcc{Update Frequency of This $n$-gram}
+    $\D[index] \leftarrow \D[index] + 1$\;
+  }
+  \Return{\D}
+\end{algorithm}
 
-For the purposes of stasticial analysis, tensors are generally thought
-of as multi-dimensional arrays. Of particular interest is the polyadic
-form of tensors, first described in~\cite{hitchcock1927}. 
-\section{Tensor Construction}
-\subsection{Corpus Vocabulary}
-\subsection{Frequency Counting}
+\subsection{Tensor Decomposition}
 
-\section{Decomposition and Normalization}
-\subsection{PARAFAC}
-\subsection{Factor Weights}
+\begin{algorithm}
+  \label{alg:ExtractFactors}
+  \caption{Extract Factors}
+  \SetKwData{LN}{$\set{\Lambda}$}  \SetKwData{C}{$\set{C}$}
+  \SetKwData{F}{$\set{F}$} \SetKwData{U}{$\set{U}$}
+  \SetKwData{T}{$\tens{T}$}\SetKwData{D}{$\tens{D}$}
+  \SetKwFunction{Norm}{$\mathrm{L}_1$\_norm}
+  \SetKwFunction{CCD}{ccd\_ntfd}
+  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+  \Input{\C, $nfactors$}
+  \Output{\LN, \F}
+  \BlankLine
+  $\F \leftarrow \emptyset$\;
+  $\LN \leftarrow \emptyset$\;
+  $nmodes \leftarrow$ number of modes in $\C[1]$\;
+  \ForEach{\D in \C}{
+    $\U \leftarrow $ \CCD{\D, $nfactors$}\;
+    \For{$i$ = 1 to $nfactors$}{
+      \tcc{Build the Factor}
+      $\T \leftarrow \U[1][:,i]$\;
+      \For{$m$ = 2 to $nmodes$}{
+        $\T \leftarrow \T \otimes \U[m][:,i]$\;
+      }
 
-\section{Influence Modelling}
-\subsection{Factor Comparisons}
-\subsection{Factor Weighting}
-\subsection{Influence Vector}
+      \tcc{Compute the norm and normalize the factor}
+      $\lambda \leftarrow $\Norm{\T}\;
+      $\T \leftarrow \T / \lambda$\;
 
-\section{Justification of the Model}
-\subsection{Measurements and Structural Expectations}
-\subsection{Proportional Profiles and Implied Axes}
-\subsection{Measuring Fit}
+      \tcc{Insert the factor and norm into the list}
+      $\F \leftarrow \F \cup \{\T\}$\;
+      $\LN \leftarrow \LN \cup \{\lambda\}$\;
+    }
+  }
+  \Return{\LN, \F}
+\end{algorithm}
+  
+
+\subsection{Factor Classification}
+\begin{algorithm}
+  \caption{Build Distance Matrix}
+  \label{alg:distance}
+  \SetKwData{DM}{$M$} \SetKwData{F}{$\set{F}$}
+  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+  \SetKwFunction{Norm}{$\mathrm{L}_1$\_norm}
+  \Input{\F}
+  \Output{\DM}
+  \BlankLine
+  $\DM \leftarrow $ Matrix with dimension $|\F| \times |\F|$\;
+  \For{$i=1$ to $|\F|$}{
+    \For{$j=1$ to $|\F|$} {
+      $\DM[i,j] \leftarrow$ \Norm{$\F[i] - \F[j]$}\;
+    }
+  }
+  \Return{\DM}
+\end{algorithm}
+
+\subsection{Weight Assignment}
+\begin{algorithm}
+  \caption{Extract Influence}
+  \label{alg:influence}
+  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+  \SetKwData{DM}{$M$} \SetKwData{F}{$\set{F}$}
+  \SetKwData{LN}{$\set{\Lambda}$}\SetKwData{Ndocs}{$ndocs$}
+  \SetKwData{W}{$\set{W}$} \SetKwData{S}{$\set{S}$}
+  
+  \Input{\Ndocs, \DM, \F, \LN}
+  \Output{\W, \S}
+  \BlankLine
+  \tcc{Find the critical value for hypothesis testing.}
+  Compute mean, $\mu$, and standard deviation $\sigma$ of \DM
+  excluding the diagonal.\; 
+  $threshold \leftarrow$ Critical value given $\mu$ and $\sigma$\;
+  \BlankLine
+  \tcc{Compute Weights}
+  $s \leftarrow \sum \LN$\;
+  $\W \leftarrow \LN / s$\;
+  \BlankLine
+  \tcc{Classify Factors}
+  $nfactors \leftarrow |\LN|$\;
+  \For{$i=1$ to $nfactors$}{
+    $min \leftarrow \DM[row,1]$\;
+    $minIndex \leftarrow 1$\;
+    $row \leftarrow i + nfactors * (ndocs-1)$\;
+    \For{$j=1$ to $nfactors * ndocs$}{
+      \If{\DM[row,j]$< min$}{
+        $min \leftarrow \DM[row,j]$\;
+        $minIndex \leftarrow j$\;
+      }
+    }
+    \eIf{$min \leq threshold$}{
+      $\S[i]\leftarrow minIndex$\;
+    }{
+      $\S[i]\leftarrow 0$\;
+    }
+  }
+  \Return{\W, \S}\;
+\end{algorithm}
+
+\section{Implementation }
+\section{Challenges}
+\section{Implementation Details}
+
+\section{Model Evaluation}
+
+\section{A Simple Example}
+\subsection{Source Text and Vocabulary}
+\subsection{Document Tensors}
+\subsection{Document Factors}
+\subsection{Classification and Weights}
 \end{document}

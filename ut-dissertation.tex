@@ -22,7 +22,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TO DO: FILL IN YOUR INFORMATION BELOW - READ THIS SECTION CAREFULLY
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{Textual Influence Modeling Through Tensor Decomposition}     	% title of thesis/dissertation
+\title{Textual Influence Modeling Through Non-Negative Tensor Decomposition}     	% title of thesis/dissertation
 \author{Robert Lowe}                			% author's name
 \copyrightYear{2018}           				% copyright year of your thesis/dissertation
 \graduationMonth{August}        			% month of graduation of your thesis/dissertation
@@ -48,7 +48,9 @@
 \usepackage[config, labelfont={bf}]{caption,subfig} % nice sub figures
 \usepackage{mathrsfs}                   % additional math scripts
 \usepackage[titletoc]{appendix}			% format appendix correctly
-\usepackage{pdflscape}					% to produce landscape pages if necessary
+\usepackage{pdflscape}					% to produce
+% landscape pages if necessary
+\usepackage[]{algorithm2e}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This section formats landscape pages properly with the correct page number.
@@ -97,7 +99,7 @@
     \tableofcontents % generate a table of contents
     \listoftables % generate a list of tables
     \listoffigures % generate a list of figures
-   
+    \listofalgorithms %generate a list of algorithms
     \newpage
     \pagenumbering{arabic}
     \setcounter{page}{1}
