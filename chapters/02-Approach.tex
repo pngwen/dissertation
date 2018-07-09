@@ -6,11 +6,57 @@
 This chapter details the approach used to build the influence model
 for a target document and its corpus of supporting documents.  This
 chapter also covers details of implementing this model and the
-challenges inherent in realizing this model.
+challenges inherent in realizing this model.  The first section of
+this chapter outlines the various steps required to build the
+influence model.  This is followed by implementation challenges and
+details, and then the chapter concludes with a simple example of the
+model's application.
 
 \section{Influence Modeling}
-\subsection{Approach Overview}
+The influence model is governed by a document list and a set of
+parameters.  The inputs to the model are outlined described in
+Table~\ref{table:modelInput}.  The document list contains a list of all
+of the documents in the corpus.  The document list contains potential
+source documents and one target document.  The target document is
+placed at the end of the document list by convention.
+\begin{table}
+  \begin{tabular}{ll}
+    \hline
+    $docs$ & A list of documents in the corpus.  The target document\\
+           & is the final entry in the list. \\
+    $nfactors$ & The number of factors for tensor decomposition.\\
+    $z^*$ & The critical value for significance testing.\\
+    \hline
+  \end{tabular}
+  \caption{Model Input}
+  \label{table:modelInput}
+\end{table}
 
+The generated model's output consists of the set of factors which have
+been found to influence the target document, the weights of each
+document's influence on the target document, and the set of factors
+found from the decomposition of the document tensors.  The output variables of
+the generated model are described in Table~\ref{table:modelOutput}.
+\begin{table}
+  \begin{tabular}{ll}
+    \hline
+    $\set{W}$ & Set of weights of each factor of the target document.\\
+              & $\set{W}_i$ is the weight of target document factor $i$.\\
+    $\set{S}$ & The set of soure indexes for each factor.\\
+              & $\set{S}_i$ is the index of the source factor, 0 \\
+              & if the factor is unique to the target document.\\
+    $\set{F}$ & The set of all document factor tensors.\\
+    \hline
+  \end{tabular}
+  \caption{Model Output}
+  \label{table:modelOutput}
+\end{table}
+
+\subsection{Approach Overview}
+The overall process was described in Chapter 1.  What remains is to
+see the detailed formulation of how each component of the model is
+computed.  The overall algorithm is described in
+Algorithm~\ref{alg:model}.  
 \begin{algorithm}
   \caption{Influence Model Construction}
   \label{alg:model}
@@ -22,14 +68,14 @@ challenges inherent in realizing this model.
   \SetKwFunction{ExtractFactors}{extract\_factors}
   \SetKwFunction{DistanceMatrix}{build\_distance\_matrix}
   \SetKwFunction{ExtractInfluence}{extract\_influence}
-  \SetKwData{W}{$\set{W}$} 
-  \SetKwData{A}{$\set{A}$} \SetKwData{D}{$\tens{D}$}
+  \SetKwData{W}{$\set{W}$} \SetKwData{S}{$\set{S}$}
+  \SetKwData{D}{$\tens{D}$}
   \SetKwData{V}{$\set{V}$} \SetKwData{LN}{$\set{\Lambda}$}
   \SetKwData{F}{$\set{F}$} \SetKwData{DM}{$M$}
   \SetKwData{C}{$\set{C}$}
   
-  \Input{$docs$ A list of documents}
-  \Output{\W, \S, \A}
+  \Input{$docs$, $nfactors$, $z^*$}
+  \Output{\W, \S, \F}
   \BlankLine
   \Prepare{$docs$}\;
   \V $\leftarrow$ \BuildVocabulary{$docs$}\;
@@ -40,8 +86,9 @@ challenges inherent in realizing this model.
   }
   \LN,\F $\leftarrow$ \ExtractFactors{\C, $nfactors$}\;
   \DM $\leftarrow$ \DistanceMatrix{\F}\;
-  \W, \S $\leftarrow$ \ExtractInfluence{$|docs|$, \DM,\F,\LN}\;
-  \Return{\W, \S}\;
+  $\lambda \leftarrow$ the entries in \LN corresponding to the target document.\;
+  \W, \S $\leftarrow$ \ExtractInfluence{$|docs|$, \DM,\F,$\lambda$}\;
+  \Return{\W, \S, \F}\;
 \end{algorithm}
 
 \subsection{Document Filtering and Vocabulary Extraction}
