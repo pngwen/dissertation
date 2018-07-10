@@ -135,7 +135,7 @@ written as the outer product of vectors.  (This is also referred to as
 the tensor product of vectors, which is in line with the geometric
 interpretation of tensors as the outer product of vector spaces.)
 Each polyadic factor in a tensor of $m$ modes is the tensor product of
-$m$ vectors.  For example, given a 3 mode tensor $\tens{T} \in
+$m$ vectors.  For example, given a 3-mode tensor $\tens{T} \in
 \R^{I\times J \times K}$, its polyadic decomposition into $r$ factors
 is a set of factors which satisfies
 Equation~\ref{eq:polyadic_decomposition}.  For the sake of
@@ -147,6 +147,43 @@ to any number of modes.
   \tens{T} \approx \dsum_{i=1}^{r} a_i \otimes b_i
   \otimes c_i
 \end{equation}
+
+The tensor, or outer,  product $a \otimes b$ used in
+Equation~\ref{eq:polyadic_decomposition} results in a tensor where the
+modes are the concatenation of the modes of $a$ and $b$.  For
+instance, if $a$ and $b$ are vectors of size $i$ and $j$ respectively,
+$a \otimes b$ results in a 2-mode tensor with dimensions $i x j$.  In
+the case of building a 3-mode tensor, three vectors are needed, and
+the elements of the product result are computed as in in
+Equation~\ref{eq:tensor_product}. A graphical representation of this
+product is showin in Figure~\label{fig:tensor_product}.  Of note is
+how each vector serves as scaling values for a mode.  
+\begin{equation} \label{eq:tensor_product}
+  \tens{T}_{ijk} = a_i b_j c_k
+\end{equation}
+
+\begin{figure}%
+  \centering
+  \subfloat[Mode Vectors]{\includegraphics[width=1.5in]{diagrams/mode_vectors}}
+  \qquad
+  \subfloat[$a \otimes b$]{\includegraphics[width=1.5in]{diagrams/mode1_tns_mode2}}
+  \qquad
+  \subfloat[$a \otimes b \otimes b$]{\includegraphics[width=1.5in]{diagrams/mode12_tns_mode3}}
+  \caption{Tensor Product} \label{fig:tensor_product}
+\end{figure}
+
+The notion of the tensor product also gives rise to the notion of
+tensor rank.  Tensor rank is not the same as matrix rank, and is in
+fact much more difficult to compute.  Perhaps the easiest way to
+understand the notion of tensor rank is recursive.  A rank 1 tensor is
+a tensor which can be constructed completely from the tensor product
+of 1-mode tensors (vectors).  The tensor descibed in
+Equation~\label{eq:tensor_product} and
+Figure~\label{fig:tensor_product} is therefore a rank-1 tensor, as are
+all the factors in the polyadic decomposition.  A tensor of general
+rank $r$ is the result of adding $r$ rank-1 tensors together. The rank
+of a tensor $\tens{T}$ is therefore defined as the minimum number of
+rank-1 tensors needed to sum to $\tens{T}$.
 
 Hitchcock's paper mainly presents the polyadic decomposition from a
 purely mathematical perspective, with applications to studying tensor
@@ -302,18 +339,15 @@ of a document into its individual factor tensors.
 \begin{equation} \label{eq:document_decomposition}
   \tens{D} = \sum \tens{F}_i 
 \end{equation}
-
-Where $\tens{F}_i\in \set{F}$ is a factor of the tensor $\tens{D}$,
+where $\tens{F}_i\in \set{F}$ is a factor of the tensor $\tens{D}$,
 ($\tens{F}_i=a_i \otimes b_i \otimes c_i$).  As has been previously
 noted, the model becomes more expressive by separating out a
 normalizing value $\lambda_i$ from each $f_i$.  Thus the decomposed
 document becomes:
-
 \begin{equation} \label{eq:document_decomposition_normal}
   \tens{D} = \sum \lambda_i \tens{F}'_i
 \end{equation}
-
-Where $\tens{F}'_i=\frac{1}{|\tens{F}_i|} \tens{F}_i$ and
+where $\tens{F}'_i=\frac{1}{|\tens{F}_i|} \tens{F}_i$ and
 $\lambda_i = |\tens{F}_i|$.  This is desirable for two reasons.  Given
 that all tensors within the corpus have the same dimensions, and that
 all are decomposed using Non-Negative CPD, the factors occupy the same
@@ -339,25 +373,25 @@ factor can be ascribed to a source document $\tens{D}_s$ or as being
 original to $\tens{D}_t$.  Using the similarity measurements between
 the $f'_t$ and $f'_s$ factors, each corresponding $f_t$ factor of
 $\tens{D}_t$ is categorized as either belonging to one of several
-sets: $F_{ts}$ for all factors of $\tens{D}_t$ ascribed to some factor
-of $\tens{D}_s$ and $F_{tt}$ for all factors with no matching source.
+sets: $F^s_t$ for all factors of $\tens{D}_t$ ascribed to some factor
+of $\tens{D}_s$ and $F^n_t$ for all factors with no matching source.
 
 For each of these factor sets, tensors can be formed by summing over
-the set.  For every $\set{F}_{ts}$, the tensor $\tens{F}_{ts}$ is the
+the set.  For every $\set{F}^s_t$, the tensor $\tens{F}^s_t$ is the
 sum of all components of document $t$ ascribed to document $s$.  
 
 Hence, the model of the target document can be rewritten:
 
 \begin{equation} \label{eq:influence_factors}
-  \tens{D}_t \approx \sum_{s=1}^{|\set{S}|} \tens{F}_{ts} + \tens{F}_{tt}
+  \tens{D}_t \approx \sum_{s=1}^{|\set{S}|} \tens{F}^s_t + \tens{F}^n_t
 \end{equation}
 
 Normalizing as in the previous equations, the target
 document's model becomes:
 
 \begin{equation} \label{eq:influence_factors_normalized}
-  \tens{D}_t = \sum_{s=1}^{|\set{S}|} \lambda_{ts} \tens{F'}_{ts} +
-  \lambda_{tt} \tens{F'}_{tt}
+  \tens{D}_t = \sum_{s=1}^{|\set{S}|} \lambda^s_t \tens{F}'^s_t +
+  \lambda^n_t \tens{F}'^n_t
 \end{equation}
 
 These new factor tensors, which are no longer necessarily rank 1
@@ -454,13 +488,9 @@ relate to each other within the target document's structure.
 The rest of this dissertation is organized as follows.  First, there
 is a chapter detailing the approach of building, fitting, and
 evaluating the influence model.  Following the approach explanation
-are two separate applications of this technique.  The first evaluates
-the strength of influence of cited documents in a scientific paper,
-and the second presents an analysis of William Shakespeare's {\em
-  Henry VI part 2}, which is often cited as a play that likely had
-coauthors in addition to Shakespeare~\cite{burrows2017}.  The final
-chapter of the dissertation discusses the findings in the two case
-studies as well as some notes for further application of this analysis
+is an application which analyzes a conference paper and its sources.
+The final chapter discusses the findings in the case
+study as well as some notes for further application of this analysis
 technique.
 
 \end{document}
