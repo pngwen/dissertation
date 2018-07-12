@@ -103,12 +103,12 @@
   \item Frequency Counting and Attribution
     \begin{itemize}
     \item {\em All the way through: testing for authorship in different
-      frequency strata}. John Burrows 2006.~\cite{burrows2006}
+      frequency strata}. John Burrows. 2006~\cite{burrows2006}
     \item {\em The Joker in the Pack?: Marlowe, Kyd, and the
         Co-authorship of Henry VI, Part 3}. John Burrows and Hugh
-      Craig 2017\cite{burrows2017}
+      Craig. 2017~\cite{burrows2017}
     \item {\em Sheakespeare, Computers, and the Mystery of
-        Authorship}. Hugh Craig and Arthur Kinney.~\cite{craig2009}
+        Authorship}. Hugh Craig and Arthur Kinney. 2009~\cite{craig2009}
     \end{itemize}
   \item $n$-gram attribution
     \begin{itemize}[<+->]
@@ -123,7 +123,7 @@
     \item {\em Tensor Decompositions and Applications}. Tamara Kolda
       and Brett Bader. 2009~\cite{kolda2009}
     \item {\em Foundations of the PARAFAC procedure: Models and
-        conditions for an" explanatory" multi-modal factor
+        conditions for ani ``explanatory'' multi-modal factor
         analysis}. Richard Harshman. 1970~\cite{harshman1970}
     \item {\em Sparse non-negative tensor factorization using
         columnwise coordinate descent}. Ji Liu, Jun Liu, Peter Wonka,
@@ -163,7 +163,7 @@
       \small
 \item First studied by Frank Hitchcock in 1927~\cite{hitchcock1927}
 \item Popularized by Richard Harshman~\cite{harshman1970} and Carroll
-  and Change~\cite{carroll1970} in the 1970's.
+  and Chang~\cite{carroll1970} in the 1970's.
 \item The polyadic form of a tensor
   \[
       \tens{T} \approx \dsum_{i=1}^{r} a_i \otimes b_i
@@ -195,7 +195,7 @@
   \begin{itemize}
   \item Tucker Decomposition (Kolda 2009)~\cite{kolda2009}
     \[
-      \tens{T} \approx \tens{G} \times_1 \mat{A} \times_3 \mat{B} \times_2
+      \tens{T} \approx \tens{G} \times_1 \mat{A} \times_2 \mat{B} \times_3
   \mat{C}
 \]
   \item Tucker Decomposition (element-wise formulation) (Kolda
@@ -225,7 +225,6 @@
 \subsection{Model Overview}
 \begin{frame}{Representing Documents as Tensors}
   \begin{itemize}[<+->]
-  \item Document tensors store frequencies of $n$-grams.
   \item Let $\set{V}$ be the set of all unique words in a corpus.
   \item Construct an $n$ mode tensor $\tens{D} \in \R^{|\set{V}|
       \times \ldots \times |\set{V}|}$
@@ -263,9 +262,9 @@
   \item Let $\tens{D}_t \in \set{C}$ be the target document.
   \item The set $\set{C}-\tens{D}_t$ is the set of source documents.
   \item Each source document $s$ decomposes into $\set{F'}_s$  and
-    $\set{\Lambda}_s$.
+    $\Lambda_s$.
   \item The target document decomposes into $\set{F'}_t$ and
-    $\set{\Lambda}_t$
+    $\Lambda_t$
   \item Ascribing target document factors to source factors produces
     the model:
     \[
@@ -664,6 +663,8 @@
         \hline
         Total Word Count & 107\\
         \hline
+        Corpus Sparsity & 99.7\%\\
+        \hline
       \end{tabular}
     \end{table}
 
@@ -853,6 +854,8 @@
         Corpus Size & 7\\
         \hline
         Total Word Count & 45,152\\
+        \hline
+        Corpus Sparsity & 99.993\%\\
         \hline
       \end{tabular}
     \end{table}
