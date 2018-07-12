@@ -8,9 +8,9 @@ for a target document and its corpus of supporting documents.  This
 chapter also covers details of implementing this model and the
 challenges inherent in realizing this model.  The first section of
 this chapter outlines the various steps required to build the
-influence model.  This is followed by implementation challenges and
-details, and then the chapter concludes with a simple example of the
-model's application.
+influence model.  The chapter concludes with implementation challenges
+and details.
+
 
 \section{Influence Modeling}
 The influence model is governed by a document list and a set of
@@ -43,7 +43,7 @@ the generated model are described in Table~\ref{table:modelOutput}.
     \hline
     $\set{W}$ & Set of weights of each factor of the target document.\\
               & $\set{W}_i$ is the weight of target document factor $i$.\\
-    $\set{S}$ & The set of soure indexes for each factor.\\
+    $\set{S}$ & The set of source indexes for each factor.\\
               & $\set{S}_i$ is the index of the source factor, 0 \\
               & if the factor is unique to the target document.\\
     $\set{F}$ & The set of all document factor tensors.\\
@@ -110,7 +110,7 @@ the rest of this explanation.
   \Output{None}
   \BlankLine
   \ForEach{$d$ in $docs$}{
-    Remove Punctation from $d$\;
+    Remove Punctuation from $d$\;
     Remove Numbers from $d$\;
     Convert $d$ to lower case\;
   }
@@ -147,7 +147,7 @@ constructed with $n$ modes where each mode contains $|\set{V}|$
 dimensions.  For example, 3 mode tensor over a a 30 word vocabulary
 would result in a $30 \times 30 \times 30$ tensor. This is used to
 count the frequency of $n$-grams within each document.  Thus entry
-$\tens{D}_{ijk}$ counts the number of occurences of the phrase
+$\tens{D}_{ijk}$ counts the number of occurrences of the phrase
 $\set{V}_i \set{V}_j \set{V}_k$ within the document.
 
 \begin{figure}
@@ -194,7 +194,7 @@ frequency of all possible $n$-grams over the vocabulary $\set{V}$, and
 intuitively few (if any) documents would use every possible $n$ length
 combination of its vocabulary as most of these phrases would be
 nonsensical.  Thus the set of tensors $\set{C}$ produced by
-Algorith~\ref{alg:BuildTensor} is a set of sparse tensors representing
+Algorithm~\ref{alg:BuildTensor} is a set of sparse tensors representing
 the document corpus.  The last tensor in the set is the representation
 of the target document as it has been placed at the end of the
 document list, as mentioned previously.
@@ -209,7 +209,7 @@ lends itself to non-negative factorization.  Moreover, as these
 tensors are expected to be very sparse, any factorization that admits
 negative numbers would likely take a very long time to converge as it
 explores many combinations of factors which sum to zero.  In fact,
-these alternating negative and postitive factors would necessarily
+these alternating negative and positive factors would necessarily
 dominate the factors and would make comparison of factors very
 difficult while providing no useful information about the underlying
 document.  Therefore, not only is non-negative factorization a logical
@@ -238,7 +238,7 @@ penalty is set to 0 for this model.)
 \end{equation}
 
 Note that the CCD model is a non-negative version of the Tucker
-decomposition. By constraining the CCD modle to use a square identity
+decomposition. By constraining the CCD model to use a square identity
 tensor (of dimension $n \times n \times \ldots n$) for
 $\tens{C}$, the model becomes equivalent to the non-negative canonical
 polyadic decomposition.  Each $U_i$ matrix will contain $n$ columns,
@@ -371,13 +371,13 @@ identify which source factors are closest to each target factor and
 compute the corresponding weights of those factors.  This task is
 carried out by Algorithm~\ref{alg:influence}.  The basic strategy is
 for each factor in the target document to be assigned the source
-factor with the mininmum distance.  The only issue with this approach
+factor with the minimum distance.  The only issue with this approach
 is it would always assign a source to a target factor, even though
 some target factors are expected to have no relatable source.  For
-this reason, two steps are needed.  First, the mininum is found,
+this reason, two steps are needed.  First, the minimum is found,
 second it is compared against a threshold.  If the minimum value is
 below this threshold, the factor is assigned a source.  If, on the
-other hand, the minimum distance is above the threhshold it is not
+other hand, the minimum distance is above the threshold it is not
 assigned a source.
 
 The result of the classification operation is the set $\set{W}$ which
@@ -453,11 +453,11 @@ the vocabulary.
 Looking at the vocabularies in several documents during preliminary
 experiments showed that each document only had about five hundred to
 one thousand frequent words.  By sorting the vocabulary in descending
-order by frequency, the vocabulary can be shortened with mininal
+order by frequency, the vocabulary can be shortened with minimal
 disturbance to the structure of the document and the makeup of most of
 the $n$-grams.  Constraining the vocabulary to 600 words when building
 a 3-gram tensor results in a tensor which has 216,000,000 potential
-entries.  Even in dense format, this can be comfortably accomodated by
+entries.  Even in dense format, this can be comfortably accommodated by
 the memory of even a modest modern desktop machine.  However, a
 problem still remains with this approach.  Decompositions of a tensor
 of this size, typically into 100-200 factors, requires too much time.
@@ -475,21 +475,21 @@ ANSI C.  C was selected because it provides enough control for
 optimizing memory usage and it is well situated to have libraries for
 other languages bound to it.
 
-The sptensor libary is implemented as a shared library, and also has a
+The sptensor library is implemented as a shared library, and also has a
 command line tool which allows tensor operations to be performed on
 files.  The main components of the sptensor library are:
 \begin{description}
 \item[{\tt vector}] An array list styled general purpose storage structure.
   This grows dynamically as needed.
 \item[{\tt sptensor}] A sparse tensor storage structure.  Tensors are stored
-  as a list of coordinates with indexes and values stored in separte
+  as a list of coordinates with indexes and values stored in separate
   vectors.  The tensor indexes are maintained in sorted order giving
   $O(\mathrm{lg} n)$ lookups.
 \item[{\tt tensor\_view}] A series of overlays for tensor objects.  These
   provide general ways of accessing tensors, printing tensors, and
   performing operations.  Operations included in the library are
   reshaping tensors, slicing tensors, and general tensor arithmetic.
-  Mechanisms are provided to allow the libray's user to provide their
+  Mechanisms are provided to allow the library's user to provide their
   own tensor views.
 \item[{\tt tensor\_math}] A set of tensor operations.  These include
   element wise operations, scalar multiplication, and a set of tensor
@@ -501,7 +501,7 @@ files.  The main components of the sptensor library are:
 The goals for the development of this library are:
 \begin{enumerate}
   \item Implement a library for dealing with sparse tensors
-    effeciently.
+    efficiently.
   \item Provide fast CCD tensor decomposition.
   \item Provide an MPI implementation for common tensor functions to
     allow for operations on very large tensors.
@@ -510,21 +510,21 @@ At the time of this writing, the first two goal have been achieved but
 unfortunately the MPI version of sptensor does not yet exist.  The
 sptensor library is designed to only represent sparse tensors, and so
 it has the opposite problem the common tensor libraries have.  Dense
-tensors are fairly ineffecient both in time and space complexity.
+tensors are fairly inefficient both in time and space complexity.
 However, for the present application the library performs quite well.
-Where matlab factorization of tensors over constrained vocabularies
+Where Matlab factorization of tensors over constrained vocabularies
 typically require 1-2 hours to complete, sptensor can accomplish the
 task in 5-10 minutes.  This speedup allowed for the construction and
 testing of the model to proceed.
 
-\subsection{Text Modelling Suite}
+\subsection{Text Modeling Suite}
 The text model described in this chapter is implemented as a series of
 stand-alone programs.  Essentially, each of the above algorithms are
 implemented as either part of the sptensor library or as a stand alone
 utility.  The decision of whether to build an algorithm into sptensor
 was based on whether the operation was a generic tensor operation, or
 whether it was specific to this model.  The sptensor tool provides the
-following fascilities:
+following facilities:
 \begin{itemize}
 \item CCD Factorization (as used in
   Algorithm~\ref{alg:ExtractFactors}.
@@ -556,18 +556,4 @@ programs are used to build the model:
   programs as per Algorithm~\ref{alg:model}.
 \end{description}
 
-\section{Model Evaluation}
-
-\section{A Simple Example}
-\subsection{Source Text and Vocabulary}
-\subsection{Document Tensors}
-\subsection{Document Factors}
-\subsection{Classification and Weights}
 \end{document}
-
-Influence Model
-Build Vocabulary
-Build Tensor
-Extract Factors
-Build Disance
-Extract Influence

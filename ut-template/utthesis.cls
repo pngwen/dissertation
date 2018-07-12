@@ -82,10 +82,10 @@
 \def\degree#1{\gdef\@degree{#1}}%
 \def\university#1{\gdef\@university{#1}}%
 % initialize macros
-\def\@title{My Title}
-\def\@author{My Name}
-\def\@graduationMonth{May}
-\def\@copyrightYear{2009}
+\def\@title{Textual Influence Modeling Through Non-Negative Tensor Decomposition} 
+\def\@author{Robert Lowe}
+\def\@graduationMonth{August}
+\def\@copyrightYear{2018}
 \def\@degree{Doctor of Philosophy}	% degree type
 \def\@university{The University  of Tennessee, Knoxville}	% school
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

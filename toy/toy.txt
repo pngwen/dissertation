@@ -33,6 +33,6 @@ The Sequel
 ==========
 The dog saw the cat on the mat.  The dog walked to the house, and the
 dog chased the cat.  The squirrel was happy to see the dog chase the
-cat.  The dog saw the squirrel, and decided to chase the squirrel
-instead.
+cat on the mat.  The dog saw the squirrel, and decided to chase the squirrel
+instead.  The cat sat on the mat.
 
