@@ -72,7 +72,7 @@
   \begin{itemize}
     \item Cited Sources
     \item Collaborators
-    \item Unconcious Influences
+    \item Unconscious Influences
   \end{itemize}
 \end{itemize}
 \column{0.5\textwidth}
@@ -90,7 +90,7 @@
     \end{itemize}
   \item Create open source software which:
     \begin{itemize}
-    \item Provides effecient handling of large sparse tensors.
+    \item Provides efficient handling of large sparse tensors.
     \item Allows binding to high level languages.
     \item Uses MPI to decompose very large sparse tensors. (partially
       completed)
@@ -161,7 +161,7 @@
 
   \begin{itemize}[<+->]
       \small
-\item First studied by Frank Hitchock in 1927~\cite{hitchcock1927}
+\item First studied by Frank Hitchcock in 1927~\cite{hitchcock1927}
 \item Popularized by Richard Harshman~\cite{harshman1970} and Carroll
   and Change~\cite{carroll1970} in the 1970's.
 \item The polyadic form of a tensor
@@ -251,7 +251,7 @@
         \]
       \item Each normalized factor is a proportional profile of the
         frequencies of $n$-grams within each document.
-      \item $\lambda_i$ expressses the importance of the factor to the
+      \item $\lambda_i$ expresses the importance of the factor to the
         document.
   \end{itemize}
 \end{frame}
@@ -259,7 +259,7 @@
 
 \begin{frame}{Matching Document Components}
   \begin{itemize}[<+->]
-  \item Let $\set{C}$ be a corpuse of document tensors.
+  \item Let $\set{C}$ be a corpus of document tensors.
   \item Let $\tens{D}_t \in \set{C}$ be the target document.
   \item The set $\set{C}-\tens{D}_t$ is the set of source documents.
   \item Each source document $s$ decomposes into $\set{F'}_s$  and
@@ -295,7 +295,7 @@
 \end{frame}
 
 \subsection{Implementation}
-\begin{frame}{Overall Algorthm}
+\begin{frame}{Overall Algorithm}
   \small
 \begin{algorithm}[H]
   \caption{Influence Model Construction}
@@ -913,14 +913,14 @@
   \begin{itemize}[<+->]
     \item Non-Negative Tensor Factorization can be used to build an
       influence model of text documents.
-    \item Semanting information extracted from the model matches
+    \item Semantic information extracted from the model matches
       expectations.
     \item Future Research Directions
       \begin{itemize}
       \item Complete the MPI implementation of sptensor
       \item Replicate the Burrows and Craig 2017 study of Henry VI,
         part 3
-      \item Study the effects of constraigning the vocabulary
+      \item Study the effects of constraining the vocabulary
       \item Apply the model to identify possible chronologies in
         documents where chronology and provenance are questioned.
       \item Use the model to build a network of influence flow in a
