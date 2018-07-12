@@ -62,6 +62,7 @@
 \end{frame}
 
 \section{Introduction}
+\subsection{Problem Statement}
 \begin{frame}{Text Documents and Influences}
 \begin{columns}
 \column{0.5\textwidth}
@@ -79,12 +80,59 @@
 \end{columns}
 \end{frame}
 
-
-\begin{frame}{Related Work}
-
+\begin{frame}{Goals and Contributions}
+  \begin{itemize}[<+->]
+  \item Invent an analysis technique which models:
+    \begin{itemize}
+    \item Text Document Influencing Factors
+    \item Text Document Author Contributions
+    \item Semantics of Influences and Author Contributions
+    \end{itemize}
+  \item Create open source software which:
+    \begin{itemize}
+    \item Provides effecient handling of large sparse tensors.
+    \item Allows binding to high level languages.
+    \item Uses MPI to decompose very large sparse tensors. (partially
+      completed)
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
+\begin{frame}[allowframebreaks]{Related Work}
+  \begin{itemize}[<+->]
+  \item Frequency Counting and Attribution
+    \begin{itemize}
+    \item {\em All the way through: testing for authorship in different
+      frequency strata}. John Burrows 2006.~\cite{burrows2006}
+    \item {\em The Joker in the Pack?: Marlowe, Kyd, and the
+        Co-authorship of Henry VI, Part 3}. John Burrows and Hugh
+      Craig 2017\cite{burrows2017}
+    \item {\em Sheakespeare, Computers, and the Mystery of
+        Authorship}. Hugh Craig and Arthur Kinney.~\cite{craig2009}
+    \end{itemize}
+  \item $n$-gram attribution
+    \begin{itemize}[<+->]
+    \item {\em N-gram over Context}. Noriaki Kawamae. 2016~\cite{kawamae2016}
+    \item {\em Language chunking, data sparseness, and the value of a
+        long marker list: explorations with word n-grams and authorial
+        attribution}. Alexis Antonia, Hugh Craig, and Jack
+      Elliott. 2014~\cite{antonia2014}
+    \end{itemize}
+  \item Tensors and Decompositions
+    \begin{itemize}[<+->]
+    \item {\em Tensor Decompositions and Applications}. Tamara Kolda
+      and Brett Bader. 2009~\cite{kolda2009}
+    \item {\em Foundations of the PARAFAC procedure: Models and
+        conditions for an" explanatory" multi-modal factor
+        analysis}. Richard Harshman. 1970~\cite{harshman1970}
+    \item {\em Sparse non-negative tensor factorization using
+        columnwise coordinate descent}. Ji Liu, Jun Liu, Peter Wonka,
+      and Jieping Yi. 2012\cite{liu2012sparse}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
 
+\subsection{Background}
 \begin{frame}{Introduction to Tensors}
 \begin{columns}
 \column{0.7\textwidth}
@@ -160,7 +208,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Property of Tensor Decomposition}
+\begin{frame}{Properties of Tensor Decomposition}
   \begin{itemize}[<+->]
   \item Decompositions are hierarchical (Kiers 1991)~\cite{kiers1991}.
   \item Polyadic decomposition is unique under rotation.
@@ -171,32 +219,82 @@
 \end{frame}
 
 
+
+
+\section{Approach}
+\subsection{Model Overview}
 \begin{frame}{Representing Documents as Tensors}
   \begin{itemize}[<+->]
   \item Document tensors store frequencies of $n$-grams.
   \item Let $\set{V}$ be the set of all unique words in a corpus.
-  \item Construct a tensor $\tens{D} \in \R^n$ 
+  \item Construct an $n$ mode tensor $\tens{D} \in \R^{|\set{V}|
+      \times \ldots \times |\set{V}|}$
+  \item Entry $d_{ijk}$ in $\tens{D}$ counts the frequency of the $n$-gram
+    $\mathrm{word}_i, \mathrm{word}_j, \mathrm{word}_k$
+  \item $\tens{D}$ counts the frequency of every possible $n$-gram
+    over the vocabulary $\set{V}$
   \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Non-Negative Decomposition of Document Tensors}
 
+\begin{frame}{Non-Negative Decomposition of Document Tensors}
+  \begin{itemize}[<+->]
+    \item Each document tensor is broken into factors using non-negative polyadic
+      decomposition
+      \[
+          \tens{D} = \sum \tens{F}_i 
+        \]
+      \item Each factor is normalized using the $L_1$ norm.
+        \[
+          \tens{D} = \sum \lambda_i \tens{F}'_i
+        \]
+      \item Each normalized factor is a proportional profile of the
+        frequencies of $n$-grams within each document.
+      \item $\lambda_i$ expressses the importance of the factor to the
+        document.
+  \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Normalizing and Matching Document Components}
-
+\begin{frame}{Matching Document Components}
+  \begin{itemize}[<+->]
+  \item Let $\set{C}$ be a corpuse of document tensors.
+  \item Let $\tens{D}_t \in \set{C}$ be the target document.
+  \item The set $\set{C}-\tens{D}_t$ is the set of source documents.
+  \item Each source document $s$ decomposes into $\set{F'}_s$  and
+    $\set{\Lambda}_s$.
+  \item The target document decomposes into $\set{F'}_t$ and
+    $\set{\Lambda}_t$
+  \item Ascribing target document factors to source factors produces
+    the model:
+    \[
+      \tens{D}_t \approx \sum_{s=1}^{|\set{S}|} \lambda^s_t \tens{F}'^s_t +
+  \lambda^n_t \tens{F}'^n_t
+    \]
+  \end{itemize}
 \end{frame}
 
 
 \begin{frame}{Assigning Weights to Factors and Documents}
+  \[
+      \tens{D}_t \approx \sum_{s=1}^{|\set{S}|} \lambda^s_t \tens{F}'^s_t +
+  \lambda^n_t \tens{F}'^n_t
+\]
 
+  \begin{itemize}[<+->]
+  \item Target document weights are computed from $\Lambda_t$
+    \[
+      \set{W} = \dfrac{1}{\sum \Lambda_t} \Lambda_t
+    \]
+  \item Weights associated with factors attributed to source factors
+    are added to the weight of their respective documents.
+  \item Weights associated with factors not attributed to source
+    factors are added to the author's contribution weight.
+  \end{itemize}
 \end{frame}
 
-
-
-\section{Approach}
+\subsection{Implementation}
 \begin{frame}{Overall Algorthm}
   \small
 \begin{algorithm}[H]
@@ -271,6 +369,13 @@
 \end{algorithm}
 \end{frame}
 
+
+\begin{frame}{Build Document Tensor}
+  \begin{figure}
+    \centering
+    \includegraphics[height=0.5\textheight]{diagrams/sliding-window}
+  \end{figure}
+\end{frame}
 
 \begin{frame}{Building Document Tensors}
   \small
@@ -428,29 +533,45 @@
 \end{frame}
 
 
-\begin{frame}{Implementation}
-
+\begin{frame}{Implementation Details}
+  \begin{itemize}[<+->]
+  \item Tensor functions are implemented as an ANSI C library called
+    sptensor.
+  \item The document influence model is implemented as a series of C
+    programs and shell scripts.  Each algorithm is a standalone
+    program.
+  \item Because the MPI version of sptensor is not yet complete,
+    vocabularies are constrained to a maximum of 600 words.
+    \begin{itemize}[<+->]
+    \item Sort the vocabulary by frequency.
+    \item Keep the 599 most frequent words.
+    \item Insert a new symbol, @, to act as a wildcard.
+    \item When building document tensors, all words not in the
+      vocabulary are replaced with the wildcard.
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 
 \section{Results}
+\subsection{A Simple Example}
 \begin{frame}[t]{A Simple Example: Cat and Dog}
 \begin{columns}[T]
   \column{0.33\textwidth}
-  \begin{block}{The Cat's Tale}
+  \begin{block}{The Cat's Tale}<2->
     \small
     The cat sat on the mat.  The cat was happy to be on the mat.  The
     cat saw the mouse running but was too lazy to chase it.
   \end{block}
   \column{0.33\textwidth}
-  \begin{block}{The Dog's Tale}
+  \begin{block}{The Dog's Tale}<3->
     \small
     The dog walked to the house.  The dog saw the food bowl, and the
     dog saw a squirrel.  The dog chased the squirrel from the food
     bowl.
   \end{block}
   \column{0.33\textwidth}
-  \begin{block}{The Saga Continues}
+  \begin{block}{The Saga Continues}<4->
     \small
     The dog saw the cat on the mat.  The dog walked to the house, and
     the dog chased the cat.  The squirrel was happy to see the dog
@@ -676,6 +797,7 @@
 \end{columns}
 \end{frame}
 
+\subsection{Analysis of a Conference Paper}
 \begin{frame}{Case Study: Regional Conference Paper}
   \begin{table}
     \centering
@@ -788,7 +910,23 @@
 
 
 \begin{frame}{Conclusion and Future Work}
-
+  \begin{itemize}[<+->]
+    \item Non-Negative Tensor Factorization can be used to build an
+      influence model of text documents.
+    \item Semanting information extracted from the model matches
+      expectations.
+    \item Future Research Directions
+      \begin{itemize}
+      \item Complete the MPI implementation of sptensor
+      \item Replicate the Burrows and Craig 2017 study of Henry VI,
+        part 3
+      \item Study the effects of constraigning the vocabulary
+      \item Apply the model to identify possible chronologies in
+        documents where chronology and provenance are questioned.
+      \item Use the model to build a network of influence flow in a
+        hierarchical corpus.
+      \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[allowframebreaks]{Bibliography}
