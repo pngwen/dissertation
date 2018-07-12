@@ -676,7 +676,6 @@ Math Here
 \begin{frame}{Model Parameters}
     \begin{table}
       \centering
-      \tiny
       Model Parameters\\
       \begin{tabular}{ll}
         \hline
@@ -697,12 +696,13 @@ Math Here
 
 \begin{frame}{Influence and Original Factors}
   \begin{columns}[T]
-    \column{0.5\textwidth}
+    \column{0.4\textwidth}
     \begin{table}
+      \tiny
       \centering
-      \begin{tabular}{l|c|l|}
+      \begin{tabular}{|l|c|l|}
         \hline
-        Document & Influence & Number of Matched Factors\\
+        Document & Influence & Factors\\
         \hline
         1 & 0.21 & 10\\
         2 & 0.09 & 9\\
@@ -711,23 +711,36 @@ Math Here
         5 & 0.00 & 0\\
         6 & 0.00 & 0\\
         Author & 0.57 & 127\\
+        \hline
       \end{tabular}
     \end{table}
-    \column{0.5\textwidth}
-    Information From Reading
+    \column{0.7\textwidth}
+    Information From Reading the Target Paper
     \begin{itemize}[<+->]
-      \item 
-    \end{itemize}
+      \item The first cited source details the algorithm which the
+        author extends.  The factors pulled from this source all
+        discuss the properties of the original algorithm.
+      \item The second, third, and fourth cited sources are previous
+        algorithms, to which the new one is compared.
+      \item Papers five and six are from a completely unrelated field.
+      \end{itemize}
+    \end{columns}
 \end{frame}
 
 
-\begin{frame}{Excerpts of Influencing Factors}
-
+\begin{frame}{Distribution of All Factor Distances}
+  \begin{figure}
+    \centering
+    \includegraphics[height=0.6\textheight]{diagrams/conference-factor-distance}
+  \end{figure}
 \end{frame}
 
 
-\begin{frame}{Excerpts of Original Factors}
-
+\begin{frame}{Distribution of Target Factor Distances}
+  \begin{figure}
+    \centering
+    \includegraphics[height=0.6\textheight]{diagrams/conference-target-distance}
+  \end{figure}
 \end{frame}
 
 
