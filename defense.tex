@@ -32,7 +32,7 @@
 
 \newcommand{\imagesource}[1]{{\centering\hfill\break\hbox{\scriptsize Image Source:\thinspace{\small\itshape #1}}\par}}
 
-\title[Textual Influence Modeling]{Textual Influence Modeling Through Non-Negative Tensor Factorization}
+\title[Textual Influence Modeling]{Textual Influence Modeling Through Non-Negative Tensor Decomposition}
 \author{Robert Earl Lowe}
 
 \date[]{July 12, 2018}
@@ -74,11 +74,16 @@
     \item Unconcious Influences
   \end{itemize}
 \end{itemize}
-
 \column{0.5\textwidth}
 \includegraphics[width=\textwidth]{images/Citations}
 \end{columns}
 \end{frame}
+
+
+\begin{frame}{Related Work}
+
+\end{frame}
+
 
 \begin{frame}{Introduction to Tensors}
 \begin{columns}
@@ -102,10 +107,26 @@
 \end{columns}
 \end{frame}
 
-\begin{frame}{Tensor Decompositions}
+\begin{frame}{Tensor Decomposition}
 \begin{columns}
-\column{0.6\textwidth}
-Math Here
+  \column{0.6\textwidth}
+
+  \begin{itemize}[<+->]
+      \small
+\item First studied by Frank Hitchock in 1927~\cite{hitchcock1927}
+\item Popularized by Richard Harshman~\cite{harshman1970} and Carroll
+  and Change~\cite{carroll1970} in the 1970's.
+\item The polyadic form of a tensor
+  \[
+      \tens{T} \approx \dsum_{i=1}^{r} a_i \otimes b_i
+  \otimes c_i
+\]
+\item Normalized polyadic form
+  \[
+      \tens{T} \approx \dsum_{i=1}^{r} \lambda_i a'_i
+  \otimes b'_i \otimes c'_i
+  \]
+\end{itemize}
 \column{0.4\textwidth}
 \begin{figure}
   \centering
@@ -122,14 +143,40 @@ Math Here
 \end{columns}
 \end{frame}
 
+\begin{frame}{Other Decomposition Techniques}
+  \begin{itemize}
+  \item Tucker Decomposition (Kolda 2009)~\cite{kolda2009}
+    \[
+      \tens{T} \approx \tens{G} \times_1 \mat{A} \times_3 \mat{B} \times_2
+  \mat{C}
+\]
+  \item Tucker Decomposition (element-wise formulation) (Kolda
+    2009)~\cite{kolda2009}
+    \[
+        t_{ijk} \approx \dsum_{p=1}^P \dsum_{q=1}^Q \dsum_{r=1}^R
+  g_{pqr}a_{ip}b_{jq}c_{kr}
+\]
+\item Non-Negative Decomposition
+  \end{itemize}
+\end{frame}
 
-\begin{frame}{Advantages of Tensor Decomposition}
-
+\begin{frame}{Property of Tensor Decomposition}
+  \begin{itemize}[<+->]
+  \item Decompositions are hierarchical (Kiers 1991)~\cite{kiers1991}.
+  \item Polyadic decomposition is unique under rotation.
+  \item Tensor decompositions retain structure.
+  \item Normalized polyadic decompositions provide proportional
+    profiles (Harshman 1970)~\cite{harshman1970}
+  \end{itemize}
 \end{frame}
 
 
 \begin{frame}{Representing Documents as Tensors}
-
+  \begin{itemize}[<+->]
+  \item Document tensors store frequencies of $n$-grams.
+  \item Let $\set{V}$ be the set of all unique words in a corpus.
+  \item Construct a tensor $\tens{D} \in \R^n$ 
+  \end{itemize}
 \end{frame}
 
 
@@ -147,10 +194,6 @@ Math Here
 
 \end{frame}
 
-
-\begin{frame}{Related Work}
-
-\end{frame}
 
 
 \section{Approach}
@@ -748,9 +791,10 @@ Math Here
 
 \end{frame}
 
-
-\begin{frame}{Bibliography}
-
+\begin{frame}[allowframebreaks]{Bibliography}
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+\bibliography{sources}{}
+\bibliographystyle{plain}
 \end{frame}
 
 
