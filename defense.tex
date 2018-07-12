@@ -1,4 +1,4 @@
-\documentclass[handout]{beamer}
+\documentclass{beamer}
 \mode<presentation>
 {
   \usetheme{Warsaw}
@@ -99,7 +99,7 @@
 \end{frame}
 
 \begin{frame}[allowframebreaks]{Related Work}
-  \begin{itemize}[<+->]
+  \begin{itemize}
   \item Frequency Counting and Attribution
     \begin{itemize}
     \item {\em All the way through: testing for authorship in different
@@ -111,7 +111,7 @@
         Authorship}. Hugh Craig and Arthur Kinney. 2009~\cite{craig2009}
     \end{itemize}
   \item $n$-gram attribution
-    \begin{itemize}[<+->]
+    \begin{itemize}
     \item {\em N-gram over Context}. Noriaki Kawamae. 2016~\cite{kawamae2016}
     \item {\em Language chunking, data sparseness, and the value of a
         long marker list: explorations with word n-grams and authorial
@@ -119,7 +119,7 @@
       Elliott. 2014~\cite{antonia2014}
     \end{itemize}
   \item Tensors and Decompositions
-    \begin{itemize}[<+->]
+    \begin{itemize}
     \item {\em Tensor Decompositions and Applications}. Tamara Kolda
       and Brett Bader. 2009~\cite{kolda2009}
     \item {\em Foundations of the PARAFAC procedure: Models and
@@ -192,7 +192,7 @@
 \end{frame}
 
 \begin{frame}{Other Decomposition Techniques}
-  \begin{itemize}
+  \begin{itemize}[<+->]
   \item Tucker Decomposition (Kolda 2009)~\cite{kolda2009}
     \[
       \tens{T} \approx \tens{G} \times_1 \mat{A} \times_2 \mat{B} \times_3
@@ -275,7 +275,7 @@
 \end{frame}
 
 
-\begin{frame}{Assigning Weights to Factors and Documents}
+\begin{frame}{Influence Model}
   \[
       \tens{D}_t \approx \sum_{s=1}^{|\set{S}|} \lambda^s_t \tens{F}'^s_t +
   \lambda^n_t \tens{F}'^n_t
@@ -394,8 +394,8 @@
   \For{$i \leftarrow 1 $ to $len - n$} {
     \tcc{Compute Tensor Element Index}
     $index \leftarrow$ list of $n$ integers\;
-    \For{$j\leftarrow i $ to $i+n$} {
-      $index[j] \leftarrow$ index of word $d[j]$ in \V\;
+    \For{$j\leftarrow 1 $ to $n$} {
+      $index[j] \leftarrow$ index of word $d[i]$ in \V\;
     }
     \tcc{Update Frequency of This $n$-gram}
     $\D[index] \leftarrow \D[index] + 1$\;
@@ -480,9 +480,9 @@
   \Output{\W, \S}
   \BlankLine
   \tcc{Compute Weights}
-  $s \leftarrow \sum \LN$\;
-  $\W \leftarrow \LN / s$\;
-  \BlankLine
+  $sum \leftarrow \sum \LN$\;
+  $\W \leftarrow \LN / sum$\;
+  $\S \leftarrow$ list of integers of size $|\lambda|$\;
   \tcc{Classify Factors}
   $nfactors \leftarrow |\LN|$\;
   \For{$i=1$ to $nfactors$}{
@@ -519,13 +519,13 @@
   \Input{\Ndocs, \S, \W}
   \Output{\I, \Author}
   \BlankLine
-  $\I \leftarrow $ List of 0 repeated $\Ndocs-1$ times
+  $\I \leftarrow $ List of 0 repeated $\Ndocs-1$ times\;
   \For{i = 1 to \Ndocs} {
     \eIf{$\S[i] = 0$} {
-      $\Author = \Author + \W[i]$
+      $\Author = \Author + \W[i]$\;
     }{
-      $j \leftarrow $ Document number corresponding with $\S[i]$
-      $\I[j] \leftarrow \I[j] + \W[i]$
+      $j \leftarrow $ Document number corresponding with $\S[i]$\;
+      $\I[j] \leftarrow \I[j] + \W[i]$\;
     }
   }
 \end{algorithm}
@@ -650,7 +650,7 @@
     \begin{table}
       \centering
       \tiny
-      Model Parameters\\
+      {\bf Model Parameters}\\
       \begin{tabular}{ll}
         \hline
         $n$-gram size & 3\\
@@ -672,7 +672,7 @@
   \begin{table}
     \centering
     \tiny
-    Model Output\\
+    {\bf Model Output}\\
     \begin{tabular}{|l|c|l|}
       \hline
       Factor & Factor Weight & Classification\\
@@ -712,7 +712,7 @@
     \begin{table}
       \centering
       \tiny
-      Matched to Cat Factor 1\\
+      {\bf Matched to Cat Factor 1}\\
       \begin{tabular}{lll|r}
         Word 1 & Word 2 & Word 3 & Proportion\\
         \hline
@@ -725,7 +725,7 @@
     \begin{table}
       \centering
       \tiny
-      Matched to Dog Factor 1\\
+      {\bf Matched to Dog Factor 1}\\
       \begin{tabular}{lll|r}
         Word 1 & Word 2 & Word 3 & Proportion\\
         \hline
@@ -803,7 +803,7 @@
   \begin{table}
     \centering
     \tiny
-    Corpus of Scientific Papers\\
+    {\bf Corpus of Scientific Papers}\\
   \begin{tabular}{|l|l|}
     \hline
     1 & Jessica Lin, Eamonn Keogh, Stefano Lonardi, and Bill Chiu. A\\
@@ -932,6 +932,17 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Acknowledgments}
+  I would like to thank
+  \begin{itemize}
+  \item My advisor Dr. Mike Berry 
+  \item My committee Dr. Audris Mockus, Dr. Brad Vander Zanden,
+    Dr. Judy Day
+  \item Graduate Student Administrator Ms. Dana Bryson
+  \item All of my colleagues at Maryville College
+  \item My Wife Erin Lowe
+  \end{itemize}
+\end{frame}
 \begin{frame}[allowframebreaks]{Bibliography}
 \setbeamertemplate{bibliography item}{\insertbiblabel}
 \bibliography{sources}{}
