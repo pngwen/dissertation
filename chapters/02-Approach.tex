@@ -264,7 +264,7 @@ this model is the $L_1$ norm.  Separating these out, the final
 approximation of each document tensor is shown in
 Equation~\ref{eq:cp-ccd-normalized}.
 \begin{equation}
-  \label{eq:cp-ccd-nromalized}
+  \label{eq:cp-ccd-normalized}
   \tens{A} \approx \dsum_{i=1}^r \lambda_i \tens{F}_i
 \end{equation}
 
@@ -272,8 +272,8 @@ The entire process of the construction of these factors is shown in
 Algorithm~\ref{alg:ExtractFactors}.  The result is an $L_1$ normalized
 set of rank-1 tensors.  
 \begin{algorithm}
-  \label{alg:ExtractFactors}
   \caption{Extract Factors}
+  \label{alg:ExtractFactors}
   \SetKwData{LN}{$\set{\Lambda}$}  \SetKwData{C}{$\set{C}$}
   \SetKwData{F}{$\set{F}$} \SetKwData{U}{$\set{U}$}
   \SetKwData{T}{$\tens{T}$}\SetKwData{D}{$\tens{D}$}
