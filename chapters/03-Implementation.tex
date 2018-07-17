@@ -24,7 +24,7 @@ Figure~\ref{fig:cat_dog_story}.  The third story is intended to be a
 sequel of sorts, drawing on material from the previous stories.  The
 complete vocabulary for this example is shown in
 Table~\ref{tab:catdog_vocabulary}.
-\begin{figure}
+\begin{figure}[p]
   \noindent\fbox{%
     \parbox{\textwidth}{%
      The cat sat on the mat.  The cat was happy to be on the mat.  The cat
@@ -33,7 +33,7 @@ Table~\ref{tab:catdog_vocabulary}.
   \caption{The Cat's Tale}\label{fig:cat_story}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[p]
   \noindent\fbox{%
     \parbox{\textwidth}{%
 
@@ -44,7 +44,7 @@ Table~\ref{tab:catdog_vocabulary}.
   \caption{The Dog's Tale}\label{fig:dog_story}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[p]
   \noindent\fbox{%
     \parbox{\textwidth}{%
     The dog saw the cat on the mat.  The dog walked to the house, and
@@ -55,9 +55,11 @@ Table~\ref{tab:catdog_vocabulary}.
   \caption{The Saga Continues}\label{fig:cat_dog_story}
 \end{figure}
 
-\begin{table}
+\begin{table}[p]
   \centering
+  \caption{Cat and Dog Vocabulary}\label{tab:catdog_vocabulary}
   \begin{tabular}{c|l||c|l}
+    \hline
     $I$ & Word & $I$ & Word\\ 
     \hline
     1 & the & 16 & chased \\
@@ -75,8 +77,8 @@ Table~\ref{tab:catdog_vocabulary}.
    13 & too & 28 & instead \\
    14 & and & 29 & but \\
    15 & see & 30 & chase\\
+    \hline
   \end{tabular}
-  \caption{Cat and Dog Vocabulary}\label{tab:catdog_vocabulary}
 \end{table}
 
 After a few trial decompositions, 7 factors was determined to be the
@@ -94,115 +96,106 @@ this requires a 90\% match in a factor.  In this case it would not
 have mattered, however, as the matching factors were all perfect
 matches with an $L_1$ distance of 0.
 
-\begin{table}
+\begin{table}[p]
   \centering
+  \caption{Cat Dog Model} \label{tab:cat_dog_class}
   \begin{tabular}{|l|c|l|}
     \hline
     Factor & Factor Weight & Classification\\
     \hline
     1 & 0.28 & Author Contribution\\
-    \hline
     2 & 0.15 & Cat Factor 1\\
-    \hline
     3 & 0.14 & Author Contribution\\
-    \hline
     4 & 0.14 & Author Contribution\\
-    \hline
     5 & 0.11 & Author Contribution\\
-    \hline
     6 & 0.11 & Author Contribution\\
-    \hline
     7 & 0.06 & Dog Factor 1\\
     \hline
   \end{tabular}
-  \caption{Cat Dog Model} \label{tab:cat_dog_class}
 \end{table}
 
-The final classification of the contribution of the 3 sources, the cat
-story, the dog story, and the author's original contributions are
-shown in Figure~\cite{fig:cat_dog_bar}.
 
-\begin{figure}
+Factor two was matched to the cat story, and factor seven was matched
+to the dog story.  These factors are shown in
+Table~\ref{tab:catfactor} and Table~\ref{tab:dogfactor}.  The
+remaining factors (1,3,4,5, and 6) were determined to be original to
+the target document.  These factors are seen in
+Table~\ref{tab:sequel_original}.
+
+\begin{table}[p]
   \centering
-  \includegraphics[width=3.5in]{diagrams/catdog}
-  \caption{Cat Dog Saga Contributions}
-\end{figure}
+  \caption{Factor 2 - Matched to Cat Factor 1}\label{tab:catfactor}
+  \begin{tabular}{lll|r}
+    \hline
+    Word 1 & Word 2 & Word 3 & Proportion\\
+    \hline
+    on & the & mat & 1.00\\
+    \hline
+  \end{tabular}
+\end{table}
 
-The factors discovered by this process are as follows.  Factor 1, with
-its non-zero entries translated into the words they represent contains
-most of the situational and action oriented parts of the sequel.
-\begin{itemize}
-\item saw the squirrel 0.267417
-\item saw the cat 0.223651
-\item saw the dog 0.192194
-\item cat the squirrel 0.044066
-\item cat the cat 0.036854
-\item cat the dog 0.031670
-\item mat the squirrel 0.034331
-\item mat the cat 0.028712
-\item mat the dog 0.024674
-\item see the squirrel 0.032132
-\item see the cat 0.026873
-\item see the dog 0.023094
-\item chased the squirrel 0.013437
-\item chased the cat 0.011238
-\item chased the dog 0.009657
-\end{itemize}
+\begin{table}[p]
+  \centering
+  \caption{Factor 7 - Matched to Dog Factor 1}\label{tab:dogfactor}
+  \begin{tabular}{lll|r}
+    \hline
+    Word 1 & Word 2 & Word 3 & Proportion\\
+    \hline
+    the & dog & saw & 0.40\\
+    the & dog & walked & 0.20\\
+    the & dog & chased & 0.20\\
+    the & dog & chase & 0.20\\
+    \hline
+  \end{tabular}
+\end{table}
 
-The second factor, which was matched to the cat story consists of just
-one phrase, which aptly describes the cat's outlook on life.
-\begin{itemize}
-\item on the mat 1.000000
-\end{itemize}
-
-The third factor deals mainly with the squirrel.  Note that the
-decomposition process actually invented a phrase which does not appear
-in the story.  This is due to the small amount of data, and therefore
-smaller chance of fitting factors to the model.
-\begin{itemize}
-\item squirrel and happy 0.249836
-\item squirrel and decided 0.262960
-\item squirrel was happy 0.237368
-\item squirrel was decided 0.249836
-\end{itemize}
-
-The fourth factor contains the dog's primary thought process.  Note
-that the dog only makes decisions in the sequel.
-\begin{itemize}
-\item decided to chase 1.000000
-\end{itemize}
-
-The fifth factor contains a response from the cat which only appears
-in the sequel.
-\begin{itemize}
-\item happy to see 1.000000
-\end{itemize}
-
-The sixth factor contains the action found in the sequel.
-\begin{itemize}
-\item cat saw the 0.345830
-\item cat see the 0.040819
-\item cat chased the 0.172914
-\item cat chase the 0.213734
-\item walked saw the 0.056987
-\item walked see the 0.006726
-\item walked chased the 0.028493
-\item walked chase the 0.035220
-\item to saw the 0.044398
-\item to see the 0.005240
-\item to chased the 0.022199
-\item to chase the 0.027439
-\end{itemize}
-
-Finally, the seventh factor gives us all the actions that the dog
-carries out.  This one was matched to the dog's story, which is where
-we first learn the things the dog likes to do!
-\begin{itemize}
-\item  the dog saw 0.400000
-\item the dog walked 0.200000
-\item the dog chased 0.200000
-\item the dog chase 0.200000
-\end{itemize}
+\begin{table}[p]
+  \centering
+  \caption{Sequel Original Factors}\label{tab:sequel_original}
+  \begin{tabular}{lll|r}
+    \hline
+    Word 1 & Word 2 & Word 3 & Proportion \\
+    \hline
+    saw & the & squirrel & 0.267417\\
+    saw & the & cat & 0.223651\\
+    saw & the & dog & 0.192194\\
+    cat & the & squirrel & 0.044066\\
+    cat & the & cat & 0.036854\\
+    cat & the & dog & 0.031670\\
+    mat & the & squirrel & 0.034331\\
+    mat & the & cat & 0.028712\\
+    mat & the & dog & 0.024674\\
+    see & the & squirrel & 0.032132\\
+    see & the & cat & 0.026873\\
+    see & the & dog & 0.023094\\
+    chased & the & squirrel & 0.013437\\
+    chased & the & cat & 0.011238\\
+    chased & the & dog & 0.009657\\
+    \hline
+    squirrel & and & happy & 0.249836\\
+    squirrel & and & decided & 0.262960\\
+    squirrel & was & happy & 0.237368\\
+    squirrel & was & decided & 0.249836\\
+    \hline
+    decided & to & chase & 1.000000\\
+    \hline
+    happy & to & see & 1.000000\\
+    \hline
+    cat & saw & the & 0.345830\\
+    cat & see & the & 0.040819\\
+    cat & chased & the & 0.172914\\
+    cat & chase & the & 0.213734\\
+    walked & saw & the & 0.056987\\
+    walked & see & the & 0.006726\\
+    walked & chased & the & 0.028493\\
+    walked & chase & the & 0.035220\\
+    to & saw & the & 0.044398\\
+    to & see & the & 0.005240\\
+    to & chased & the & 0.022199\\
+    to & chase & the & 0.027439\\
+    \hline
+  \end{tabular}
+\end{table}
 
 The separation that the model accomplished, even with very scant data,
 shows that the expected similarities in the resultant factors are
@@ -222,9 +215,12 @@ Table~\ref{tab:conference_corpus}. Documents 1-4 are the papers cited
 by the target paper, documents 5-6 are unrelated papers, and document
 7 is the target paper.
 
-\begin{table}
+\begin{table}[p]
   \centering
+  \caption{Conference Paper Corpus}\label{tab:conference_corpus}
   \begin{tabular}{|l|l|}
+    \hline
+    Num & Document Information\\
     \hline
     1 & Jessica Lin, Eamonn Keogh, Stefano Lonardi, and Bill Chiu. A\\
       & symbolic representation of time series, with implications for\\
@@ -250,21 +246,20 @@ by the target paper, documents 5-6 are unrelated papers, and document
     6 & Blei, David M and Ng, Andrew Y and Jordan, Michael I. Latent\\
       & dirichlet allocation. 2007\\
     \hline
-    \hline
     7 & Serfas, Doug. Dynamic Biometric Recognition of Handwritten Digits\\
       & Using Symbolic Aggregate Approximation. Proceedings of the ACM\\
       & Southeast Conference 2017\\
     \hline
   \end{tabular}
-  \caption{Conference Paper Corpus}\label{tab:conference_corpus}
 \end{table}
 
 The entire corpus consists of 45,152 words.  As described in the
 previous chapter, the vocabulary was truncated to 600 words.  The 600
 words were the most frequent words across the corpus.  The other
 parameters are shown in Table~\ref{tab:model_parameters}
-\begin{table}
+\begin{table}[p]
   \centering
+  \caption{Conference Model Parameters}\label{tab:model_parameters}
   \begin{tabular}{ccc}
     \hline
     $n$ & $nfactors$ & $threshold$\\
@@ -272,7 +267,6 @@ parameters are shown in Table~\ref{tab:model_parameters}
     3 & 150 & 0.2\\
     \hline
   \end{tabular}
-  \caption{Conference Model Parameters}\label{tab:model_parameters}
 \end{table}
 \end{document}
 Again, 0.2 is used as the threshold as it is a good default setting.
@@ -284,8 +278,9 @@ matrix and classifying the factors required another hour and a half.
 The results are shown in Table~\ref{tab:conference_results}.
 
 
-\begin{table}
+\begin{table}[p]
   \centering
+  \caption{Conference Classification Results}\label{tab:conference_results}
   \begin{tabular}{l|c|l|}
     \hline
     Document & Influence & Number of Matched Factors\\
@@ -297,8 +292,8 @@ The results are shown in Table~\ref{tab:conference_results}.
     5 & 0.00 & 0\\
     6 & 0.00 & 0\\
     Author & 0.57 & 127\\
+    \hline
   \end{tabular}
-  \caption{Conference Classification Results}\label{tab:conference_results}
 \end{table}
 
 As these results show, the model makes a set of reasonable matches,

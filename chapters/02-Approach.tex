@@ -19,8 +19,13 @@ Table~\ref{table:modelInput}.  The document list contains a list of all
 of the documents in the corpus.  The document list contains potential
 source documents and one target document.  The target document is
 placed at the end of the document list by convention.
-\begin{table}
+\begin{table}[p]
+  \centering
+  \caption{Model Input}
+  \label{table:modelInput}
   \begin{tabular}{ll}
+    \hline
+    Parameter & Explanation\\
     \hline
     $docs$ & A list of documents in the corpus.  The target document\\
            & is the final entry in the list. \\
@@ -28,9 +33,7 @@ placed at the end of the document list by convention.
     $nfactors$ & The number of factors for tensor decomposition.\\
     $threshold$ & The threshold value for factor matching.\\
     \hline
-  \end{tabular}
-  \caption{Model Input}
-  \label{table:modelInput}
+  \end{tabular}\\
 \end{table}
 
 The generated model's output consists of the set of factors which have
@@ -38,8 +41,14 @@ been found to influence the target document, the weights of each
 document's influence on the target document, and the set of factors
 found from the decomposition of the document tensors.  The output variables of
 the generated model are described in Table~\ref{table:modelOutput}.
-\begin{table}
+\begin{table}[p]
+  \centering
+  \caption{Model Output}
+  \label{table:modelOutput}
+
   \begin{tabular}{ll}
+    \hline
+    Parameter & Explanation\\
     \hline
     $\set{W}$ & Set of weights of each factor of the target document.\\
               & $\set{W}_i$ is the weight of target document factor $i$.\\
@@ -49,8 +58,6 @@ the generated model are described in Table~\ref{table:modelOutput}.
     $\set{F}$ & The set of all document factor tensors.\\
     \hline
   \end{tabular}
-  \caption{Model Output}
-  \label{table:modelOutput}
 \end{table}
 
 \subsection{Approach Overview}
@@ -150,7 +157,7 @@ count the frequency of $n$-grams within each document.  Thus entry
 $\tens{D}_{ijk}$ counts the number of occurrences of the phrase
 $\set{V}_i \set{V}_j \set{V}_k$ within the document.
 
-\begin{figure}
+\begin{figure}[p]
   \begin{center}
     \includegraphics[width=0.75\textwidth]{diagrams/sliding-window}
   \end{center}
