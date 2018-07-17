@@ -58,7 +58,7 @@ Table~\ref{tab:catdog_vocabulary}.
 \begin{table}[p]
   \centering
   \caption{Cat and Dog Vocabulary}\label{tab:catdog_vocabulary}
-  \begin{tabular}{c|l||c|l}
+  \begin{tabular}{|c|l||c|l|}
     \hline
     $I$ & Word & $I$ & Word\\ 
     \hline
@@ -80,6 +80,7 @@ Table~\ref{tab:catdog_vocabulary}.
     \hline
   \end{tabular}
 \end{table}
+\FloatBarrier
 
 After a few trial decompositions, 7 factors was determined to be the
 optimal decomposition of the document corpus.  This yielded an error
@@ -125,7 +126,7 @@ Table~\ref{tab:sequel_original}.
 \begin{table}[p]
   \centering
   \caption{Factor 2 - Matched to Cat Factor 1}\label{tab:catfactor}
-  \begin{tabular}{lll|r}
+  \begin{tabular}{|lll|r|}
     \hline
     Word 1 & Word 2 & Word 3 & Proportion\\
     \hline
@@ -137,7 +138,7 @@ Table~\ref{tab:sequel_original}.
 \begin{table}[p]
   \centering
   \caption{Factor 7 - Matched to Dog Factor 1}\label{tab:dogfactor}
-  \begin{tabular}{lll|r}
+  \begin{tabular}{|lll|r|}
     \hline
     Word 1 & Word 2 & Word 3 & Proportion\\
     \hline
@@ -152,7 +153,7 @@ Table~\ref{tab:sequel_original}.
 \begin{table}[p]
   \centering
   \caption{Sequel Original Factors}\label{tab:sequel_original}
-  \begin{tabular}{lll|r}
+  \begin{tabular}{|lll|r|}
     \hline
     Word 1 & Word 2 & Word 3 & Proportion \\
     \hline
@@ -200,7 +201,7 @@ Table~\ref{tab:sequel_original}.
 The separation that the model accomplished, even with very scant data,
 shows that the expected similarities in the resultant factors are
 present.  The next step is to look at a more substantial example.
-
+\FloatBarrier
 
 \section{A Conference Paper Case Study}
 For a real-world case study, a conference paper was pulled from the
@@ -281,7 +282,7 @@ The results are shown in Table~\ref{tab:conference_results}.
 \begin{table}[p]
   \centering
   \caption{Conference Classification Results}\label{tab:conference_results}
-  \begin{tabular}{l|c|l|}
+  \begin{tabular}{|l|c|l|}
     \hline
     Document & Influence & Number of Matched Factors\\
     \hline

@@ -59,6 +59,7 @@ the generated model are described in Table~\ref{table:modelOutput}.
     \hline
   \end{tabular}
 \end{table}
+\FloatBarrier
 
 \subsection{Approach Overview}
 The overall process was described in Chapter 1.  What remains is to
@@ -157,13 +158,6 @@ count the frequency of $n$-grams within each document.  Thus entry
 $\tens{D}_{ijk}$ counts the number of occurrences of the phrase
 $\set{V}_i \set{V}_j \set{V}_k$ within the document.
 
-\begin{figure}[p]
-  \begin{center}
-    \includegraphics[width=0.75\textwidth]{diagrams/sliding-window}
-  \end{center}
-  \caption{Sliding Window}
-  \label{fig:SlidingWindow}
-\end{figure}
 
 The construction of this tensor is detailed in
 Algorithm~\ref{alg:BuildTensor}.  The tensor is constructed using a
@@ -195,6 +189,15 @@ process is illustrated in Figure~\ref{fig:SlidingWindow}.
   }
   \Return{\D}
 \end{algorithm}
+
+\begin{figure}[p]
+  \begin{center}
+    \includegraphics[width=0.75\textwidth]{diagrams/sliding-window}
+  \end{center}
+  \caption{Sliding Window}
+  \label{fig:SlidingWindow}
+\end{figure}
+\FloatBarrier
 
 The resultant tensor is typically very sparse as it counts the
 frequency of all possible $n$-grams over the vocabulary $\set{V}$, and
