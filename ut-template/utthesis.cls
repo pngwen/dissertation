@@ -83,7 +83,7 @@
 \def\university#1{\gdef\@university{#1}}%
 % initialize macros
 \def\@title{Textual Influence Modeling Through Non-Negative Tensor Decomposition} 
-\def\@author{Robert Lowe}
+\def\@author{Robert Earl Lowe}
 \def\@graduationMonth{August}
 \def\@copyrightYear{2018}
 \def\@degree{Doctor of Philosophy}	% degree type
