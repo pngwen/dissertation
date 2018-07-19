@@ -82,17 +82,28 @@ Table~\ref{tab:catdog_vocabulary}.
 \end{table}
 \FloatBarrier
 
-After a few trial decompositions, 7 factors was determined to be the
-optimal decomposition of the document corpus.  This yielded an error
-ratio of 0.45, which is the best fit can yield.  (The range of values
-tried was from 1 to the number of non-zero elements in the tensor.)
-Even with this relatively poor fit, the model was able to distinguish
-features of the stories.  The distances between the factors, other
-than the diagonals, range from 0 to 1.4.  The final classification
-step yielded the classification of factors shown in
+The number of factors was determined by trial decomposition of the
+target document.  The target document consists of 52 words, which
+yields 49 3-grams of which 42 are unique.  The resultant document
+tensor has 42 non-zero entries.  Of course, one unique solution to the
+decomposition of this tensor would be 42 tensors consisting of the
+individual non-zero entries in position.  This would be the maximal
+size of the rank of the tensor.  Tensor decompositions were performed
+for between 1 and 42 factors.  Above 15 factors, the CCD algorithm
+produced factorizations that were mostly zeroes.  That is, factor
+tensors consisted entirely of zero entries.  This is due to the small
+number of entries present, and the small amount of variation between
+them.  Because the higher-ranked factorizations all suffered from this
+problem, they were exlcuded for consideration.  For the factorizations
+between 1 and 15 factors, 7 yielded the best fit with an error ratio
+of 0.45, and so 7 was determined to be the optimal number of factors
+for this corpus. Even with this relatively poor fit, the model was
+able to distinguish features of the stories.  The distances between
+the factors, other than the diagonals, range from 0 to 1.4.  The final
+classification step yielded the classification of factors shown in
 Table~\ref{tab:cat_dog_class}.
 
-The model threshold value as set to 0.2, which is a sensible value as
+The model threshold value was set to 0.2, which is a sensible value as
 this requires a 90\% match in a factor.  In this case it would not
 have mattered, however, as the matching factors were all perfect
 matches with an $L_1$ distance of 0.
