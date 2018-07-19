@@ -67,11 +67,12 @@ see the detailed formulation of how each component of the model is
 computed.  The overall algorithm is described in
 Algorithm~\ref{alg:model}.  The principal activities in the model
 building process are document preparation, tensor construction, and
-influence extraction.  
+influence extraction.
+
 \begin{algorithm}
   \caption{Influence Model Construction}
   \label{alg:model}
-
+  
   \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
   \SetKwFunction{Prepare}{prepare}
   \SetKwFunction{BuildVocabulary}{build\_vocabulary}
@@ -81,7 +82,7 @@ influence extraction.
   \SetKwFunction{ExtractInfluence}{extract\_influence}
   \SetKwData{W}{$\set{W}$} \SetKwData{S}{$\set{S}$}
   \SetKwData{D}{$\tens{D}$}
-  \SetKwData{V}{$\set{V}$} \SetKwData{LN}{$\set{\Lambda}$}
+  \SetKwData{V}{$\set{V}$} \SetKwData{LN}{$\Lambda$}
   \SetKwData{F}{$\set{F}$} \SetKwData{DM}{$M$}
   \SetKwData{C}{$\set{C}$}
   
@@ -100,6 +101,7 @@ influence extraction.
   $\lambda \leftarrow$ the entries in \LN corresponding to the target document.\;
   \W, \S $\leftarrow$ \ExtractInfluence{$|docs|$, \DM,\F,$\lambda$, $threshold$}\;
   \Return{\W, \S, \F}\;
+
 \end{algorithm}
 
 \subsection{Document Filtering and Vocabulary Extraction}
@@ -123,6 +125,13 @@ the rest of this explanation.
     Convert $d$ to lower case\;
   }
 \end{algorithm}
+
+Note that none of the words, including stop words, of the document are
+removed during filtering.  Also, no stemming is performed.  The reason
+for this is that these elements go to the style of the author.  In
+fact, both stop words and unstemmed words have been shown to be
+powerful markers for authorship and style~\ref{antonia2014,
+  stamatatos2011, burrows2017}.  
 
 In order to build tensors, a vocabulary is first extracted from the
 corpus.  The vocabulary is simply the set of all words within the
@@ -152,9 +161,9 @@ Following the preparation of the corpus and vocabulary extraction, the
 next step is key to the construction of the tensor model.  In this
 step, each document is represented by a tensor.  The tensor is
 constructed with $n$ modes where each mode contains $|\set{V}|$
-dimensions.  For example, 3 mode tensor over a a 30 word vocabulary
+dimensions.  For example, 3-mode tensor over a a 30-word vocabulary
 would result in a $30 \times 30 \times 30$ tensor. This is used to
-count the frequency of $n$-grams within each document.  Thus entry
+count the frequency of $n$-grams within each document.  Thus, entry
 $\tens{D}_{ijk}$ counts the number of occurrences of the phrase
 $\set{V}_i \set{V}_j \set{V}_k$ within the document.
 
@@ -180,10 +189,9 @@ process is illustrated in Figure~\ref{fig:SlidingWindow}.
   \For{$i \leftarrow 1 $ to $len - n$} {
     \tcc{Compute Tensor Element Index}
     $index \leftarrow$ list of $n$ integers\;
-    \For{$j\leftarrow i $ to $i+n$} {
-      $index[j] \leftarrow$ index of word $d[j]$ in \V\;
+    \For{$j\leftarrow 1 $ to $n$} {
+      $index[j] \leftarrow$ index of word $d[i]$ in \V\;
     }
-    \BlankLine
     \tcc{Update Frequency of This $n$-gram}
     $\D[index] \leftarrow \D[index] + 1$\;
   }
@@ -254,14 +262,14 @@ $\tens{C}$, the model becomes equivalent to the non-negative canonical
 polyadic decomposition.  Each $U_i$ matrix will contain $n$ columns,
 and when this product is carried out, it can be rewritten as the sum
 of the tensor product of the columns of $U$.  That is, the equivalent
-CP model can be written as in Equation~\ref{eq:cp-ccd}.
+CP model can be expressed using Equation~\ref{eq:cp-ccd}.
 \begin{equation}
   \label{eq:cp-ccd}
   \tens{A} = \dsum_{i=1}^n U^1_{:,i} \otimes U^2_{:,i} \otimes \ldots
   \otimes U^m_{:,i} - \tens{E}
 \end{equation}
 
-Having extracting the rank-1 tensors which approximate $\tens{A}$, the
+Having extracted the rank-1 tensors which approximate $\tens{A}$, the
 last remaining step is to normalize these factors.  The norm used in
 this model is the $L_1$ norm.  Separating these out, the final
 approximation of each document tensor is shown in
@@ -270,14 +278,23 @@ Equation~\ref{eq:cp-ccd-normalized}.
   \label{eq:cp-ccd-normalized}
   \tens{A} \approx \dsum_{i=1}^r \lambda_i \tens{F}_i
 \end{equation}
+The $L_1$ norm is used here, and in the distance calculation in a
+later step, because it produces a sparse solution.  The tensors being
+factored in this model are already very sparse, and the non-negative
+decomposition produces factors which are also sparse.  Using the $L_2$
+norm would tend to allow large differences between the factors
+dominate the model's selection of related factors when the differences
+between factors are computed. Because the lower sensitivity of the
+$L_1$ norm is desired in the distance calculation, it is also used
+here.  Doing so sets the range of distances between factors $[0,2]$.
 
 The entire process of the construction of these factors is shown in
-Algorithm~\ref{alg:ExtractFactors}.  The result is an $L_1$ normalized
+Algorithm~\ref{alg:ExtractFactors}.  The result is an $L_1$-normalized
 set of rank-1 tensors.  
 \begin{algorithm}
   \caption{Extract Factors}
   \label{alg:ExtractFactors}
-  \SetKwData{LN}{$\set{\Lambda}$}  \SetKwData{C}{$\set{C}$}
+  \SetKwData{LN}{$\Lambda$}  \SetKwData{C}{$\set{C}$}
   \SetKwData{F}{$\set{F}$} \SetKwData{U}{$\set{U}$}
   \SetKwData{T}{$\tens{T}$}\SetKwData{D}{$\tens{D}$}
   \SetKwFunction{Norm}{$\mathrm{L}_1$\_norm}
@@ -376,7 +393,7 @@ indicates maximum distance.
   \Return{\DM}
 \end{algorithm}
 
-The final task to be preformed in constructing the model is to
+The final task to be performed in constructing the model is to
 identify which source factors are closest to each target factor and
 compute the corresponding weights of those factors.  This task is
 carried out by Algorithm~\ref{alg:influence}.  The basic strategy is
@@ -389,6 +406,21 @@ second it is compared against a threshold.  If the minimum value is
 below this threshold, the factor is assigned a source.  If, on the
 other hand, the minimum distance is above the threshold it is not
 assigned a source.
+
+The threshold value is a heuristic parameter which controls the
+matching of factors. Recall that the factors are $L_1$-normalized, and
+the distance computed between the factors is the $L_1$-distance. If
+two factors are a perfect match, this results in a distance of $0$
+If they are completely disparate, the result will be a maximum
+distance of $2$.  This latter arrangement implies that no non-zero
+entries in the factor tensors were found in the same position and
+would therefore signify completely unrelated factors.  A sensible
+default setting for this threshold is $0.2$ as this requires a $90\%$
+agreement in the proportion of the entries.  Another approach to
+selecting a threshold value is to examine the distribution of
+distances within the distance matrix and use that information to
+select the threshold.  For the applications in this dissertation, a
+threshold value of $0.2$ is used.
 
 The result of the classification operation is the set $\set{W}$ which
 is simply the normalized set of $\lambda$ values for the target
@@ -408,9 +440,9 @@ position $\set{S}_i$.
   \Output{\W, \S}
   \BlankLine
   \tcc{Compute Weights}
-  $s \leftarrow \sum \LN$\;
-  $\W \leftarrow \LN / s$\;
-  \BlankLine
+  $sum \leftarrow \sum \LN$\;
+  $\W \leftarrow \LN / sum$\;
+  $\S \leftarrow$ list of integers of size $|\lambda|$\;
   \tcc{Classify Factors}
   $nfactors \leftarrow |\LN|$\;
   \For{$i=1$ to $nfactors$}{
@@ -430,6 +462,29 @@ position $\set{S}_i$.
     }
   }
   \Return{\W, \S}\;
+\end{algorithm}
+
+\begin{algorithm}
+  \caption{Final Summation}
+  \label{alg:summation}
+  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+  \SetKwData{F}{$\set{F}$}
+  \SetKwData{LN}{$\set{\lambda}$}\SetKwData{Ndocs}{$ndocs$}
+  \SetKwData{W}{$\set{W}$} \SetKwData{S}{$\set{S}$}
+  \SetKwData{I}{$\set{I}$} \SetKwData{Author}{$author$}
+  
+  \Input{\Ndocs, \S, \W}
+  \Output{\I, \Author}
+  \BlankLine
+  $\I \leftarrow $ List of 0 repeated $\Ndocs-1$ times\;
+  \For{i = 1 to \Ndocs} {
+    \eIf{$\S[i] = 0$} {
+      $\Author = \Author + \W[i]$\;
+    }{
+      $j \leftarrow $ Document number corresponding with $\S[i]$\;
+      $\I[j] \leftarrow \I[j] + \W[i]$\;
+    }
+  }
 \end{algorithm}
 
 \section{Implementation}
@@ -467,16 +522,17 @@ order by frequency, the vocabulary can be shortened with minimal
 disturbance to the structure of the document and the makeup of most of
 the $n$-grams.  Constraining the vocabulary to 600 words when building
 a 3-gram tensor results in a tensor which has 216,000,000 potential
-entries.  Even in dense format, this can be comfortably accommodated by
-the memory of even a modest modern desktop machine.  However, a
+entries.  Even in dense format, this can be comfortably accommodated
+by the memory of even a modest modern desktop machine.  However, a
 problem still remains with this approach.  Decompositions of a tensor
 of this size, typically into 100-200 factors, requires too much time.
-Non-negative factorization tended to require about 2 hours of time,
-and so a faster method was still needed even in the constrained case.
-Searching for the optimal number of factors by multiple factorings
-proved even more challenging.  This is especially challenging when
-considering that this model requires the decomposition of multiple
-documents within a corpus!
+When using matlab on an 8-core 3.4GHz Intel linux machine with 16GB of
+RAM, non-negative factorization tended to require about 2 hours of
+elapsed wall-clock time, and so a faster method was still needed even
+in the constrained case.  Searching for the optimal number of factors
+by multiple factorings proved even more challenging.  This is
+especially challenging when considering that this model requires the
+decomposition of multiple documents within a corpus!
 
 \subsection{The sptensor Library and Tool}
 To address the problems of time and memory constraints, a new library
@@ -523,9 +579,10 @@ it has the opposite problem the common tensor libraries have.  Dense
 tensors are fairly inefficient both in time and space complexity.
 However, for the present application the library performs quite well.
 Where Matlab factorization of tensors over constrained vocabularies
-typically require 1-2 hours to complete, sptensor can accomplish the
-task in 5-10 minutes.  This speedup allowed for the construction and
-testing of the model to proceed.
+typically require 1-2 hours to complete on a modest desktop computer
+(3.4GHz), sptensor can accomplish the task in 5-10 minutes.  This
+speedup allowed for the construction and testing of the model to
+proceed.
 
 \subsection{Text Modeling Suite}
 The text model described in this chapter is implemented as a series of
@@ -561,7 +618,7 @@ programs are used to build the model:
   at the end of the list.
 \item[classify] A C program which uses the sptensor library to
   classify and report classification of factors.  The output of this
-  corresponds to the$\set{S}$ and $\set{W}$ sets in Algorithm~\ref{alg:model}.
+  corresponds to the $\set{S}$ and $\set{W}$ sets in Algorithm~\ref{alg:model}.
 \item[build-model] A shell script which invokes all the other
   programs as per Algorithm~\ref{alg:model}.
 \end{description}
