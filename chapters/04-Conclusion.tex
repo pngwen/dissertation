@@ -85,5 +85,24 @@ the rank of sparse tensors would alleviate this problem.
 
 
 \section{Future Research}
+The immediate future plans for this research involve the further
+development of the sptensor library.  Further optimization is needed,
+as well as completion of its MPI interface.  Following that, library
+bindings to higher level languages will be created.
 
+Another application of the model is in the works which will replicate
+the studies conducted by Craig, Hugh, and Burrows~\cite{burrows2017,
+  craig2009}.  Addressing the problem of Shakespearean authorship
+using this model poses several unique challenges, not least of which
+is due to the inconsistencies in Elizabethan spelling (which
+necessitates the decomposition over full vocabularies).  Additional
+applications will also be explored, including establishing
+chronologies of documents via topological sorting and modeling the
+influence flow through a hierarchical network of documents.
+
+The effects of constrained vocabularies are another area which needs
+to be addressed.  Following the authorship studies, another future
+effort will be to address the effect of the vocabulary size on the
+output of the model.  Other aspects warranting further study are the
+effects of the various tunable parameters of the model.  
 \end{document}
