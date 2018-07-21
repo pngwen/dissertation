@@ -352,6 +352,7 @@ are attempted with increasing rank until the fit begins to become
 worse, or until the error ratio drops below $20\%$
 (Equation~\ref{eq:error_ratio}).  (Of course a different threshold
 could be used if desired.)
+
 \begin{equation}\label{eq:sparse_start_rank}
   R_0 = \left\lceil \displaystyle\frac{nnz}{3\sqrt[3]{nnz}-2} \right\rceil
   \end{equation}
@@ -360,21 +361,41 @@ could be used if desired.)
   \displaystyle\frac{|\tens{D} - \tens{\hat{D}}|}{|\tens{D}|}
 \end{equation}
 
+Extending the starting point from Equation~\ref{eq:sparse_start_rank}
+for tensors of arbitrary, $n$, modes yields
+Equation~\ref{eq:n_sparse_start_rank}.  However, the rank of sparse
+tensors is very much an open question.  There is no real theoretical
+basis for these equations other than sensible conjectures.  The
+process of finding the number of modes is, for now, confined to a
+process of trial and error.  The objective is always to find a model
+that fits reasonably well, and until the problem of sparse tensor rank
+is solved this is all that can be achieved without an exhaustive
+search of all possible ranks. These starting points do seem to yield
+good results in practice, and as 3-grams have been shown to work best
+for author classification~\cite{antonia2014}, 3-mode tensors (and
+Equation~\ref{eq:sparse_start_rank} will be used in all of the
+experiments in this dissertation.
+
+\begin{equation}\label{eq:sparse_start_rank}
+  R_0 = \left\lceil \displaystyle\frac{nnz}{n\sqrt[n]{nnz}-2} \right\rceil
+\end{equation}
+
+
 \subsection{Factor Classification}
 Having extracted factors from the document corpus, the next step is to
 classify each of the target document's factors as either belonging to
 the set $F^s_t$ (target factors with sources) or $F^n_t$ (target
 factors without sources).  In order to do this, the similarity of each
 factor pair must be measured.  Because each factor has the same
-dimension, and each factor's modes have the same semantic meaning,
-they can be compared by distance from each other within the factor
-space.  Algorithm~\ref{alg:distance} accomplishes this task by finding
-the $L_1$ distance between each pair of factors.  The result is a
-matrix $M$ where $M_{ij}$ is the $L_1$ distance between $\set{F}_i$
-and $\set{F}_j$.  Of course, this matrix will have zeroes on the
-diagonal.  Because each factor is non-negative and already $L_1$
-normalized, $0 \leq M_{ij} \leq 2$, where 0 is a perfect match and 2
-indicates maximum distance.  
+dimension, and each factor's modes represent indexes over the same
+vocabulary, they can be compared by distance from each other within
+the factor space.  Algorithm~\ref{alg:distance} accomplishes this task
+by finding the $L_1$ distance between each pair of factors.  The
+result is a matrix $M$ where $M_{ij}$ is the $L_1$ distance between
+$\set{F}_i$ and $\set{F}_j$.  Of course, this matrix will have zeroes
+on the diagonal.  Because each factor is non-negative and already
+$L_1$ normalized, $0 \leq M_{ij} \leq 2$, where 0 is a perfect match
+and 2 indicates maximum distance.
 \begin{algorithm}
   \caption{Build Distance Matrix}
   \label{alg:distance}

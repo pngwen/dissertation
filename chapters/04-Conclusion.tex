@@ -1,6 +1,89 @@
 \documentclass[../ut-dissertation.tex]{subfiles}
 \begin{document}
 
-\chapter{Conclusion and Future Work}
+\chapter{Conclusions}
+This chapter contains a summary of the results, a justfication of the
+model, an outline of various weaknesses of the model, and then
+concludes with a discussion of future work.
+
+\section{Model Performance}
+As can be seen from the experiments in the previous chapter, the model
+performs as expected.  The factors discovered by non-negative tensor
+decomposition all contain related $n$-grams.  Moreover, the factors
+are unique enough that a match, or a near match within some heuristic
+bound, provides evidence of a relationship between factors.  The
+related factors also make sense on an intuitive level, each having a
+clear semantic relationship to both target and source material.
+
+The quantification of the influencing factors also perform as
+expected.  While no ground truth is available for a weighted mixture
+of source documents on the target documents, inspecting the documents
+in the corpus shows that the model's output matches the expectations
+of a human reader.  
+
+
+\section{Justification of the Model}
+This influence model is based on a factorization of tensors describing
+the $n$-gram frequency counts of the document.  $n$-grams are a fairly
+common approach to modeling the topic and style of documents, and
+therefore the topic and styles of the documents can logically be said
+to be contained within the tensor representation of them.  By
+decomposing a document tensor into a non-negative polyadic
+decomposition, the resultant factors will be a mixture of covariant
+and contravariant factors.  That is, the frequencies of the $n$-grams
+found within each factor will have similar covariant properties.  This
+is done irrespective of the order of the $n$-grams within the
+document.
+
+The next step of the model normalizes all the factors.  In so doing,
+this removes the magnitude of the frequencies and leaves the factor
+tensors with a proportional profile of the $n$-gram composition of the
+document.  This factor now contains a description of each of the
+principal elements of the document in relationship to its vocabulary.
+
+By repeating this process for every document in the corpus, this
+technique produces a set of proportional profiles that describe the
+make up of each document within the corpus.  By searching for
+comonality among these factors, the influence model locates documents
+which have common explanatory factors.  If a document has a strong
+enough match on one or more of its factors, it provides evidence of a
+relationship between the documents.  This evidence can be considered
+to vary in strength according to the selection heuristic, and because
+the factors are based on the distribution of phrases within the
+document, this provides a sound model of document influence.
+
+Another aspect of this operation that makes this a useful model is
+that it compares all factors irrespective of their influence in their
+original source document.  That is to say if a source puts forward
+some topic, which is subsequently modeled as a proportional factor,
+and that topic is relatively unimportant in its source this will have
+no impact on how much influence it may exert in a target document.  In
+traditional influence models, which are based on word frequency, this
+sort of relationship will not be found.  However, with the present
+model it will, and its weight will be based upon the total impact it
+has on the target document. 
+
+\section{Weaknesses of the Model}
+Perhaps the greatest weakness of the present model is that no ground
+truth is available.  This sort of quantification of influence is not
+readily available, but given the justification of the model the
+information it discovers can still be considered useful.
+
+Another problem with this model is that it is sensitive to three input
+parameters.  $n$ for the number of words, $nfactors$ for the number of
+decomposition factors and $threshold$ for the selection criteria.  Of
+course, justifications for the selection of $n$ and $threshold$ have
+already been discussed.  In the case of $n$, the setting of 3 is a
+standard starting point in the field of $n$-gram analysis for English,
+but this would likely need to be tuned for other languages.  The
+biggest impediment to succesfully modelling influence in this fashion
+is the $nfactors$.  In order to get a well-fit and unique document
+tensor decomposition, the rank of the tensors is needed.  However,
+knowing the true value of this parameter is intractible and it must be
+searched for.  Further study and research into the open question of
+the rank of sparse tensors would alleviate this problem.
+
+
+\section{Future Research}
 
 \end{document}
