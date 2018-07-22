@@ -13,7 +13,7 @@ is difficult to arrive at.  In fact, this model quantifies a property
 which even the author of the documents in question may be unaware of.
 As such, verification of the model depends on the sensibility of its
 answers.  However, this again presents a challenge because the total
-structure of the all of the factors and relationships among them is
+structure of all of the factors and relationships among them is
 very complex and difficult to visualize.  To help alleviate this
 problem, this section contains a very simple example, one in which all
 of the components of the model may be seen.  This example uses three
@@ -87,19 +87,20 @@ target document.  The target document consists of 52 words, which
 yields 49 3-grams of which 42 are unique.  The resultant document
 tensor has 42 non-zero entries.  Of course, one unique solution to the
 decomposition of this tensor would be 42 tensors consisting of the
-individual non-zero entries in position.  This would be the maximal
-size of the rank of the tensor.  Tensor decompositions were performed
-for between 1 and 42 factors.  Above 15 factors, the CCD algorithm
-produced factorizations that were mostly zeroes.  That is, factor
-tensors consisted entirely of zero entries.  This is due to the small
-number of entries present, and the small amount of variation between
-them.  Because the higher-ranked factorizations all suffered from this
-problem, they were excluded for consideration.  For the factorizations
-between 1 and 15 factors, 7 yielded the best fit with an error ratio
-of 0.45, and so 7 was determined to be the optimal number of factors
-for this corpus. Even with this relatively poor fit, the model was
-able to distinguish features of the stories.  The distances between
-the factors, other than the diagonals, range from 0 to 1.4.  The final
+individual non-zero entries in the same position as in the target
+tensor.  This would be the maximal candidate for the rank of the
+tensor.  Tensor decompositions were performed for between 1 and 42
+factors.  Above 15 factors, the CCD algorithm produced factorizations
+that were mostly zeroes.  That is, most of factor tensors consisted
+entirely of zero entries.  This is due to the small number of entries
+present, and the small amount of variation between them.  Because the
+higher-ranked factorizations all suffered from this problem, they were
+excluded for consideration.  For the factorizations between 1 and 15
+factors, 7 yielded the best fit with an error ratio of 0.45, and so 7
+was determined to be the optimal number of factors for this
+corpus. Even with this relatively poor fit, the model was able to
+distinguish features of the stories.  The distances between the
+factors, other than the diagonals, range from 0 to 1.4.  The final
 classification step yielded the classification of factors shown in
 Table~\ref{tab:cat_dog_class}.
 
@@ -327,6 +328,49 @@ from the target document's factors.
     \caption{Factor Distance Distribution}\label{fig:conference_distribution}
 \end{figure}
 \FloatBarrier
+
+\begin{table}[p]
+  \centering
+  \caption{First 30 Non-Zero Entries of Factor 56}\label{fig:factor-56}
+  \begin{tabular}{|lll|r|}
+    \hline
+    Word 1 & Word 2 & Word 3 & Proportion\\
+    \hline
+    is & the & sax & 0.000887\\
+    into & the & data & 0.000886\\
+    symbols & the & sax & 0.000874\\
+    digits & the & timeseries & 0.000865\\
+    digits & the & data & 0.000857\\
+    with & the & sax & 0.000856\\
+    from & the & square & 0.000852\\
+    however & the & sax & 0.000844\\
+    up & the & sax & 0.000844\\
+    characters & the & sax & 0.000844\\
+    becomes & the & sax & 0.000844\\
+    note & the & sax & 0.000843\\
+    using & the & sax & 0.000841\\
+    for & the & square & 0.000838\\
+    into & the & sax & 0.000838\\
+    from & the & svc & 0.000833\\
+    from & the & paa & 0.000832\\
+    author & the & square & 0.000828\\
+    on & the & author & 0.000824\\
+    for & the & svc & 0.000819\\
+    for & the & paa & 0.000818\\
+    on & the & accuracy & 0.000814\\
+    on & the & array & 0.000814\\
+    digits & the & sax & 0.00081\\
+    author & the & svc & 0.000809\\
+    author & the & paa & 0.000808\\
+    on & the & distance & 0.000806\\
+    on & the & x & 0.000806\\
+    from & the & timeseries & 0.000804\\
+    of & the & author & 0.000802\\
+    \hline
+  \end{tabular}
+\end{table}
+
+  
 
 As these results show, the model makes a set of reasonable matches,
 and it does not select unrelated documents.  The actual makeup of the

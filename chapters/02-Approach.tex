@@ -69,7 +69,7 @@ Algorithm~\ref{alg:model}.  The principal activities in the model
 building process are document preparation, tensor construction, and
 influence extraction.
 
-\begin{algorithm}[H]
+\begin{algorithm}[p]
   \caption{Influence Model Construction}
   \label{alg:model}
   
@@ -112,7 +112,7 @@ numbers, and convert to lower case.  The document strings are then
 treated as a list of lower case words and will be treated as such for
 the rest of this explanation.
 
-\begin{algorithm}[H]
+\begin{algorithm}[p]
   \caption{Prepare}
   \label{alg:Prepare}
   \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -139,7 +139,8 @@ corpus. The set $\set{V}$ contains a single entry for each word.  The
 index of each word is used in the next step to create tensor
 representation of each document. This process is described in
 Algorithm~\ref{alg:vocabulary}.
-\begin{algorithm}[H]
+
+\begin{algorithm}[p]
   \caption{Build Vocabulary}
   \label{alg:vocabulary}
   \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -184,7 +185,7 @@ the document corpus.  The last tensor in the set is the representation
 of the target document as it has been placed at the end of the
 document list, as mentioned previously.
 
-\begin{algorithm}[H]
+\begin{algorithm}[p]
   \caption{Build Tensor}
   \label{alg:BuildTensor}
   \SetKwData{D}{$\tens{D}$} \SetKwData{V}{$\set{V}$} \SetKwData{N}{$n$}
@@ -292,8 +293,9 @@ interval $[0,2]$.
 
 The entire process of the construction of these factors is shown in
 Algorithm~\ref{alg:ExtractFactors}.  The result is an $L_1$-normalized
-set of rank-1 tensors.  
-\begin{algorithm}[H]
+set of rank-1 tensors.
+
+\begin{algorithm}[p]
   \caption{Extract Factors}
   \label{alg:ExtractFactors}
   \SetKwData{LN}{$\Lambda$}  \SetKwData{C}{$\set{C}$}
@@ -398,7 +400,8 @@ $\set{F}_i$ and $\set{F}_j$.  Of course, this matrix will have zeroes
 on the diagonal.  Because each factor is non-negative and already
 $L_1$ normalized, $0 \leq M_{ij} \leq 2$, where 0 is a perfect match
 and 2 indicates maximum distance.
-\begin{algorithm}[H]
+
+\begin{algorithm}[p]
   \caption{Build Distance Matrix}
   \label{alg:distance}
   \SetKwData{DM}{$M$} \SetKwData{F}{$\set{F}$}
@@ -462,7 +465,8 @@ document, and the set $\set{S}$ where entry $\set{S}_i$ is the index
 of the factor which is the source for target factor $i$.  If target
 factor $i$ has no assignable source, then a value of 0 is written to
 position $\set{S}_i$.
-\begin{algorithm}[H]
+
+\begin{algorithm}[p]
   \caption{Extract Influence}
   \label{alg:influence}
   \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -501,7 +505,8 @@ position $\set{S}_i$.
 After the factors have been matched, the final output of the model can
 be summarized by summing the influence of each source document and
 author contribution factor using Algorithm~\ref{alg:summation}.
-\begin{algorithm}[H]
+
+\begin{algorithm}[p]
   \caption{Final Summation}
   \label{alg:summation}
   \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
