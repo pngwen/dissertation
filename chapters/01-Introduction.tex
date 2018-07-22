@@ -281,22 +281,22 @@ So then if the tensor decomposition models provide a worse fit, the
 question becomes why are they important?  The answer lies in several
 properties of the tensor decompositions.  First, tensor decompositions
 retain the structure of the original data~\cite{harshman1970,
-  kolda2009}.  Unfolding a tensor loses semantic information about the
-variables being analyzed, and extracting intuitive semantics from the
-resultant PCA model is difficult and usually
-impossible~\cite{bro1997}.  Also, in the case of CPD, the factors are
-unique under rotation so long as the number of factors extracted is
-greater than or equal to the rank of the tensor~\cite{harshman1994}.
-Another desirable property of the CPD is that it does not partition
-space by hyper-surfaces.  Instead, it creates a sort of implicit set
-of axes for factor separation by providing a proportional profile
-along the tensor's basis~\cite{harshman1994}.  Thus if several tensors
-of like dimensions are decomposed, their factors can be logically
-thought of as existing within the same space.  This allows for
-comparison among the factors to be carried out, unlike under PCA where
-the factor space of each matrix is a projection into a new space,
-making comparison of factors from disparate matrices difficult to
-perform in a meaningful way.
+  kolda2009}.  Unfolding a tensor into a matrix loses semantic
+information about the variables being analyzed, and extracting
+intuitive semantics from the resultant PCA model is difficult and
+usually impossible~\cite{bro1997}.  Also, in the case of CPD, the
+factors are unique under rotation so long as the number of factors
+extracted is greater than or equal to the rank of the
+tensor~\cite{harshman1994}.  Another desirable property of the CPD is
+that it does not partition space by hyper-surfaces.  Instead, it
+creates a sort of implicit set of axes for factor separation by
+providing a proportional profile along the tensor's
+basis~\cite{harshman1994}.  Thus if several tensors of like dimensions
+are decomposed, their factors can be logically thought of as existing
+within the same space.  This allows for comparison among the factors
+to be carried out, unlike under PCA where the factor space of each
+matrix is a projection into a new space, making comparison of factors
+from disparate matrices difficult to perform in a meaningful way.
 
 In some instances of tensor analysis, it can be convenient to apply
 additional constraints to the model.  The most common constraint
