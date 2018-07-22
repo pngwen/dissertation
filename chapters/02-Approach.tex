@@ -69,7 +69,7 @@ Algorithm~\ref{alg:model}.  The principal activities in the model
 building process are document preparation, tensor construction, and
 influence extraction.
 
-\begin{algorithm}
+\begin{algorithm}[H]
   \caption{Influence Model Construction}
   \label{alg:model}
   
@@ -112,7 +112,7 @@ numbers, and convert to lower case.  The document strings are then
 treated as a list of lower case words and will be treated as such for
 the rest of this explanation.
 
-\begin{algorithm}
+\begin{algorithm}[H]
   \caption{Prepare}
   \label{alg:Prepare}
   \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -130,7 +130,7 @@ Note that none of the words, including stop words, of the document are
 removed during filtering.  Also, no stemming is performed.  The reason
 for this is that these elements go to the style of the author.  In
 fact, both stop words and unstemmed words have been shown to be
-powerful markers for authorship and style~\ref{antonia2014,
+powerful markers for authorship and style~\cite{antonia2014,
   stamatatos2011, burrows2017}.  
 
 In order to build tensors, a vocabulary is first extracted from the
@@ -139,7 +139,7 @@ corpus. The set $\set{V}$ contains a single entry for each word.  The
 index of each word is used in the next step to create tensor
 representation of each document. This process is described in
 Algorithm~\ref{alg:vocabulary}.
-\begin{algorithm}
+\begin{algorithm}[H]
   \caption{Build Vocabulary}
   \label{alg:vocabulary}
   \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -173,7 +173,7 @@ Algorithm~\ref{alg:BuildTensor}.  The tensor is constructed using a
 sliding window, beginning with the first word of the document
 and proceeding until $n$ words from the end of the document.  This
 process is illustrated in Figure~\ref{fig:SlidingWindow}.
-\begin{algorithm}
+\begin{algorithm}[H]
   \caption{Build Tensor}
   \label{alg:BuildTensor}
   \SetKwData{D}{$\tens{D}$} \SetKwData{V}{$\set{V}$} \SetKwData{N}{$n$}
@@ -291,7 +291,7 @@ here.  Doing so sets the range of distances between factors $[0,2]$.
 The entire process of the construction of these factors is shown in
 Algorithm~\ref{alg:ExtractFactors}.  The result is an $L_1$-normalized
 set of rank-1 tensors.  
-\begin{algorithm}
+\begin{algorithm}[H]
   \caption{Extract Factors}
   \label{alg:ExtractFactors}
   \SetKwData{LN}{$\Lambda$}  \SetKwData{C}{$\set{C}$}
@@ -376,7 +376,7 @@ for author classification~\cite{antonia2014}, 3-mode tensors (and
 Equation~\ref{eq:sparse_start_rank} will be used in all of the
 experiments in this dissertation.
 
-\begin{equation}\label{eq:sparse_start_rank}
+\begin{equation}\label{eq:n_sparse_start_rank}
   R_0 = \left\lceil \displaystyle\frac{nnz}{n\sqrt[n]{nnz}-2} \right\rceil
 \end{equation}
 
@@ -396,7 +396,7 @@ $\set{F}_i$ and $\set{F}_j$.  Of course, this matrix will have zeroes
 on the diagonal.  Because each factor is non-negative and already
 $L_1$ normalized, $0 \leq M_{ij} \leq 2$, where 0 is a perfect match
 and 2 indicates maximum distance.
-\begin{algorithm}
+\begin{algorithm}[H]
   \caption{Build Distance Matrix}
   \label{alg:distance}
   \SetKwData{DM}{$M$} \SetKwData{F}{$\set{F}$}
@@ -449,7 +449,7 @@ document, and the set $\set{S}$ where entry $\set{S}_i$ is the index
 of the factor which is the source for target factor $i$.  If target
 factor $i$ has no assignable source, then a value of 0 is written to
 position $\set{S}_i$.
-\begin{algorithm}
+\begin{algorithm}[H]
   \caption{Extract Influence}
   \label{alg:influence}
   \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -485,7 +485,10 @@ position $\set{S}_i$.
   \Return{\W, \S}\;
 \end{algorithm}
 
-\begin{algorithm}
+After the factors have been matched, the final output of the model can
+be summarized by summing the influence of each source document and
+author contribution factor using Algorithm~\ref{alg:summation}.
+\begin{algorithm}[H]
   \caption{Final Summation}
   \label{alg:summation}
   \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}

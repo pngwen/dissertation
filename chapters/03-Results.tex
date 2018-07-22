@@ -94,7 +94,7 @@ produced factorizations that were mostly zeroes.  That is, factor
 tensors consisted entirely of zero entries.  This is due to the small
 number of entries present, and the small amount of variation between
 them.  Because the higher-ranked factorizations all suffered from this
-problem, they were exlcuded for consideration.  For the factorizations
+problem, they were excluded for consideration.  For the factorizations
 between 1 and 15 factors, 7 yielded the best fit with an error ratio
 of 0.45, and so 7 was determined to be the optimal number of factors
 for this corpus. Even with this relatively poor fit, the model was
@@ -289,6 +289,17 @@ approximately 2.5 hours to complete. Calculation of the distance
 matrix and classifying the factors required another hour and a half.
 The results are shown in Table~\ref{tab:conference_results}.
 
+The distribution of the factor distances are shown in
+Figure~\ref{fig:conference_distribution}.  The vertical red line on
+the graphs shows the threshold for factor matching.
+Figure~\ref{fig:conference_distribution}(a) shows the distribution of
+factor distances for the entire factor matrix while
+~\ref{fig:conference_distribution}(b) shows the distribution of
+the distances from the target factors.  Note that both distributions
+are tri-modal.  The two spikes on the far left correspond to factors
+from the unrelated documents, which shows that they are well separated
+from the target document's factors.
+
 
 \begin{table}[p]
   \centering
@@ -307,6 +318,15 @@ The results are shown in Table~\ref{tab:conference_results}.
     \hline
   \end{tabular}
 \end{table}
+
+\begin{figure}[p]
+  \centering
+  \subfloat[All Factor Distances]{\includegraphics[width=3in]{diagrams/conference-factor-distance}}
+  \subfloat[Target Factor
+  Distances]{\includegraphics[width=3in]{diagrams/conference-target-distance}}
+    \caption{Factor Distance Distribution}\label{fig:conference_distribution}
+\end{figure}
+\FloatBarrier
 
 As these results show, the model makes a set of reasonable matches,
 and it does not select unrelated documents.  The actual makeup of the
