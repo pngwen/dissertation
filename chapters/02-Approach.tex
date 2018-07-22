@@ -14,9 +14,9 @@ and details.
 
 \section{Influence Modeling}
 The influence model is governed by a document list and a set of
-parameters.  The inputs to the model are outlined described in
+parameters.  The inputs to the model are described in
 Table~\ref{table:modelInput}.  The document list contains a list of all
-of the documents in the corpus.  The document list contains potential
+of the documents in the corpus and is comprised of potential
 source documents and one target document.  The target document is
 placed at the end of the document list by convention.
 \begin{table}[p]
@@ -107,7 +107,7 @@ influence extraction.
 \subsection{Document Filtering and Vocabulary Extraction}
 The first step is to prepare the document corpus as detailed in
 Algorithm~\ref{alg:Prepare}.The documents are
-left mostly intact.  The only filtering is to remove punctuation,
+left mostly intact with the only filtering being to remove punctuation,
 numbers, and convert to lower case.  The document strings are then
 treated as a list of lower case words and will be treated as such for
 the rest of this explanation.
@@ -127,7 +127,7 @@ the rest of this explanation.
 \end{algorithm}
 
 Note that none of the words, including stop words, of the document are
-removed during filtering.  Also, no stemming is performed.  The reason
+removed during filtering, and no stemming is performed.  The reason
 for this is that these elements go to the style of the author.  In
 fact, both stop words and unstemmed words have been shown to be
 powerful markers for authorship and style~\cite{antonia2014,
@@ -173,6 +173,17 @@ Algorithm~\ref{alg:BuildTensor}.  The tensor is constructed using a
 sliding window, beginning with the first word of the document
 and proceeding until $n$ words from the end of the document.  This
 process is illustrated in Figure~\ref{fig:SlidingWindow}.
+
+The resultant tensor is typically very sparse as it counts the
+frequency of all possible $n$-grams over the vocabulary $\set{V}$, and
+intuitively few (if any) documents would use every possible $n$ length
+combination of its vocabulary as most of these phrases would be
+nonsensical.  Thus the set of tensors $\set{C}$ produced by
+Algorithm~\ref{alg:BuildTensor} is a set of sparse tensors representing
+the document corpus.  The last tensor in the set is the representation
+of the target document as it has been placed at the end of the
+document list, as mentioned previously.
+
 \begin{algorithm}[H]
   \caption{Build Tensor}
   \label{alg:BuildTensor}
@@ -207,19 +218,9 @@ process is illustrated in Figure~\ref{fig:SlidingWindow}.
 \end{figure}
 \FloatBarrier
 
-The resultant tensor is typically very sparse as it counts the
-frequency of all possible $n$-grams over the vocabulary $\set{V}$, and
-intuitively few (if any) documents would use every possible $n$ length
-combination of its vocabulary as most of these phrases would be
-nonsensical.  Thus the set of tensors $\set{C}$ produced by
-Algorithm~\ref{alg:BuildTensor} is a set of sparse tensors representing
-the document corpus.  The last tensor in the set is the representation
-of the target document as it has been placed at the end of the
-document list, as mentioned previously.
-
 \subsection{Tensor Decomposition}
 The next step in the process is to decompose each document tensor into
-rank 1 components.  As noted in chapter 1, several decompositions
+rank-1 components.  As noted in Chapter 1, several decompositions
 exist which can accomplish this task.  Because the data the present
 model consumes is frequency counting, the tensors comprising the
 corpus are all strictly non-negative.  This arrangement naturally
@@ -243,9 +244,9 @@ where $m$ is the number of modes.  The result of this decomposition is
 shown in Equation~\ref{eq:ccd}.  The object of the model is to
 minimize the error tensor $\tens{E}$, and CCD accomplishes this by
 iteratively solving for $U_i$ by holding the other factor matrices
-constant.  The optimal solution for each entry of $U_i$ is governed by
-a differential equation which is solved iteratively (as it has no
-closed form solution).  The big advantage to the CCD method is that
+constant.  The optimal solution for each entry of $U_i$ is determined by
+a differential equation which is solved iteratively as it has no
+closed form solution.  The big advantage to the CCD method is that
 rows in each column are independent, and so entire columns can be
 solved in parallel.  CCD also allows for $L_1$ sparsity constraints to
 be applied, though this is not used in the present model.  (The $L_1$
@@ -282,11 +283,12 @@ The $L_1$ norm is used here, and in the distance calculation in a
 later step, because it produces a sparse solution.  The tensors being
 factored in this model are already very sparse, and the non-negative
 decomposition produces factors which are also sparse.  Using the $L_2$
-norm would tend to allow large differences between the factors
+norm would tend to allow large differences between the factors to 
 dominate the model's selection of related factors when the differences
 between factors are computed. Because the lower sensitivity of the
 $L_1$ norm is desired in the distance calculation, it is also used
-here.  Doing so sets the range of distances between factors $[0,2]$.
+here.  Doing so sets the range of distances between factors to the
+interval $[0,2]$.
 
 The entire process of the construction of these factors is shown in
 Algorithm~\ref{alg:ExtractFactors}.  The result is an $L_1$-normalized
@@ -342,7 +344,7 @@ However, this estimate assumes a generic tensor and not a sparse
 tensor!  In fact, in every instance of the document tensors used here,
 this minimal rank would far exceed the number of non-zero elements.
 This leaves the choice up to searching for a number of factors which
-gives a the best fit to the model.  The approach used to find this
+gives the best fit to the model.  The approach used to find this
 number begins with assuming that the non-zero elements, $nnz$, of the
 document tensor were packed into a dense tensor with dimensions
 $\sqrt[3]{nnz} \times \sqrt[3]{nnz} \times \sqrt[3]{nnz}$.  This
@@ -355,7 +357,7 @@ could be used if desired.)
 
 \begin{equation}\label{eq:sparse_start_rank}
   R_0 = \left\lceil \displaystyle\frac{nnz}{3\sqrt[3]{nnz}-2} \right\rceil
-  \end{equation}
+\end{equation}
   
 \begin{equation}\label{eq:error_ratio}
   \displaystyle\frac{|\tens{D} - \tens{\hat{D}}|}{|\tens{D}|}
@@ -413,6 +415,17 @@ and 2 indicates maximum distance.
   }
   \Return{\DM}
 \end{algorithm}
+
+In actuality, only the entries corresponding to the target document
+factors are necessary.  That is, $M[i,j]$ is only needed where $i$ is
+the index of a target factor and $j$ is the index of a potential
+source factor.  The entire distance matrix is useful for studying the
+distribution of factor distances which is useful in finding model
+thresholds as well as quantifying the uniqueness of each factor. This
+last item is useful in determining the validity of the decomposition
+as if each factor is similar, especially factors within each document,
+this can provide evidence that more factors are needed to fully
+decompose the corpus.
 
 The final task to be performed in constructing the model is to
 identify which source factors are closest to each target factor and
@@ -532,7 +545,8 @@ As already stated, the tensors used in this model are very sparse.
 Essentially, every word in a document is the beginning of a new
 phrase, and so every document tensor will contain the same number of
 non-zero entries as there are words in the document.  (With the
-exception being the last $n$-gram which is necessarily truncated.)
+exception being the last $n$-gram as each word following the first in
+the $n$-gram cannot be the start of a new $n$-gram.)
 Storing the frequency counts of these documents is trivial, but the
 model needs them in their positions within the tensor in order to
 decompose and fit elements.  Most of the complexity, therefore lies
@@ -556,7 +570,7 @@ elapsed wall-clock time, and so a faster method was still needed even
 in the constrained case.  Searching for the optimal number of factors
 by multiple factorings proved even more challenging.  This is
 especially challenging when considering that this model requires the
-decomposition of multiple documents within a corpus!
+decomposition of multiple documents within a corpus.
 
 \subsection{The sptensor Library and Tool}
 To address the problems of time and memory constraints, a new library
@@ -600,22 +614,22 @@ At the time of this writing, the first two goal have been achieved but
 unfortunately the MPI version of sptensor does not yet exist.  The
 sptensor library is designed to only represent sparse tensors, and so
 it has the opposite problem the common tensor libraries have.  Dense
-tensors are fairly inefficient both in time and space complexity.
-However, for the present application the library performs quite well.
-Where Matlab factorization of tensors over constrained vocabularies
-typically require 1-2 hours to complete on a modest desktop computer
-(3.4GHz), sptensor can accomplish the task in 5-10 minutes.  This
-speedup allowed for the construction and testing of the model to
-proceed.
+tensors in sptensorr are therefore fairly inefficient both in time and
+space complexity.  However, for the present application the library
+performs quite well.  Where Matlab factorization of tensors over
+constrained vocabularies typically require 1-2 hours to complete on a
+modest desktop computer (3.4GHz), sptensor can accomplish the task in
+5-10 minutes.  This speedup allowed for the construction and testing
+of the model to proceed.
 
 \subsection{Text Modeling Suite}
 The text model described in this chapter is implemented as a series of
-stand-alone programs.  Essentially, each of the above algorithms are
-implemented as either part of the sptensor library or as a stand alone
-utility.  The decision of whether to build an algorithm into sptensor
-was based on whether the operation was a generic tensor operation, or
-whether it was specific to this model.  The sptensor tool provides the
-following facilities:
+stand-alone programs.  Essentially, each of the algorithms described
+in this chapter are implemented as either part of the sptensor library
+or as a stand alone utility.  The decision of whether to build an
+algorithm into sptensor was based on whether the operation was a
+generic tensor operation, or whether it was specific to this model.
+The sptensor tool provides the following facilities:
 \begin{itemize}
 \item CCD Factorization (as used in
   Algorithm~\ref{alg:ExtractFactors}.
@@ -624,7 +638,7 @@ following facilities:
 \item Distance matrix computation (Algorithm~\ref{alg:distance})
 \end{itemize}
 
-In addition to the sptensor utility, the following stand alone
+In addition to the sptensor utility, the following standalone
 programs are used to build the model:
 \begin{description}
 \item[prepare] This is a simple bash shell script which uses the UNIX
