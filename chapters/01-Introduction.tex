@@ -29,14 +29,14 @@ author could have transferred ideas from some outside source.  These
 sources can take on many forms.  In the case of academic writing, the
 author is likely to have been influenced primarily by the various
 books and papers that they have read over the course of their
-research.  Of course, another form of influence is a coauthor (though
-in the case of academic literature, coauthors are almost always
-explicitly stated.)  Of course, the influence over the text in a paper
-is not constrained merely to the literature that the author has cited,
-but is ultimately a reflection of an author's entire life experience
-and background.  In the case of literary writing, such as a novel or
-play, a reasonable assumption is that an author is influenced by other
-works within their genre as well as by the society in which they live.
+research.  Another form of influence is a coauthor (though in the case
+of academic literature, coauthors are almost always explicitly
+stated.)  Of course, the influence over the text in a paper is not
+constrained merely to the literature that the author has cited, but is
+ultimately a reflection of an author's entire life experience and
+background.  In the case of literary writing, such as a novel or play,
+a reasonable assumption is that an author is influenced by other works
+within their genre as well as by the society in which they live.
 
 Given that every written document is influenced by at least a small
 set of outside documents, the present work attempts to model and
@@ -152,7 +152,7 @@ The tensor, or outer,  product $a \otimes b$ used in
 Equation~\ref{eq:polyadic_decomposition} results in a tensor where the
 modes are the concatenation of the modes of $a$ and $b$.  For
 instance, if $a$ and $b$ are vectors of size $i$ and $j$ respectively,
-$a \otimes b$ results in a 2-mode tensor with dimensions $i x j$.  In
+$a \otimes b$ results in a 2-mode tensor with dimensions $i \times j$.  In
 the case of building a 3-mode tensor, three vectors are needed, and
 the elements of the product result are computed as in in
 Equation~\ref{eq:tensor_product}. A graphical representation of this
@@ -179,12 +179,12 @@ fact much more difficult to compute.  Perhaps the easiest way to
 understand the notion of tensor rank is recursive.  A rank 1 tensor is
 a tensor which can be constructed completely from the tensor product
 of 1-mode tensors (vectors).  The tensor described in
-Equation~\ref{eq:tensor_product} and
-Figure~\ref{fig:tensor_product} is therefore a rank-1 tensor, as are
-all the factors in the polyadic decomposition.  A tensor of general
-rank $r$ is the result of adding $r$ rank-1 tensors together. The rank
-of a tensor $\tens{T}$ is therefore defined as the minimum number of
-rank-1 tensors needed to sum to $\tens{T}$.
+Equation~\ref{eq:tensor_product} and Figure~\ref{fig:tensor_product}
+is therefore a rank-1 tensor, as are all the factors in the polyadic
+decomposition.  A tensor of general rank $r$ is the result of the
+summation of $r$ rank-1 tensors. The rank of a tensor $\tens{T}$ is
+therefore defined as the minimum number of rank-1 tensors needed to
+sum to $\tens{T}$.
 
 Hitchcock's paper mainly presents the polyadic decomposition from a
 purely mathematical perspective, with applications to studying tensor
@@ -218,7 +218,7 @@ clearly seen from Equation~\ref{eq:polyadic_decomposition_normalized},
 $\lambda_i$ is also an expression of the influence that factor $i$
 exerts over the tensor $\tens{T}$.  For this reason, factors are
 typically expressed in order from largest $\lambda_i$ to the smallest
-$\lambda_i$.  Thus these factor norms serve the same purpose as
+$\lambda_i$.  Thus these factor norms serve a similar purpose as
 eigenvalues in principal component analysis, or as singular values in
 singular value decomposition.
 
