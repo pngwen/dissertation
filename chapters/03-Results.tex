@@ -302,6 +302,7 @@ from the unrelated documents, which shows that they are well separated
 from the target document's factors.
 
 
+
 \begin{table}[p]
   \centering
   \caption{Conference Classification Results}\label{tab:conference_results}
@@ -328,6 +329,59 @@ from the target document's factors.
     \caption{Factor Distance Distribution}\label{fig:conference_distribution}
 \end{figure}
 \FloatBarrier
+
+Given the separation of the factors, and that the model excluded two
+obviously unrelated papers, the model appears to have produced desired
+results.  For final verification, the text of the documents in
+question will now be summarized.  The target paper details an
+algorithm which is used to identify handwritten
+characters~\cite{serfass2017dynamic}.  The algorithm presented is an
+extension of another algorithm, Symbolic Aggregate Approximation
+(SAX), which was first presented in Lin et al.'s
+paper~\cite{lin2003symbolic}.  Because the target paper is an
+extension of this one, a reasonable assumption would be that it would
+be heavily influenced by this source.  This is precisely what the
+model predicted in that this paper was assigned a weight of $0.21$,
+and had a total of ten matching factors.  The remaining citations that
+were found to influence the document present competing algorithms, and
+are primarily mentioned in the target papers related works section.
+A summary of one of the most influencial of the 10 matched factors is
+shown in Table~\ref{fig:factor-56}.  This is the factor 56 (out of
+150) in the decomposition of the target document and represents a
+weight of $0.04$.  The factor was sorted in decreasing order by
+proportion and only the first 30 $n$-grams are shown.  (The actual
+factor contains 11,661 $n$-grams, most of which have very small
+proportional entries.)  Note most of the $n$-grams are discussing the
+SAX algorithm, and various properties of it.  In fact, this is what is
+found in the other nine factors, they all discuss different elements
+of SAX.
+
+Another property of the target paper is that bears examination is the
+makeup of the text itself.  The paper is 4 pages long, the first page
+being devoted to front matter and the related works.  The second page
+contains the conclusion of the related works section, which occupies
+approximately $25\%$ of the page.  The rest of the second page, and
+the entirety of the third page have the author's contributions and the
+conclusion.  Half of the fourth page has the final conclusion
+paragraph, and then the bibliography.  By rough estimate, therefore,
+the paper contains $1.75$ pages of what is essentially the summary of
+existing work.  This leaves $2.25$ pages of original material, which
+means that a cursory analysis of the paper would imply that the author
+has contributed $56\%$ of the text of the paper.  The model's
+prediction of $57\%$ is in line with this estimate.  
+
+As these results show, the model makes a set of reasonable matches,
+and it does not select unrelated documents.  The actual makeup of the
+factors are much more complex, however ideas can be traced through
+them.  Unfortunately, these factors are much too large to be included
+verbatim in this chapter. However, the factors that were matched from
+paper one all deal with a technique which generates a symbolic
+representation of a time series.  This technique serves as the basis
+for the invention in the paper, and is talked about many times with
+many of the same explanations used in the first paper.  Thus the model
+has not only avoided unrelated information, it has given a greater
+weight to the paper which had the greatest semantic influence on the
+work being studied.
 
 \begin{table}[p]
   \centering
@@ -369,18 +423,4 @@ from the target document's factors.
     \hline
   \end{tabular}
 \end{table}
-
-  
-
-As these results show, the model makes a set of reasonable matches,
-and it does not select unrelated documents.  The actual makeup of the
-factors are much more complex, however ideas can be traced through
-them.  Unfortunately, these factors are much too large to be included
-verbatim in this chapter. However, the factors that were matched from
-paper one all deal with a technique which generates a symbolic
-representation of a time series.  This technique serves as the basis
-for the invention in the paper, and is talked about many times with
-many of the same explanations used in the first paper.  Thus the model
-has not only avoided unrelated information, it has given a greater
-weight to the paper which had the greatest semantic influence on the
-work being studied.
+\FloatBarrier
