@@ -15,11 +15,11 @@ bound, provides evidence of a relationship between factors.  The
 related factors also make sense on an intuitive level, each having a
 clear semantic relationship to both target and source material.
 
-The quantification of the influencing factors also perform as
+The quantifications of the influencing factors also perform as
 expected.  While no ground truth is available for a weighted mixture
-of source documents on the target documents, inspecting the documents
-in the corpus shows that the model's output matches the expectations
-of a human reader.  
+of source documents to the target documents, inspecting the documents
+in the corpus shows that the model's output reasonbaly matches the
+expectations of a human reader.
 
 
 \section{Justification of the Model}
@@ -83,6 +83,11 @@ knowing the true value of this parameter is intractable and it must be
 searched for.  Further study and research into the open question of
 the rank of sparse tensors would alleviate this problem.
 
+Finally, this model is based on $n$-gram
+frequencies.  As such, small documents are often difficult to model
+becuase they will have relatively few repeated $n$-grams.  If the
+distribution of $n$-grams is completely  uniform, this will also act
+as an impediment to meaningful tensor decompositions.
 
 \section{Future Research}
 The immediate future plans for this research involve the further
@@ -90,19 +95,25 @@ development of the sptensor library.  Further optimization is needed,
 as well as completion of its MPI interface.  Following that, library
 bindings to higher level languages will be created.
 
-Another application of the model is in the works which will replicate
-the studies conducted by Craig and Burrows~\cite{burrows2017,
-  craig2009}.  Addressing the problem of Shakespearean authorship
-using this model poses several unique challenges, not least of which
-is due to the inconsistencies in Elizabethan spelling (which
-necessitates the decomposition over full vocabularies).  Additional
-applications will also be explored, including establishing
-chronologies of documents via topological sorting and modeling the
-influence flow through a hierarchical network of documents.
+Another application of the model is to replicate the studies conducted
+by Craig and Burrows~\cite{burrows2017, craig2009}.  Addressing the
+problem of Shakespearean authorship using this model poses several
+unique challenges, not least of which is due to the inconsistencies in
+Elizabethan spelling (which necessitates the decomposition over full
+vocabularies).  Additional applications will also be explored,
+including establishing chronologies of documents via topological
+sorting and modeling the influence flow through a hierarchical network
+of documents.
 
 The effects of constrained vocabularies are another area which needs
 to be addressed.  Following the authorship studies, another future
 effort will be to address the effect of the vocabulary size on the
 output of the model.  Other aspects warranting further study are the
-effects of the various parameters of the model.  
+effects of the various parameters of the model.
+
+Finally, several experiments are under way to extend the reach of the
+model from influence modelling to plagairsm detection.  This last
+branch will perhaps be the most important as it will examine not only
+plagiarism from one source document, but will take into account many
+potential documents of origin.
 \end{document}

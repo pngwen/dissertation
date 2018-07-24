@@ -424,11 +424,7 @@ factors are necessary.  That is, $M[i,j]$ is only needed where $i$ is
 the index of a target factor and $j$ is the index of a potential
 source factor.  The entire distance matrix is useful for studying the
 distribution of factor distances which is useful in finding model
-thresholds as well as quantifying the uniqueness of each factor. This
-last item is useful in determining the validity of the decomposition
-as if each factor is similar, especially factors within each document,
-this can provide evidence that more factors are needed to fully
-decompose the corpus.
+thresholds as well as quantifying the uniqueness of each factor. 
 
 The final task to be performed in constructing the model is to
 identify which source factors are closest to each target factor and
@@ -453,18 +449,11 @@ distance of $2$.  This latter arrangement implies that no non-zero
 entries in the factor tensors were found in the same position and
 would therefore signify completely unrelated factors.  A sensible
 default setting for this threshold is $0.2$ as this requires a $90\%$
-agreement in the proportion of the entries.  Another approach to
+agreement of the entries.  Another approach to
 selecting a threshold value is to examine the distribution of
 distances within the distance matrix and use that information to
 select the threshold.  For the applications in this dissertation, a
 threshold value of $0.2$ is used.
-
-The result of the classification operation is the set $\set{W}$ which
-is simply the normalized set of $\lambda$ values for the target
-document, and the set $\set{S}$ where entry $\set{S}_i$ is the index
-of the factor which is the source for target factor $i$.  If target
-factor $i$ has no assignable source, then a value of 0 is written to
-position $\set{S}_i$.
 
 \begin{algorithm}[p]
   \caption{Extract Influence}
@@ -501,6 +490,14 @@ position $\set{S}_i$.
   }
   \Return{\W, \S}\;
 \end{algorithm}
+\FloatBarrier
+
+The result of the classification operation is the set $\set{W}$ which
+is simply the normalized set of $\lambda$ values for the target
+document, and the set $\set{S}$ where entry $\set{S}_i$ is the index
+of the factor which is the source for target factor $i$.  If target
+factor $i$ has no assignable source, then a value of 0 is written to
+position $\set{S}_i$.
 
 After the factors have been matched, the final output of the model can
 be summarized by summing the influence of each source document and
@@ -528,6 +525,7 @@ author contribution factor using Algorithm~\ref{alg:summation}.
     }
   }
 \end{algorithm}
+\FloatBarrier
 
 \section{Implementation}
 Implementing the model described in this chapter comes with several
@@ -636,8 +634,7 @@ algorithm into sptensor was based on whether the operation was a
 generic tensor operation, or whether it was specific to this model.
 The sptensor tool provides the following facilities:
 \begin{itemize}
-\item CCD Factorization (as used in
-  Algorithm~\ref{alg:ExtractFactors}.
+\item CCD Factorization (as used in Algorithm~\ref{alg:ExtractFactors})
 \item Extraction of normalized factors from the matrix output of CCD,
   also from Algorithm~\ref{alg:ExtractFactors}.
 \item Distance matrix computation (Algorithm~\ref{alg:distance})
