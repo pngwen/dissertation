@@ -567,7 +567,7 @@ entries.  Even in dense format, this can be comfortably accommodated
 by the memory of even a modest modern desktop machine.  However, a
 problem still remains with this approach.  Decompositions of a tensor
 of this size, typically into 100-200 factors, requires too much time.
-When using matlab on an 8-core 3.4GHz Intel linux machine with 16GB of
+When using Matlab on an 8-core 3.4GHz Intel Linux machine with 16GB of
 RAM, non-negative factorization tended to require about 2 hours of
 elapsed wall-clock time, and so a faster method was still needed even
 in the constrained case.  Searching for the optimal number of factors
@@ -617,7 +617,7 @@ At the time of this writing, the first two goal have been achieved but
 unfortunately the MPI version of sptensor does not yet exist.  The
 sptensor library is designed to only represent sparse tensors, and so
 it has the opposite problem the common tensor libraries have.  Dense
-tensors in sptensorr are therefore fairly inefficient both in time and
+tensors in sptensor are therefore fairly inefficient both in time and
 space complexity.  However, for the present application the library
 performs quite well.  Where Matlab factorization of tensors over
 constrained vocabularies typically require 1-2 hours to complete on a
